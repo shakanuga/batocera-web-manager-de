@@ -70,7 +70,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
       },
     })
   } catch {
-    throw new ApiError('No se pudo contactar con el servidor.')
+    throw new ApiError('Server nicht erreichbar.')
   }
 
   const text = await res.text()
@@ -85,7 +85,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
   if (!res.ok) {
     const payload = data as OkEnvelope | null
-    const message = payload?.error || `Error ${res.status}`
+    const message = payload?.error || `Fehler ${res.status}`
     throw new ApiError(message, res.status, payload?.errors ?? [])
   }
   return data as T
@@ -95,7 +95,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 export function unwrap<T extends OkEnvelope>(payload: T): T {
   if (payload && payload.ok === false) {
     const errors = payload.errors?.length ? payload.errors : []
-    throw new ApiError(payload.error || errors[0] || 'Operación fallida', 200, errors)
+    throw new ApiError(payload.error || errors[0] || 'Vorgang fehlgeschlagen', 200, errors)
   }
   return payload
 }

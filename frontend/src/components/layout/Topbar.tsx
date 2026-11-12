@@ -23,7 +23,7 @@ export function Topbar({ title, subtitle, onMenu, leading, actions }: TopbarProp
           <button
             type="button"
             onClick={onMenu}
-            aria-label="Abrir menú"
+            aria-label="Menü öffnen"
             className="-ml-1 cursor-pointer rounded-xl border border-border bg-card p-2 text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 lg:hidden"
           >
             <Menu className="size-4" />
@@ -48,8 +48,8 @@ export function Topbar({ title, subtitle, onMenu, leading, actions }: TopbarProp
           <motion.button
             type="button"
             onClick={toggle}
-            aria-label={resolved === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}
-            title={resolved === 'dark' ? 'Tema claro' : 'Tema oscuro'}
+            aria-label={resolved === 'dark' ? 'Zum hellen Design wechseln' : 'Zum dunklen Design wechseln'}
+            title={resolved === 'dark' ? 'Helles Design' : 'Dunkles Design'}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
             transition={{ type: 'spring', stiffness: 400, damping: 28 }}

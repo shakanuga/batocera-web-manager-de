@@ -35,20 +35,20 @@ type StatusFilter = 'with-roms' | 'all' | 'with-media' | 'without-media' | 'empt
 type SortKey = 'name' | 'roms-desc' | 'roms-asc' | 'media-desc' | 'coverage'
 
 const STATUS_FILTERS: { key: StatusFilter; label: string }[] = [
-  { key: 'with-roms', label: 'Con ROMs' },
-  { key: 'all', label: 'Todos' },
-  { key: 'with-media', label: 'Con media' },
-  { key: 'without-media', label: 'Sin media' },
-  { key: 'empty', label: 'Vacíos' },
-  { key: 'gamelist', label: 'Con gamelist' },
+  { key: 'with-roms', label: 'Mit ROMs' },
+  { key: 'all', label: 'Alle' },
+  { key: 'with-media', label: 'Mit Medien' },
+  { key: 'without-media', label: 'Ohne Medien' },
+  { key: 'empty', label: 'Leer' },
+  { key: 'gamelist', label: 'Mit gamelist' },
 ]
 
 const SORTS: { key: SortKey; label: string }[] = [
-  { key: 'name', label: 'Nombre' },
-  { key: 'roms-desc', label: 'Más ROMs' },
-  { key: 'roms-asc', label: 'Menos ROMs' },
-  { key: 'media-desc', label: 'Más media' },
-  { key: 'coverage', label: 'Cobertura' },
+  { key: 'name', label: 'Name' },
+  { key: 'roms-desc', label: 'Meiste ROMs' },
+  { key: 'roms-asc', label: 'Wenigste ROMs' },
+  { key: 'media-desc', label: 'Meiste Medien' },
+  { key: 'coverage', label: 'Abdeckung' },
 ]
 
 /** ¿Alguna fuente tiene credenciales guardadas? */
@@ -201,7 +201,7 @@ export function ScraperPage() {
     <>
       <Topbar
         title="Scraper"
-        subtitle={`${totals.systems} sistemas · ${totals.roms.toLocaleString('es-ES')} ROMs`}
+        subtitle={`${totals.systems} Systeme · ${totals.roms.toLocaleString('de-DE')} ROMs`}
         onMenu={openMenu}
         actions={
           <>
@@ -211,10 +211,10 @@ export function ScraperPage() {
               onClick={() => openScrape([])}
             >
               <Settings className="size-4" />
-              Configurar
+              Konfigurieren
             </Button>
             <IconButton
-              label="Recargar sistemas"
+              label="Systeme neu laden"
               onClick={() => {
                 triggerHaptic('light')
                 refresh()
@@ -232,7 +232,7 @@ export function ScraperPage() {
             <CircleAlert className="size-4 shrink-0" />
             <span className="min-w-0 flex-1">{error}</span>
             <Button size="sm" variant="outline" onClick={refresh}>
-              Reintentar
+              Erneut versuchen
             </Button>
           </div>
         )}
@@ -241,30 +241,30 @@ export function ScraperPage() {
           <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
             <CircleAlert className="size-4 shrink-0" />
             <span className="min-w-0 flex-1">
-              Ninguna fuente de scraping tiene credenciales. Pulsa «Configurar» para añadirlas.
+              Keine Scraping-Quelle hat Zugangsdaten. Klicke auf „Konfigurieren“, um sie hinzuzufügen.
             </span>
             <Button size="sm" variant="outline" onClick={() => openScrape([])}>
               <Settings className="size-4" />
-              Configurar
+              Konfigurieren
             </Button>
           </div>
         )}
 
         {/* Resumen */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <MetricCard label="Sistemas" value={totals.systems} icon={Gamepad2} />
-          <MetricCard label="ROMs" value={totals.roms.toLocaleString('es-ES')} icon={Sparkles} />
+          <MetricCard label="Systeme" value={totals.systems} icon={Gamepad2} />
+          <MetricCard label="ROMs" value={totals.roms.toLocaleString('de-DE')} icon={Sparkles} />
           <MetricCard
-            label="Con media"
-            value={totals.media.toLocaleString('es-ES')}
+            label="Mit Medien"
+            value={totals.media.toLocaleString('de-DE')}
             icon={ImageIcon}
             accent="good"
           />
           <MetricCard
-            label="Sin media"
-            value={totals.pending.toLocaleString('es-ES')}
+            label="Ohne Medien"
+            value={totals.pending.toLocaleString('de-DE')}
             icon={Download}
-            hint="pendientes de scrapear"
+            hint="noch zu scrapen"
           />
         </div>
 
@@ -280,8 +280,8 @@ export function ScraperPage() {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Buscar sistema, fabricante o plataforma…"
-                aria-label="Buscar sistema"
+                placeholder="System, Hersteller oder Plattform suchen…"
+                aria-label="System suchen"
                 className={cn(
                   'h-10 w-full rounded-xl border border-input bg-transparent pl-9 pr-3 text-sm text-foreground',
                   'placeholder:text-muted-foreground/70 transition-colors duration-150',
@@ -291,7 +291,7 @@ export function ScraperPage() {
               {query && (
                 <button
                   type="button"
-                  aria-label="Limpiar búsqueda"
+                  aria-label="Suche leeren"
                   onClick={() => setQuery('')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-lg p-1.5 text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
                 >
@@ -300,7 +300,7 @@ export function ScraperPage() {
               )}
             </div>
             <p className="text-[11px] font-medium tabular-nums text-muted-foreground">
-              {filtered.length} de {totals.systems} sistemas
+              {filtered.length} von {totals.systems} Systeme
             </p>
           </div>
 
@@ -323,7 +323,7 @@ export function ScraperPage() {
             {types.length > 1 && (
               <PillBar>
                 <Pill active={typeFilter === 'all'} onClick={() => setTypeFilter('all')}>
-                  Todo tipo
+                  Alle Typen
                 </Pill>
                 {types.map((type) => (
                   <Pill key={type} active={typeFilter === type} onClick={() => setTypeFilter(type)}>
@@ -361,8 +361,8 @@ export function ScraperPage() {
           <div className="mt-4">
             <EmptyState
               icon={<Search className="size-5" />}
-              title="Ningún sistema coincide"
-              description="Prueba con otro texto o cambia los filtros para ver más sistemas de la biblioteca."
+              title="Kein System passt"
+              description="Versuch es mit einem anderen Text oder ändere die Filter, um mehr Systeme der Bibliothek zu sehen."
               action={
                 <Button
                   variant="secondary"
@@ -372,7 +372,7 @@ export function ScraperPage() {
                     setStatusFilter('all')
                   }}
                 >
-                  Quitar filtros
+                  Filter entfernen
                 </Button>
               }
             />
@@ -416,7 +416,7 @@ export function ScraperPage() {
     <>
       <Topbar
         title={selected.fullname || selected.name}
-        subtitle={`${selected.name} · ${selected.rom_count.toLocaleString('es-ES')} ROMs · ${mediaCount} con media · ${pendingCount} sin media`}
+        subtitle={`${selected.name} · ${selected.rom_count.toLocaleString('de-DE')} ROMs · ${mediaCount} mit Medien · ${pendingCount} ohne Medien`}
         onMenu={openMenu}
         leading={
           <button
@@ -426,7 +426,7 @@ export function ScraperPage() {
               setSelected(null)
               setSubpath('')
             }}
-            aria-label="Volver a la lista de sistemas"
+            aria-label="Zurück zur Systemliste"
             className={cn(
               'inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-xl border border-border bg-card',
               'px-2.5 py-1.5 text-xs font-semibold text-muted-foreground transition-colors duration-150',
@@ -435,7 +435,7 @@ export function ScraperPage() {
             )}
           >
             <ArrowLeft className="size-3.5" />
-            <span className="hidden sm:inline">Volver</span>
+            <span className="hidden sm:inline">Zurück</span>
           </button>
         }
         actions={
@@ -446,10 +446,10 @@ export function ScraperPage() {
               onClick={() => openScrape([selected.name])}
             >
               <Download className="size-4" />
-              Escapear sistema
+              System scrapen
             </Button>
             <IconButton
-              label="Recargar ROMs"
+              label="ROMs neu laden"
               onClick={() => {
                 triggerHaptic('light')
                 refreshFolder()
@@ -467,7 +467,7 @@ export function ScraperPage() {
             <CircleAlert className="size-4 shrink-0" />
             <span className="min-w-0 flex-1">{folderError}</span>
             <Button size="sm" variant="outline" onClick={refreshFolder}>
-              Reintentar
+              Erneut versuchen
             </Button>
           </div>
         )}

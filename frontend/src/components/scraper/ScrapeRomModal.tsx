@@ -23,12 +23,12 @@ import { cn } from '@/lib/utils'
 
 /** Etiqueta de cada tipo de imagen que se puede descargar. */
 const IMG_TYPE_LABELS: Record<string, string> = {
-  mixrbv1: 'Mix v1 (caja + fondo)',
+  mixrbv1: 'Mix v1 (Box + Hintergrund)',
   mixrbv2: 'Mix v2',
-  'box-2D': 'Caja 2D',
+  'box-2D': '2D-Box',
   ss: 'Screenshot',
-  screenshot: 'Captura',
-  wheel: 'Rueda / logo',
+  screenshot: 'Screenshot (Ingame)',
+  wheel: 'Wheel / Logo',
   fanart: 'Fanart',
 }
 
@@ -83,11 +83,11 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
     async (sources: ScraperSource[], nombre: string) => {
       if (!rom) return
       if (!sources.length) {
-        setError('Elige al menos una fuente de datos')
+        setError('Wähle mindestens eine Datenquelle')
         return
       }
       if (!nombre.trim()) {
-        setError('Escribe un nombre para buscar')
+        setError('Gib einen Namen für die Suche ein')
         return
       }
       setSearching(true)
@@ -125,7 +125,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
         }
       } catch (err) {
         setResult(null)
-        const mensaje = err instanceof Error ? err.message : 'No se pudo buscar el juego'
+        const mensaje = err instanceof Error ? err.message : 'Spiel konnte nicht gesucht werden'
         // «Sin resultados» no es un fallo: lo que hace falta es otro nombre.
         if (/sin resultado|no encontrad|no result/i.test(mensaje)) {
           setNoResults(true)
@@ -227,7 +227,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
       // Modo local (el juego ya tenía ficha): sólo se guardan los metadatos
       // editados, sin volver a scrapear ni descargar imágenes.
       if (!editing) {
-        setError('No hay nada que guardar: el juego ya tiene su ficha')
+        setError('Nichts zu speichern: Das Spiel hat schon seinen Eintrag')
         return
       }
       setSaving(true)
@@ -248,17 +248,17 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
         onClose()
         showNotify({
           variant: 'success',
-          title: 'Ficha actualizada',
-          message: `${meta.name || rom.name} · datos guardados en el gamelist.xml`,
+          title: 'Eintrag aktualisiert',
+          message: `${meta.name || rom.name} · Daten in der gamelist.xml gespeichert`,
         })
       } catch (err) {
         const detalle =
           err instanceof ApiError ? [err.message, ...err.errors].join('\n') : String(err)
-        setError(err instanceof Error ? err.message : 'No se pudo guardar la ficha')
+        setError(err instanceof Error ? err.message : 'Eintrag konnte nicht gespeichert werden')
         showNotify({
           variant: 'error',
-          title: 'No se pudo guardar la ficha',
-          message: err instanceof Error ? err.message : 'No se pudo guardar la ficha',
+          title: 'Eintrag konnte nicht gespeichert werden',
+          message: err instanceof Error ? err.message : 'Eintrag konnte nicht gespeichert werden',
           detail: detalle,
         })
       } finally {
@@ -302,30 +302,30 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
         // El aviso de error se queda en pantalla hasta que se confirme.
         showNotify({
           variant: 'error',
-          title: 'Guardado con errores',
-          message: `Se guardaron los metadatos, pero ${failures.length} imagen(es) no se pudieron descargar.`,
+          title: 'Mit Fehlern gespeichert',
+          message: `Die Metadaten wurden gespeichert, aber ${failures.length} Bild(er) konnten nicht heruntergeladen werden.`,
           detail: failures.join('\n'),
         })
       } else {
         showNotify({
           variant: 'success',
-          title: 'Juego scraped y guardado',
+          title: 'Spiel gescrapt und gespeichert',
           message: [
             meta.name || rom.name,
             imagenes.length
-              ? `${imagenes.length} imagen(es) descargada(s)`
-              : 'Metadatos guardados',
+              ? `${imagenes.length} Bild(er) heruntergeladen`
+              : 'Metadaten gespeichert',
           ].join(' · '),
         })
       }
     } catch (err) {
       const detalle =
         err instanceof ApiError ? [err.message, ...err.errors].join('\n') : String(err)
-      setError(err instanceof Error ? err.message : 'No se pudo guardar el juego')
+      setError(err instanceof Error ? err.message : 'Spiel konnte nicht gespeichert werden')
       showNotify({
         variant: 'error',
-        title: 'No se pudo guardar el juego',
-        message: err instanceof Error ? err.message : 'No se pudo guardar el juego',
+        title: 'Spiel konnte nicht gespeichert werden',
+        message: err instanceof Error ? err.message : 'Spiel konnte nicht gespeichert werden',
         detail: detalle,
       })
     } finally {
@@ -334,11 +334,11 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
   }
 
   const metaItems = [
-    { key: 'name' as const, label: 'Título' },
-    { key: 'year' as const, label: 'Año' },
-    { key: 'publisher' as const, label: 'Editorial' },
-    { key: 'genre' as const, label: 'Género' },
-    { key: 'rating' as const, label: 'Nota' },
+    { key: 'name' as const, label: 'Titel' },
+    { key: 'year' as const, label: 'Jahr' },
+    { key: 'publisher' as const, label: 'Publisher' },
+    { key: 'genre' as const, label: 'Genre' },
+    { key: 'rating' as const, label: 'Bewertung' },
   ]
 
   const toggleSource = (id: ScraperSource) => {
@@ -358,7 +358,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
     <Modal
       open={open}
       onClose={onClose}
-      title={rom?.name ?? 'Juego'}
+      title={rom?.name ?? 'Spiel'}
       description={`${system}${subpath ? ` / ${subpath}` : ''}`}
       className="max-w-xl"
       footer={
@@ -371,7 +371,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
               disabled={searching || saving}
             >
               <RefreshCw className={cn('size-4', searching && 'animate-spin')} />
-              Actualizar
+              Aktualisieren
             </Button>
           ) : (
             <Button
@@ -381,7 +381,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
               disabled={searching || saving}
             >
               {searching ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
-              Escapear
+              Scrapen
             </Button>
           )}
           <Button
@@ -393,12 +393,12 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
             }}
           >
             <Pencil className="size-4" />
-            {editing ? 'Terminar edición' : 'Editar'}
+            {editing ? 'Bearbeitung beenden' : 'Bearbeiten'}
           </Button>
           {(result?.game || editing) && (
             <Button variant="primary" size="sm" onClick={handleSave} disabled={saving || searching}>
               {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
-              Guardar
+              Speichern
             </Button>
           )}
         </>
@@ -416,7 +416,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
         {!local && (
           <section>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-            Fuentes (por orden de prioridad)
+            Quellen (nach Priorität)
           </h3>
           <div className="flex flex-wrap gap-2">
             {SCRAPER_SOURCES.map((option, index) => {
@@ -448,14 +448,14 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
                           : 'bg-muted text-muted-foreground',
                     )}
                   >
-                    {!ready ? sourceMissing(config, option.id) : active ? 'Activa' : 'Inactiva'}
+                    {!ready ? sourceMissing(config, option.id) : active ? 'Aktiv' : 'Inaktiv'}
                   </span>
                 </button>
               )
             })}
           </div>
           <p className="mt-1.5 text-[11px] text-muted-foreground">
-            Se prueban en orden: la primera que encuentre el juego gana.
+            Sie werden der Reihe nach probiert: Die erste, die das Spiel findet, gewinnt.
           </p>
           </section>
         )}
@@ -463,7 +463,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
         {searching && (
           <div className="flex items-center gap-2 rounded-2xl border border-border bg-muted/40 px-4 py-6 text-xs font-medium text-muted-foreground">
             <Loader2 className="size-4 animate-spin" />
-            Buscando en {enabled.map(sourceLabel).join(' → ') || '…'}
+            Suche in {enabled.map(sourceLabel).join(' → ') || '…'}
           </div>
         )}
 
@@ -472,8 +472,8 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
             <Search className="size-5 text-muted-foreground/60" />
             <p className="text-xs font-medium text-muted-foreground">
               {noResults
-                ? 'Ninguna fuente encontró el juego con ese nombre. Edítalo para acotar la búsqueda.'
-                : 'Sin resultados. Pulsa «Actualizar» para buscarlo de nuevo.'}
+                ? 'Keine Quelle hat das Spiel mit diesem Namen gefunden. Bearbeite ihn, um die Suche einzugrenzen.'
+                : 'Keine Ergebnisse. Klicke auf „Aktualisieren“, um erneut zu suchen.'}
             </p>
           </div>
         )}
@@ -482,12 +482,12 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
         {nameEditor && (
           <section className="rounded-2xl border border-border bg-muted/40 p-3">
             <Field
-              label="Nombre para buscar"
+              label="Suchname"
               htmlFor="scrape-search-name"
               hint={
                 rom?.is_game_folder
-                  ? 'El juego está en una carpeta: se busca por el nombre de la carpeta. La carpeta no se renombra, los datos se guardan siempre en su sitio.'
-                  : 'Por ejemplo «007: Agent Under Fire». El ROM no se renombra: los datos se guardan siempre en el fichero original.'
+                  ? 'Das Spiel liegt in einem Ordner: Es wird nach dem Ordnernamen gesucht. Der Ordner wird nicht umbenannt, die Daten werden immer an ihrem Platz gespeichert.'
+                  : 'Zum Beispiel „007: Agent Under Fire“. Das ROM wird nicht umbenannt: Die Daten werden immer in der Originaldatei gespeichert.'
               }
             >
               <div className="flex gap-2">
@@ -503,7 +503,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
                       void runSearch(enabled, searchName)
                     }
                   }}
-                  placeholder="Nombre del juego"
+                  placeholder="Name des Spiels"
                 />
                 <Button
                   variant="secondary"
@@ -512,7 +512,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
                   onClick={() => void runSearch(enabled, searchName)}
                 >
                   {searching ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
-                  Buscar
+                  Suchen
                 </Button>
               </div>
             </Field>
@@ -525,7 +525,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
             onClick={() => setNameEditor(true)}
             className="cursor-pointer text-[11px] font-semibold text-muted-foreground underline-offset-2 transition-colors duration-150 hover:text-foreground hover:underline"
           >
-            Buscar con otro nombre
+            Mit anderem Namen suchen
           </button>
         )}
 
@@ -554,12 +554,12 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
                     </p>
                     <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
                       {[meta.year, meta.publisher, meta.genre].filter(Boolean).join(' · ') ||
-                        'Sin metadatos'}
+                        'Keine Metadaten'}
                     </p>
                   </div>
                 </div>
                 <p className="mt-1.5 text-[11px] font-semibold text-foreground">
-                  Ficha de tu biblioteca
+                  Eintrag in deiner Bibliothek
                 </p>
                 {meta.desc && (
                   <p className="mt-1.5 line-clamp-4 text-[11px] leading-relaxed text-muted-foreground">
@@ -572,17 +572,14 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
             <p className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
               {meta.desc || meta.genre || meta.publisher || meta.year ? (
                 <>
-                  Este juego <strong className="text-foreground">ya tiene su información y su
-                  carátula</strong>: no hace falta volver a scrapearlo. Puedes <strong
-                    className="text-foreground">editar</strong> los datos o, si quieres
-                  actualizarlos, pulsar «Escapear» para buscarlo de nuevo en las fuentes.
+                  Dieses Spiel <strong className="text-foreground">hat bereits seine Infos und sein Cover</strong>: Es muss nicht erneut gescrapt werden. Du kannst die Daten <strong
+                    className="text-foreground">bearbeiten</strong> oder, wenn du sie aktualisieren willst, auf „Scrapen“ klicken, um es erneut in den Quellen zu suchen.
                 </>
               ) : (
                 <>
-                  Este juego <strong className="text-foreground">ya tiene su carátula</strong>,
-                  aunque le faltan los datos. Puedes <strong className="text-foreground">editar
-                  </strong> la ficha a mano o pulsar «Escapear» para completarla desde las
-                  fuentes.
+                  Dieses Spiel <strong className="text-foreground">hat bereits sein Cover</strong>,
+                  aber es fehlen die Daten. Du kannst den Eintrag von Hand <strong className="text-foreground">bearbeiten
+                  </strong> oder auf „Scrapen“ klicken, um ihn aus den Quellen zu ergänzen.
                 </>
               )}
             </p>
@@ -627,24 +624,24 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
                       {meta.name || result.meta?.name || rom?.name}
                     </p>
                     <p className="mt-0.5 text-[11px] font-medium text-muted-foreground">
-                      {[meta.year, meta.publisher, meta.genre].filter(Boolean).join(' · ') || 'Sin metadatos'}
+                      {[meta.year, meta.publisher, meta.genre].filter(Boolean).join(' · ') || 'Keine Metadaten'}
                     </p>
                   </div>
                 </div>
                 <p className="mt-1.5 text-[11px] font-semibold text-foreground">
-                  Fuente: {sourceLabel(result.source)}
+                  Quelle: {sourceLabel(result.source)}
                 </p>
                 {imgState === 'loading' && (
-                  <p className="mt-0.5 text-[11px] text-muted-foreground">Cargando carátula…</p>
+                  <p className="mt-0.5 text-[11px] text-muted-foreground">Cover wird geladen…</p>
                 )}
                 {imgState === 'error' && (
                   <p className="mt-0.5 text-[11px] text-muted-foreground">
-                    No se pudo cargar la carátula de la fuente.
+                    Cover der Quelle konnte nicht geladen werden.
                   </p>
                 )}
                 {fallbacks.length > 0 && (
                   <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">
-                    {fallbacks.map(sourceLabel).join(' y ')} no tenían datos para este juego.
+                    {fallbacks.map(sourceLabel).join(' und ')} hatten keine Daten zu diesem Spiel.
                   </p>
                 )}
                 {meta.desc && (
@@ -659,7 +656,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
             {result.source === 'screenscraper' && (result.img_types?.length ?? 0) > 0 && (
               <section>
                 <h3 className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-                  Imágenes a descargar
+                  Herunterzuladende Bilder
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {(result.img_types ?? []).map((type) => {
@@ -702,7 +699,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
                     </Field>
                   ))}
                 </div>
-                <Field label="Descripción" htmlFor="rom-desc">
+                <Field label="Beschreibung" htmlFor="rom-desc">
                   <Textarea
                     id="rom-desc"
                     value={meta.desc}
@@ -713,7 +710,7 @@ export function ScrapeRomModal({ open, onClose, system, subpath, rom, onSaved }:
             )}
 
             <p className="border-t border-border pt-3 text-[11px] leading-relaxed text-muted-foreground">
-              Al guardar se descarga la imagen y se escriben los metadatos en el gamelist.xml.
+              Beim Speichern wird das Bild heruntergeladen und die Metadaten werden in die gamelist.xml geschrieben.
             </p>
           </>
         )}

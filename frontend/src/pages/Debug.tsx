@@ -19,8 +19,8 @@ export function DebugPage() {
   return (
     <>
       <Topbar
-        title="Depuración"
-        subtitle="Eventos del manager en vivo"
+        title="Fehlersuche"
+        subtitle="Live-Ereignisse des Managers"
         onMenu={openMenu}
         actions={
           <span
@@ -37,7 +37,7 @@ export function DebugPage() {
                   : 'size-1.5 rounded-full bg-amber-500'
               }
             />
-            {connected ? 'En vivo' : 'Reconectando…'}
+            {connected ? 'Live' : 'Verbinde neu…'}
           </span>
         }
       />
@@ -45,21 +45,21 @@ export function DebugPage() {
       <PageContainer>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <MetricCard
-            label="Eventos"
+            label="Ereignisse"
             value={entries.length}
             icon={Radio}
-            hint={connected ? 'Stream abierto' : 'Sin conexión con el backend'}
+            hint={connected ? 'Stream offen' : 'Keine Verbindung zum Backend'}
             accent={connected ? 'good' : 'warn'}
           />
-          <MetricCard label="Información" value={counts.info} icon={CircleCheck} />
+          <MetricCard label="Information" value={counts.info} icon={CircleCheck} />
           <MetricCard
-            label="Avisos"
+            label="Warnungen"
             value={counts.warn}
             icon={CircleAlert}
             accent={counts.warn > 0 ? 'warn' : 'default'}
           />
           <MetricCard
-            label="Errores"
+            label="Fehler"
             value={counts.error}
             icon={Bug}
             accent={counts.error > 0 ? 'bad' : 'default'}
@@ -70,8 +70,8 @@ export function DebugPage() {
           <LogStream
             className="card card-hover rounded-3xl border-border"
             entries={entries}
-            title="Flujo de eventos"
-            description="Acciones y avisos del backend. Activa «Debug» para ver el tráfico HTTP; pulsa / para filtrar por texto."
+            title="Ereignisstrom"
+            description="Aktionen und Meldungen des Backends. Aktiviere „Debug“, um den HTTP-Verkehr zu sehen; drücke /, um nach Text zu filtern."
             height={520}
             maxEntries={500}
             live

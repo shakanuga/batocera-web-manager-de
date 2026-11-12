@@ -52,7 +52,7 @@ export function useApi<T>(fetcher: () => Promise<T>, deps: unknown[], options: U
         setError(null)
       } catch (err) {
         if (cancelled) return
-        setError(err instanceof ApiError ? err.message : 'Error inesperado')
+        setError(err instanceof ApiError ? err.message : 'Unerwarteter Fehler')
       } finally {
         if (!cancelled) setLoading(false)
       }

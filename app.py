@@ -102,7 +102,7 @@ def tools_catalogo(settings=None, refresh=False):
 def tools_dats_status(settings=None):
     """Que DAT hay descargados y que sistemas los admiten."""
     if not HAS_ROMTOOLS:
-        return {"ok": False, "error": "el modulo de herramientas no esta disponible",
+        return {"ok": False, "error": "das Werkzeug-Modul ist nicht verfügbar",
                 "dats": [], "sistemas": []}
     cache = tools_dir(settings)
     installed = {info["system"]: info for info in _rt_dats.dat_files(str(cache))}
@@ -378,7 +378,7 @@ def tools_convert(settings, system, name, target):
     folder = system_dir(settings, system)
     path = safe_path_under(folder, name)
     if not path.is_file():
-        raise ValueError("el fichero no existe")
+        raise ValueError("die Datei existiert nicht")
     ext = _rt_sistemas.extension_de_accion(target)
     if ext:
         try:
@@ -386,7 +386,7 @@ def tools_convert(settings, system, name, target):
         except Exception:
             admitidos = set()
         if admitidos and ext not in admitidos:
-            raise ValueError("este sistema no admite el formato .%s" % ext)
+            raise ValueError("dieses System unterstützt das Format .%s nicht" % ext)
     return tools_resultado(_rt_formats.convert(str(path), target,
                                                sistema=system))
 
@@ -435,7 +435,7 @@ def tools_compress(settings, system, name):
     folder = system_dir(settings, system)
     path = safe_path_under(folder, name)
     if not path.is_file():
-        raise ValueError("el fichero no existe")
+        raise ValueError("die Datei existiert nicht")
     return _rt_formats.compress_zip(str(path))
 
 
@@ -445,9 +445,9 @@ def tools_patch(settings, system, name, patch_name):
     path = safe_path_under(folder, name)
     patch = safe_path_under(folder, patch_name)
     if not path.is_file():
-        raise ValueError("la ROM no existe")
+        raise ValueError("das ROM existiert nicht")
     if not patch.is_file():
-        raise ValueError("el parche no existe")
+        raise ValueError("der Patch existiert nicht")
     return _rt_formats.apply_ips(str(path), str(patch))
 
 
@@ -521,8 +521,8 @@ PLATFORM_IDS = [
 ]
 HARDWARE_TYPES = ["console","portable","computer","arcade","engine","fantasy","other"]
 EXT_PRESETS = {
-    "ROMs genéricos":  ".zip .7z .rar",
-    "ISO / Disco":     ".iso .chd .cue .bin",
+    "Allgemeine ROMs":  ".zip .7z .rar",
+    "ISO / Disc":     ".iso .chd .cue .bin",
     "Nintendo Switch": ".nsp .xci",
     "GBA / NDS":       ".gba .nds .gb .gbc",
     "PlayStation":     ".pbp .pkg .iso .chd",
@@ -2327,14 +2327,14 @@ def safe_path_under(base, *parts):
     try:
         target_r.relative_to(base_r)
     except ValueError:
-        raise ValueError("ruta fuera del directorio permitido")
+        raise ValueError("Pfad außerhalb des erlaubten Verzeichnisses")
     return target_r
 
 
 def system_dir(settings, system):
     """Devuelve <roms_base>/<system> validando que `system` sea un componente seguro."""
     if not is_safe_component(system):
-        raise ValueError("nombre de sistema inválido")
+        raise ValueError("ungültiger Systemname")
     return safe_path_under(settings["roms_base"], system)
 
 
@@ -2350,7 +2350,7 @@ def confine_to_base(base, candidate):
     try:
         target_r.relative_to(base_r)
     except ValueError:
-        raise ValueError("ruta fuera de la base permitida")
+        raise ValueError("Pfad außerhalb der erlaubten Basis")
     return target_r
 
 
@@ -2362,7 +2362,7 @@ def sanitize_conf_value(value):
     """
     value = (value or "").strip()
     if not value or not _CONF_VALUE_RE.match(value):
-        raise ValueError("valor de configuración inválido")
+        raise ValueError("ungültiger Konfigurationswert")
     return value
 
 
@@ -3088,7 +3088,7 @@ def collect_missing_bios(user_systems, bios_dir):
         except Exception as e:
             # Un sistema problemático (permisos, fichero que desaparece…) no
             # debe tumbar la lista entera de BIOS faltantes.
-            print(f"  aviso: no se pudo revisar las BIOS de '{name}': {e}")
+            print(f"  Hinweis: Prüfung der BIOS fehlgeschlagen für '{name}': {e}")
             continue
         if info is None or not info["files"]:
             continue
@@ -3180,7 +3180,7 @@ def bios_descargar(settings, progreso=None):
     """
     if not HAS_ROMTOOLS:
         return {"ok": False,
-                "error": "el modulo de herramientas no esta disponible"}
+                "error": "das Werkzeug-Modul ist nicht verfügbar"}
     bios_dir = Path(settings.get("bios_dir", "/userdata/bios"))
     user_systems = get_rom_systems_cached(settings)
     faltantes = collect_missing_bios(user_systems, bios_dir)
@@ -3194,8 +3194,8 @@ def bios_descargar(settings, progreso=None):
     # sigue: se dice en que va para que no parezca colgado.
     if progreso:
         progreso({"hechos": 0, "total": 1, "porcentaje": 100,
-                  "actual": "comprobando las BIOS descargadas",
-                  "mensaje": "comprobando lo que se ha descargado"})
+                  "actual": "heruntergeladene BIOS werden geprüft",
+                  "mensaje": "Heruntergeladenes wird geprüft"})
     estados = {}
     if resultado.get("descargadas"):
         try:
@@ -3871,7 +3871,7 @@ def _bios_entry_state(rel, entry, bios_dir, index, zindex):
             return "ausente", {}
         contents = _zip_members(path)
         if contents is None:
-            return "ilegible", {"motivo": "no se puede abrir como ZIP"}
+            return "ilegible", {"motivo": "lässt sich nicht als ZIP öffnen"}
         faltan = [m["name"] for m in members if m["name"] not in contents]
         if not faltan:
             return "ok", {"miembros": len(members)}
@@ -3992,21 +3992,21 @@ def repair_bios(settings, slug, rel):
     catalog = get_bios_catalog()
     info = catalog["systems"].get((slug or "").strip().lower())
     if not info:
-        return {"ok": False, "error": f"no se conoce el sistema '{slug}'"}
+        return {"ok": False, "error": f"unbekanntes System '{slug}'"}
     entry = info["files"].get(rel)
     if not entry:
-        return {"ok": False, "error": f"'{rel}' no es una BIOS de {slug}"}
+        return {"ok": False, "error": f"'{rel}' ist kein BIOS von {slug}"}
     bios_dir = Path(settings.get("bios_dir", "/userdata/bios"))
     try:
         dest = safe_path_under(bios_dir, rel)
     except ValueError:
-        return {"ok": False, "error": "ruta invalida"}
+        return {"ok": False, "error": "ungültiger Pfad"}
     index = build_bios_index(bios_dir)
     zindex = bios_zip_index(bios_dir, index)
     estado, _detalle = _bios_entry_state(rel, entry, bios_dir, index, zindex)
     if estado in ("ok", "sin_verificar"):
         return {"ok": True, "estado": estado, "dest": str(dest),
-                "motivo": "ya estaba en su sitio"}
+                "motivo": "lag schon an seinem Platz"}
     members = entry.get("members") or []
     md5s = entry.get("md5s") or []
     try:
@@ -4050,7 +4050,7 @@ def repair_bios(settings, slug, rel):
         if len(found) != len(wanted):
             # No se escribe un ZIP a medias: el destino no se toca.
             return {"ok": False,
-                    "error": "no se ha encontrado todo el contenido en la consola",
+                    "error": "nicht der gesamte Inhalt wurde auf der Konsole gefunden",
                     "faltan": [n for n in wanted if n not in found]}
         quarantine = _bios_quarantine(bios_dir, dest) if dest.exists() else None
         tmp = dest.with_suffix(dest.suffix + ".tmp")
@@ -4076,7 +4076,7 @@ def repair_bios(settings, slug, rel):
                 origen = Path(bios_dir) / other
                 break
         if origen is None:
-            return {"ok": False, "error": "no se ha encontrado el fichero en la consola"}
+            return {"ok": False, "error": "die Datei wurde auf der Konsole nicht gefunden"}
         quarantine = _bios_quarantine(bios_dir, dest) if dest.exists() else None
         shutil.copy2(str(origen), str(dest))
     _bios_invalidate_cache(bios_dir)
@@ -4132,24 +4132,24 @@ def download_bios_from_url(bios_dir, filename, url, expected_md5s=None, timeout=
     filename = (filename or "").strip()
     url = (url or "").strip()
     if not filename or not url:
-        return {"ok": False, "error": "Faltan 'file' o 'url'"}
+        return {"ok": False, "error": "'file' oder 'url' fehlt"}
     if urllib.parse.urlparse(url).scheme not in ("http", "https"):
-        return {"ok": False, "error": "Solo se permiten URLs http/https"}
+        return {"ok": False, "error": "Nur http/https-URLs sind erlaubt"}
     try:
         dest = safe_path_under(Path(bios_dir), filename)
     except ValueError:
-        return {"ok": False, "error": "Ruta de BIOS inválida"}
+        return {"ok": False, "error": "Ungültiger BIOS-Pfad"}
     try:
         data = _bios_urlopen(url, timeout)
     except Exception as e:
-        return {"ok": False, "error": f"No se pudo descargar: {e}"}
+        return {"ok": False, "error": f"Download fehlgeschlagen: {e}"}
     if len(data) > MAX_BIOS_DOWNLOAD:
         return {"ok": False, "error": "Archivo demasiado grande"}
     try:
         dest.parent.mkdir(parents=True, exist_ok=True)
         dest.write_bytes(data)
     except Exception as e:
-        return {"ok": False, "error": f"No se pudo guardar: {e}"}
+        return {"ok": False, "error": f"Speichern fehlgeschlagen: {e}"}
     md5_val = hashlib.md5(data).hexdigest()
     return {
         "ok": True,
@@ -4220,7 +4220,7 @@ def get_batocera_version():
         v = _read_file(p)
         if v: return v
     v = _run("batocera-info 2>/dev/null | head -1")
-    return v or "desconocida"
+    return v or "unbekannt"
 
 def get_cpu_info():
     model = ""
@@ -4232,7 +4232,7 @@ def get_cpu_info():
             if line.startswith("processor"):
                 cores += 1
     except Exception: pass
-    return model or "Desconocido", cores or 1
+    return model or "Unbekannt", cores or 1
 
 def get_cpu_usage():
     """Calcula % CPU comparando dos lecturas de /proc/stat con 0.2s de diferencia."""
@@ -5485,13 +5485,13 @@ def restart_emulationstation():
         p = _sp.run(["batocera-es-swissknife", "--restart"],
                     capture_output=True, text=True, timeout=60)
     except FileNotFoundError:
-        return False, {"error": "batocera-es-swissknife no está disponible"}
+        return False, {"error": "batocera-es-swissknife ist nicht verfügbar"}
     except _sp.TimeoutExpired:
-        return False, {"error": "Reinicio de ES agotado (timeout)"}
+        return False, {"error": "Neustart von ES abgebrochen (Zeitüberschreitung)"}
     except Exception as e:
         return False, {"error": str(e)}
     if p.returncode != 0:
-        msg = (p.stderr or p.stdout or "error desconocido").strip()[:500]
+        msg = (p.stderr or p.stdout or "unbekannter Fehler").strip()[:500]
         return False, {"error": msg}
     mark_es_restart_pending(False)
     return True, {"ok": True}
@@ -5516,7 +5516,7 @@ def reload_es_after_scrape(meta_saved=True):
     if ok:
         return {"ok": True, "reloaded": True}
     return {"ok": False, "reloaded": False,
-            "error": (info or {}).get("error", "error desconocido")}
+            "error": (info or {}).get("error", "unbekannter Fehler")}
 
 def get_es_status():
     # `comm` se trunca a 15 chars ("emulationstatio"), por eso -f (cmdline completa)
@@ -5976,7 +5976,7 @@ def save_scraper_config(conf_path, lines):
             # valor inyectaria una directiva nueva (p. ej. global.es.foo=bar)
             # y el servidor la escribe con permisos de root.
             if "\n" in val or "\r" in val:
-                return False, f"valor de configuración inválido: {key}"
+                return False, f"ungültiger Konfigurationswert: {key}"
             if key in SCRAPER_SECRET_CONF_KEYS:
                 # Una mascara no es una credencial nueva: se conserva la guardada.
                 if looks_like_ra_mask(val):
@@ -6141,10 +6141,10 @@ def ss_search_game(rom_filename, system_name, ss_user, ss_pass,
     `name_only` fuerza la busqueda por nombre: es lo que corresponde cuando el
     juego es una carpeta (ScummVM, DOSBox...), que no se puede hashear."""
     if not ss_user or not ss_pass:
-        return None, "Sin credenciales de ScreenScraper", {}
+        return None, "Keine ScreenScraper-Zugangsdaten", {}
     if not devid or not devpassword:
-        return None, ("ScreenScraper necesita devid/devpassword de desarrollador "
-                      "(campos opcionales en la pestaña Configuración del scraper)"), {}
+        return None, ("ScreenScraper braucht devid/devpassword eines Entwicklers "
+                      "(optionale Felder im Reiter „Konfiguration“ des Scrapers)"), {}
 
     sys_id = SS_SYSTEMS.get(system_name.lower(), 0)
     base = {
@@ -6201,7 +6201,7 @@ def ss_search_game(rom_filename, system_name, ss_user, ss_pass,
                 if jeu:
                     return jeu, None, quota
             elif hdr.get("success") is False:
-                msg = hdr.get("message", "") or hdr.get("error", "Sin resultados")
+                msg = hdr.get("message", "") or hdr.get("error", "Keine Ergebnisse")
                 # Si el motivo es el systemeid obligatorio, seguimos al fallback
                 if "systemeid" not in str(msg).lower():
                     return None, msg, quota
@@ -6212,13 +6212,13 @@ def ss_search_game(rom_filename, system_name, ss_user, ss_pass,
     # mas margen: con 20 s se quedaba cortada y se perdia el resultado.
     clean = _clean_rom_name(rom_filename)
     if not clean:
-        return None, (err or "Sin resultados para este ROM"), (quota or {})
+        return None, (err or "Keine Ergebnisse für dieses ROM"), (quota or {})
     p2 = {k: v for k, v in base.items()}
     p2["recherche"] = clean
     p2["systemeid"] = str(sys_id)
     data2, err2, _ = _ss_fetch_json(f"{SS_API}/jeuRecherche.php?" + _uparse.urlencode(p2), timeout=SS_SEARCH_TIMEOUT_NAME)
     if data2 is None:
-        return None, (err2 or err or "Sin resultados"), (quota or {})
+        return None, (err2 or err or "Keine Ergebnisse"), (quota or {})
     hdr2 = data2.get("header", {}) or {}
     quota2 = _ss_quota(data2)
     if hdr2.get("success") == "true":
@@ -6231,8 +6231,8 @@ def ss_search_game(rom_filename, system_name, ss_user, ss_pass,
             jeu = _ss_parse_jeu(data2)
         if jeu:
             return jeu, None, quota2
-        return None, "Sin resultados para este ROM", quota2
-    msg2 = hdr2.get("message", "") or hdr2.get("error", "Sin resultados")
+        return None, "Keine Ergebnisse für dieses ROM", quota2
+    msg2 = hdr2.get("message", "") or hdr2.get("error", "Keine Ergebnisse")
     return None, msg2, (quota2 or quota or {})
 
 # ── Vista previa de carátulas (proxy + caché en memoria) ───────────────
@@ -6391,7 +6391,7 @@ def ss_download_image(game_data, image_type, dest_path, region="wor", cfg=None):
     """Descarga una imagen de ScreenScraper y la guarda."""
     url, _ext = ss_media_url(game_data, image_type, region)
     if not url:
-        return False, "Sin imagen disponible en ScreenScraper"
+        return False, "Kein Bild auf ScreenScraper verfügbar"
     url = ss_media_signed_url(url, cfg)
     ok, msg = download_image_generic(url, dest_path, referer_for=url)
     return ok, msg
@@ -6525,7 +6525,7 @@ def tgdb_search_game(rom_filename, system_name, api_key, clean_name=None):
     primero, si no hay ninguno de esa plataforma).
     """
     if not api_key:
-        return None, "Falta API Key de TheGamesDB"
+        return None, "TheGamesDB-API-Key fehlt"
     if not clean_name:
         clean_name = _clean_rom_name(rom_filename)
     platform_id = TGDB_PLATFORMS.get(system_name.lower())
@@ -6551,7 +6551,7 @@ def tgdb_search_game(rom_filename, system_name, api_key, clean_name=None):
                 if str(juego.get("platform")) == str(platform_id):
                     return juego, None
         return sueltos[0], None
-    return None, ultimo_error or "Sin resultados en TheGamesDB"
+    return None, ultimo_error or "Keine Ergebnisse auf TheGamesDB"
 
 def tgdb_get_image(game_id, api_key):
     """Obtiene la URL de boxart/imagen de un juego TGDB."""
@@ -6569,7 +6569,7 @@ def tgdb_get_image(game_id, api_key):
                     return base + img.get("filename",""), None
             if images:
                 return base + images[0].get("filename",""), None
-            return None, "Sin imágenes disponibles"
+            return None, "Keine Bilder verfügbar"
     except Exception as e:
         return None, str(e)
 
@@ -6647,14 +6647,14 @@ def igdb_get_token(client_id, client_secret):
             _igdb_token_cache["expires"] = _t.time() + ttl - 60
             return token, None
     except _ureq.HTTPError as e:
-        return None, f"HTTP {e.code}: credenciales Twitch inválidas"
+        return None, f"HTTP {e.code}: ungültige Twitch-Zugangsdaten"
     except Exception as e:
         return None, str(e)
 
 def igdb_search_game(rom_filename, system_name, client_id, client_secret, clean_name=None):
     """Busca un juego en IGDB."""
     if not client_id or not client_secret:
-        return None, "Faltan Client ID / Secret de Twitch para IGDB"
+        return None, "Client-ID / Secret von Twitch für IGDB fehlen"
     token, err = igdb_get_token(client_id, client_secret)
     if not token:
         return None, err
@@ -6675,7 +6675,7 @@ def igdb_search_game(rom_filename, system_name, client_id, client_secret, clean_
         with _ureq.urlopen(req, timeout=12) as r:
             data = json.loads(r.read())
             if not data:
-                return None, "Sin resultados en IGDB"
+                return None, "Keine Ergebnisse auf IGDB"
             return data[0], None
     except _ureq.HTTPError as e:
         body_err = ""
@@ -6802,7 +6802,7 @@ def save_gamelist_entry(roms_base, meta):
         gl_path.write_text(xml_out, encoding="utf-8")
         invalidate_rom_cache()
     except Exception as e:
-        log_message = f"Error guardando gamelist: {e}"
+        log_message = f"Fehler beim Speichern der gamelist: {e}"
         print(f"  {log_message}")
         raise
 
@@ -6832,11 +6832,11 @@ def scrape_search_one(source, filename, system, cfg, rom_path=None, public=True,
     Con `name_only` la búsqueda es sólo por nombre (juego en carpeta).
     """
     if not source_has_creds(source, cfg):
-        return None, None, [], None, f"Faltan credenciales para {source}", {}
+        return None, None, [], None, f"Zugangsdaten fehlen für {source}", {}
     if source == "thegamesdb":
         game, err = tgdb_search_game(filename, system, cfg.get("tgdb_apikey",""))
         if not game:
-            return None, None, [], None, (err or "Sin resultados"), {}
+            return None, None, [], None, (err or "Keine Ergebnisse"), {}
         meta = tgdb_build_meta(game, cfg.get("tgdb_apikey",""))
         img_url = None
         try:
@@ -6851,7 +6851,7 @@ def scrape_search_one(source, filename, system, cfg, rom_path=None, public=True,
                                      cfg.get("igdb_client_id",""),
                                      cfg.get("igdb_client_secret",""))
         if not game:
-            return None, None, [], None, (err or "Sin resultados"), {}
+            return None, None, [], None, (err or "Keine Ergebnisse"), {}
         meta = igdb_build_meta(game)
         return game, meta, ["cover"], igdb_get_image_url(game), None, {}
 
@@ -6864,7 +6864,7 @@ def scrape_search_one(source, filename, system, cfg, rom_path=None, public=True,
                                       devpassword=cfg.get("ss_devpassword",""),
                                       name_only=name_only)
     if not game:
-        return None, None, [], None, (err or "Sin resultados"), (quota or {})
+        return None, None, [], None, (err or "Keine Ergebnisse"), (quota or {})
     meta    = ss_build_meta(game, cfg.get("ss_region","wor"), cfg.get("ss_lang","es"))
     medias  = game.get("medias", []) or []
     img_types = sorted({m.get("type","") for m in medias
@@ -6910,7 +6910,7 @@ def scrape_search_cascade(filename, system, cfg, sources=None, rom_path=None,
     for src in chain:
         if not source_has_creds(src, cfg):
             tried.append(src)
-            last_err = f"Faltan credenciales para {src}"
+            last_err = f"Zugangsdaten fehlen für {src}"
             continue
         game, meta, img_types, image_url, err, src_quota = scrape_search_one(
             src, filename, system, cfg, rom_path=rom_path, public=public,
@@ -6921,7 +6921,7 @@ def scrape_search_cascade(filename, system, cfg, sources=None, rom_path=None,
         if game:
             return game, meta, img_types, image_url, src, tried, None, quota
         last_err = err
-    return None, None, [], None, None, tried, (last_err or "Sin resultados"), quota
+    return None, None, [], None, None, tried, (last_err or "Keine Ergebnisse"), quota
 
 def do_scrape_system(settings, system, source, creds, options, progress_cb=None):
     """Scrapea todos los ROMs de un sistema. Reusable desde sync y background."""
@@ -6929,7 +6929,7 @@ def do_scrape_system(settings, system, source, creds, options, progress_cb=None)
     all_sys  = get_rom_systems(settings, fast=False)
     sys_data = next((x for x in all_sys if x["name"]==system), None)
     if not sys_data:
-        return {"ok":0,"fail":0,"skip":0,"errors":[f"Sistema '{system}' no encontrado"],"total":0,"quota":{}}
+        return {"ok":0,"fail":0,"skip":0,"errors":[f"System '{system}' no encontrado"],"total":0,"quota":{}}
     roms_base = Path(settings["roms_base"])
     sys_root  = roms_base / system
     only_missing = options.get("only_missing", True)
@@ -6965,7 +6965,7 @@ def do_scrape_system(settings, system, source, creds, options, progress_cb=None)
             chain += [x for x in SCRAPER_SOURCE_ORDER if x != source]
         for src in chain:
             if not source_has_creds(src, creds):
-                err = f"Faltan credenciales para {src}"
+                err = f"Zugangsdaten fehlen für {src}"
                 continue
             if src == "thegamesdb":
                 game, err = tgdb_search_game(nombre_busqueda, system, creds.get("tgdb_apikey",""))
@@ -7024,7 +7024,7 @@ def do_scrape_system(settings, system, source, creds, options, progress_cb=None)
             meta   = {}
         if not game:
             results["fail"] += 1
-            results["errors"].append(f"{rom['name']}: {(err or 'Sin resultados')[:80]}")
+            results["errors"].append(f"{rom['name']}: {(err or 'Keine Ergebnisse')[:80]}")
             if progress_cb:
                 progress_cb(system, rom["name"], idx+1, len(roms), results, err)
             continue
@@ -7035,7 +7035,7 @@ def do_scrape_system(settings, system, source, creds, options, progress_cb=None)
             results["ok"] += 1
         else:
             results["fail"] += 1
-            results["errors"].append(f"{rom['name']} (sin imagen)")
+            results["errors"].append(f"{rom['name']} (kein Bild)")
         if progress_cb:
             progress_cb(system, rom["name"], idx+1, len(roms), results)
     return results
@@ -7075,7 +7075,7 @@ def _start_batch_worker():
                         with _scraper_jobs_lock:
                             job["status"] = "failed"
                             job["error"] = str(e)
-                        log_event("error", "scraper", f"Trabajo {job.get('id','?')} falló: {e}")
+                        log_event("error", "scraper", f"Trabajo {job.get('id','?')} fehlgeschlagen: {e}")
                 else:
                     time.sleep(1)
         _scraper_worker_thread = threading.Thread(target=worker, daemon=True)
@@ -7254,7 +7254,7 @@ def _safe_api(fn):
         except Exception:
             traceback.print_exc()
             try:
-                self.send_json({"ok": False, "error": "error interno del servidor"}, 500)
+                self.send_json({"ok": False, "error": "interner Serverfehler"}, 500)
             except Exception:
                 pass
     wrapper._safe_api = True
@@ -7361,7 +7361,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         """Enrutador de ``/api/tools/*``: DAT, formatos y renombrado."""
         if not HAS_ROMTOOLS:
             self.send_json({"ok": False,
-                            "error": "el modulo de herramientas no esta disponible",
+                            "error": "das Werkzeug-Modul ist nicht verfügbar",
                             "detalle": ROMTOOLS_ERROR})
             return
         query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
@@ -7379,37 +7379,37 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 if sub == "roms":
                     system = (query.get("system") or [""])[0]
                     if not system:
-                        self.send_json({"ok": False, "error": "falta el sistema"}); return
+                        self.send_json({"ok": False, "error": "das System fehlt"}); return
                     self.send_json({"ok": True, "system": system,
                                     "files": tools_rom_files(s, system)}); return
                 if sub == "rename/plan":
                     system = (query.get("system") or [""])[0]
                     if not system:
-                        self.send_json({"ok": False, "error": "falta el sistema"}); return
+                        self.send_json({"ok": False, "error": "das System fehlt"}); return
                     minimo = float((query.get("min") or ["0.75"])[0])
                     self.send_json(tools_rename_plan(s, system, minimo)); return
                 if sub == "rename/plan/start":
                     system = (query.get("system") or [""])[0]
                     if not system:
-                        self.send_json({"ok": False, "error": "falta el sistema"}); return
+                        self.send_json({"ok": False, "error": "das System fehlt"}); return
                     minimo = float((query.get("min") or ["0.75"])[0])
                     trabajo = _rt_jobs.JOBS.lanzar(
                         "plan",
                         lambda job: tools_rename_plan(s, system, minimo,
                                                       progreso=job.progreso),
-                        mensaje="identificando los ficheros")
+                        mensaje="Dateien werden identifiziert")
                     self.send_json({"ok": True, "job": trabajo.id}); return
                 if sub == "rename/job":
                     job_id = (query.get("id") or [""])[0]
                     trabajo = _rt_jobs.JOBS.obtener(job_id)
                     if trabajo is None:
-                        self.send_json({"ok": False, "error": "el trabajo no existe"},
+                        self.send_json({"ok": False, "error": "der Auftrag existiert nicht"},
                                        404); return
                     self.send_json(trabajo.as_dict()); return
                 if sub == "rename/journal":
                     self.send_json({"ok": True, "batches": _rt_rename.journal_batches(
                         tools_journal_root(s))}); return
-                self.send_json({"ok": False, "error": "ruta desconocida"}, 404); return
+                self.send_json({"ok": False, "error": "unbekannter Pfad"}, 404); return
 
             # POST
             data = self.read_json() or {}
@@ -7432,13 +7432,13 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             if sub == "dats/remove":
                 system = (data.get("system") or "").strip()
                 if not system:
-                    self.send_json({"ok": False, "error": "falta el sistema"}); return
+                    self.send_json({"ok": False, "error": "das System fehlt"}); return
                 self.send_json(_rt_dats.remove_dat(system, str(tools_dir(s)))); return
             if sub == "formats/detect":
                 system = (data.get("system") or "").strip()
                 name = (data.get("file") or "").strip()
                 if not system or not name:
-                    self.send_json({"ok": False, "error": "faltan 'system' o 'file'"}); return
+                    self.send_json({"ok": False, "error": "'system' oder 'file' fehlt"}); return
                 folder = system_dir(s, system)
                 path = safe_path_under(folder, name)
                 info = _rt_formats.detect_format(str(path), system)
@@ -7449,7 +7449,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 name = (data.get("file") or "").strip()
                 target = (data.get("target") or "iso").strip()
                 if not system or not name:
-                    self.send_json({"ok": False, "error": "faltan 'system' o 'file'"}); return
+                    self.send_json({"ok": False, "error": "'system' oder 'file' fehlt"}); return
                 self.send_json(tools_convert(s, system, name, target)); return
             if sub == "formats/batch":
                 system = (data.get("system") or "").strip()
@@ -7457,13 +7457,13 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 kind = (data.get("kind") or "").strip() or None
                 if not system or not target:
                     self.send_json({"ok": False,
-                                    "error": "faltan 'system' o 'target'"}); return
+                                    "error": "'system' oder 'target' fehlt"}); return
                 self.send_json(tools_convert_batch(s, system, target, kind)); return
             if sub == "formats/compress":
                 system = (data.get("system") or "").strip()
                 name = (data.get("file") or "").strip()
                 if not system or not name:
-                    self.send_json({"ok": False, "error": "faltan 'system' o 'file'"}); return
+                    self.send_json({"ok": False, "error": "'system' oder 'file' fehlt"}); return
                 self.send_json(tools_compress(s, system, name)); return
             if sub == "formats/patch":
                 system = (data.get("system") or "").strip()
@@ -7471,28 +7471,28 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 patch = (data.get("patch") or "").strip()
                 if not system or not name or not patch:
                     self.send_json({"ok": False,
-                                    "error": "faltan 'system', 'file' o 'patch'"}); return
+                                    "error": "'system', 'file' oder 'patch' fehlt"}); return
                 self.send_json(tools_patch(s, system, name, patch)); return
             if sub == "rename/apply":
                 system = (data.get("system") or "").strip()
                 if not system:
-                    self.send_json({"ok": False, "error": "falta el sistema"}); return
+                    self.send_json({"ok": False, "error": "das System fehlt"}); return
                 self.send_json(tools_rename_apply(s, system,
                                                   bool(data.get("include_review")))); return
             if sub == "rename/apply/start":
                 system = (data.get("system") or "").strip()
                 if not system:
-                    self.send_json({"ok": False, "error": "falta el sistema"}); return
+                    self.send_json({"ok": False, "error": "das System fehlt"}); return
                 incluir = bool(data.get("include_review"))
                 trabajo = _rt_jobs.JOBS.lanzar(
                     "apply",
                     lambda job: tools_rename_apply(s, system, incluir,
                                                   progreso=job.progreso),
-                    mensaje="identificando los ficheros")
+                    mensaje="Dateien werden identifiziert")
                 self.send_json({"ok": True, "job": trabajo.id}); return
             if sub == "rename/undo":
                 self.send_json(_rt_rename.undo_last(tools_journal_root(s))); return
-            self.send_json({"ok": False, "error": "ruta desconocida"}, 404)
+            self.send_json({"ok": False, "error": "unbekannter Pfad"}, 404)
         except ValueError as exc:
             self.send_json({"ok": False, "error": str(exc)})
         except Exception as exc:
@@ -7503,7 +7503,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         """Enrutador de ``/api/library/*``: inventario, duplicados y limpieza."""
         if not HAS_ROMTOOLS:
             self.send_json({"ok": False,
-                            "error": "el modulo de herramientas no esta disponible",
+                            "error": "das Werkzeug-Modul ist nicht verfügbar",
                             "detalle": ROMTOOLS_ERROR})
             return
         query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
@@ -7522,14 +7522,14 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                     trabajo = _rt_jobs.JOBS.lanzar(
                         "auditoria",
                         lambda job: library_auditoria(s, progreso=job.progreso),
-                        mensaje="recorriendo la biblioteca")
+                        mensaje="Bibliothek wird durchsucht")
                     self.send_json({"ok": True, "job": trabajo.id})
                     return
                 if sub == "job":
                     job_id = (query.get("id") or [""])[0]
                     trabajo = _rt_jobs.JOBS.obtener(job_id)
                     if trabajo is None:
-                        self.send_json({"ok": False, "error": "el trabajo no existe"},
+                        self.send_json({"ok": False, "error": "der Auftrag existiert nicht"},
                                        404)
                         return
                     self.send_json(trabajo.as_dict())
@@ -7546,16 +7546,16 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 if sub == "missing/start":
                     sistema = (query.get("system") or [""])[0].strip()
                     if not sistema:
-                        self.send_json({"ok": False, "error": "falta el sistema"})
+                        self.send_json({"ok": False, "error": "das System fehlt"})
                         return
                     trabajo = _rt_jobs.JOBS.lanzar(
                         "faltantes",
                         lambda job: library_faltantes(s, sistema,
                                                       progreso=job.progreso),
-                        mensaje="comparando con el DAT")
+                        mensaje="Vergleich mit dem DAT")
                     self.send_json({"ok": True, "job": trabajo.id})
                     return
-                self.send_json({"ok": False, "error": "ruta desconocida"}, 404)
+                self.send_json({"ok": False, "error": "unbekannter Pfad"}, 404)
                 return
 
             # POST
@@ -7563,7 +7563,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             if sub == "quarantine":
                 ficheros = data.get("ficheros") or []
                 if not ficheros:
-                    self.send_json({"ok": False, "error": "no hay ficheros"})
+                    self.send_json({"ok": False, "error": "keine Dateien"})
                     return
                 self.send_json(_rt_library.cuarentena(
                     library_base(s), ficheros,
@@ -7572,7 +7572,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             if sub == "gamelist/clean":
                 sistema = (data.get("sistema") or data.get("system") or "").strip()
                 if not sistema:
-                    self.send_json({"ok": False, "error": "falta el sistema"})
+                    self.send_json({"ok": False, "error": "das System fehlt"})
                     return
                 self.send_json(_rt_library.limpiar_gamelist(
                     library_base(s), sistema, root=tools_journal_root(s)))
@@ -7580,7 +7580,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             if sub == "undo":
                 self.send_json(_rt_library.undo_last(tools_journal_root(s)))
                 return
-            self.send_json({"ok": False, "error": "ruta desconocida"}, 404)
+            self.send_json({"ok": False, "error": "unbekannter Pfad"}, 404)
         except ValueError as exc:
             self.send_json({"ok": False, "error": str(exc)})
         except Exception as exc:
@@ -7668,7 +7668,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             subpath = urllib.parse.unquote(query.get("path",[""])[0])
             folder = list_rom_folder(s, name, subpath)
             if folder is None:
-                self.send_json({"ok":False,"error":"Carpeta no encontrada o acceso inválido"})
+                self.send_json({"ok":False,"error":"Ordner nicht gefunden oder ungültiger Zugriff"})
             else:
                 self.send_json({"ok":True,"folder":folder})
         elif path == "/api/dashboard":
@@ -7717,7 +7717,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                                 found.append({"dir":mdir,"file":p.name,"size":human_size(p.stat().st_size)})
                 self.send_json({"ok":True,"images":found,"rom":rom_fn})
             else:
-                self.send_json({"ok":False,"error":"Faltan parámetros"})
+                self.send_json({"ok":False,"error":"Parameter fehlen"})
         elif path == "/api/scraper/config":
             self.send_json(public_scraper_config(get_scraper_config(s)))
         elif path == "/api/scraper/image":
@@ -7764,7 +7764,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             job_id = (query.get("id") or [""])[0]
             trabajo = _rt_jobs.JOBS.obtener(job_id)
             if trabajo is None:
-                self.send_json({"ok": False, "error": "el trabajo no existe"},
+                self.send_json({"ok": False, "error": "der Auftrag existiert nicht"},
                                404)
                 return
             self.send_json(trabajo.as_dict())
@@ -7824,12 +7824,12 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                     _ra_cache_file().unlink(missing_ok=True)
                 except Exception:
                     pass
-            log_event("info", "ajustes", "Ajustes guardados")
+            log_event("info", "ajustes", "Einstellungen gespeichert")
             self.send_json({"ok":True})
         elif path == "/api/es/restart":
             ok, info = restart_emulationstation()
             log_event("info" if ok else "warn", "es",
-                      "EmulationStation reiniciado" if ok else f"No se pudo reiniciar EmulationStation: {info}")
+                      "EmulationStation reiniciado" if ok else f"EmulationStation konnte nicht neu gestartet werden: {info}")
             self.send_json({"ok": ok, **info})
         elif path == "/api/upload-logo":
             self._upload_logo(s)
@@ -7848,7 +7848,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             url    = (d.get("url") or "").strip()
             system = (d.get("system") or "").strip()
             if not fname or not url:
-                self.send_json({"ok": False, "error": "Faltan 'file' o 'url'"}); return
+                self.send_json({"ok": False, "error": "'file' oder 'url' fehlt"}); return
             expected = _bios_expected_md5s(system, fname)
             result = download_bios_from_url(
                 s.get("bios_dir", "/userdata/bios"), fname, url, expected)
@@ -7861,7 +7861,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         elif path == "/api/bios/descargar/start":
             if not HAS_ROMTOOLS:
                 self.send_json({"ok": False,
-                                "error": "el modulo de herramientas no esta disponible"})
+                                "error": "das Werkzeug-Modul ist nicht verfügbar"})
                 return
             global _bios_job_actual
             with _bios_job_lock:
@@ -7875,7 +7875,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             trabajo = _rt_jobs.JOBS.lanzar(
                 "bios",
                 lambda job: bios_descargar(s, progreso=job.progreso),
-                mensaje="comprobando las BIOS")
+                mensaje="BIOS werden geprüft")
             with _bios_job_lock:
                 _bios_job_actual = trabajo
             self.send_json({"ok": True, "job": trabajo.id})
@@ -7891,7 +7891,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             slug = (d.get("system") or "").strip()
             rel  = (d.get("file") or "").strip()
             if not slug or not rel:
-                self.send_json({"ok":False,"error":"Faltan 'system' o 'file'"}); return
+                self.send_json({"ok":False,"error":"'system' oder 'file' fehlt"}); return
             try:
                 self.send_json(repair_bios(s, slug, rel))
             except Exception as e:
@@ -7968,13 +7968,13 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         if len(parts)==3 and parts[:2]==["api","system"]:
             name = urllib.parse.unquote(parts[2])
             ok, info = delete_custom_system(name, s)
-            log_event("info" if ok else "error", "sistemas", f"Sistema eliminado: {name}")
+            log_event("info" if ok else "error", "sistemas", f"System gelöscht: {name}")
             self.send_json({"ok": ok, **info})
         elif len(parts)>=3 and parts[:2]==["api","rom"]:
             system   = parts[2]
             filename = urllib.parse.unquote("/".join(parts[3:])) if len(parts)>3 else ""
             if not filename:
-                self.send_json({"ok":False,"error":"Falta filename"}); return
+                self.send_json({"ok":False,"error":"filename fehlt"}); return
             base = Path(s["roms_base"]).resolve()
             target = (base / system / filename).resolve()
             try:
@@ -7998,21 +7998,21 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         log  = []
         slug = (d.get("name") or "").strip()
         errors = []
-        if not d.get("fullname","").strip():   errors.append("Nombre completo requerido")
+        if not d.get("fullname","").strip():   errors.append("Vollständiger Name erforderlich")
         if not slug:                           errors.append("Slug requerido")
-        elif not is_safe_component(slug):      errors.append("Slug inválido (sin espacios ni separadores)")
-        if not d.get("rompath","").strip():    errors.append("Ruta de ROMs requerida")
+        elif not is_safe_component(slug):      errors.append("Ungültiger Slug (ohne Leerzeichen oder Trennzeichen)")
+        if not d.get("rompath","").strip():    errors.append("ROM-Pfad erforderlich")
         if not d.get("extensions","").strip(): errors.append("Extensiones requeridas")
         if errors:
-            log_event("warn", "sistemas", f"Creación rechazada: {', '.join(errors)}")
+            log_event("warn", "sistemas", f"Anlegen abgelehnt: {', '.join(errors)}")
             self.send_json({"ok":False,"errors":errors}); return
         dry      = bool(d.get("dry_run"))
         cfg_dir  = s["es_cfg_dir"]
         cfg_path = os.path.join(cfg_dir, f"es_systems_{slug}.cfg")
         xml_str  = build_xml(d, s)
         if dry:
-            log.append(f"[SIMULACIÓN] CFG se escribiría en: {cfg_path}")
-            log.append("[SIMULACIÓN] No se modificó ningún archivo.")
+            log.append(f"[SIMULATION] CFG würde geschrieben nach: {cfg_path}")
+            log.append("[SIMULATION] Es wurde keine Datei verändert.")
         else:
             try:
                 os.makedirs(cfg_dir, exist_ok=True)
@@ -8026,7 +8026,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 try:
                     os.makedirs(confine_to_base(s["roms_base"], d.get("rompath","").strip()), exist_ok=True)
                     log.append("✔ Dir ROMs creado")
-                except ValueError: log.append("⚠ Ruta de ROMs fuera de la base permitida; no se creó")
+                except ValueError: log.append("⚠ ROM-Pfad außerhalb der erlaubten Basis; nicht angelegt")
                 except Exception as e: log.append(f"⚠ {e}")
             if d.get("batocera_conf_entry") and d.get("emulator") and d.get("core"):
                 try:
@@ -8036,12 +8036,12 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                     with open(s["batocera_conf"],"a",encoding="utf-8") as f:
                         f.write(f"\n# {comment}\n{slug}.emulator={emu}\n{slug}.core={core}\n")
                     log.append("✔ batocera.conf actualizado")
-                except ValueError as e: log.append(f"⚠ Valor inválido para batocera.conf: {e}")
+                except ValueError as e: log.append(f"⚠ Ungültiger Wert für batocera.conf: {e}")
                 except Exception as e: log.append(f"⚠ {e}")
-        log.append(f"\n✅ Sistema '{slug}' {'simulado' if dry else 'creado'}.")
-        if not dry: log.append("   Reinicia EmulationStation para que aparezca.")
+        log.append(f"\n✅ System '{slug}' {'simulado' if dry else 'creado'}.")
+        if not dry: log.append("   Starte EmulationStation neu, damit es erscheint.")
         log_event("debug" if dry else "info", "sistemas",
-                  f"Sistema {'simulado' if dry else 'creado'}: {slug}")
+                  f"System {'simulado' if dry else 'creado'}: {slug}")
         self.send_json({"ok":True,"log":log,"xml":xml_str,"cfg_path":cfg_path})
 
     def _update_system(self, s):
@@ -8050,27 +8050,27 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         slug = (d.get("name") or "").strip()
         log  = []
         errors = []
-        if not d.get("fullname","").strip():   errors.append("Nombre completo requerido")
-        if not old:                            errors.append("Sistema original requerido")
+        if not d.get("fullname","").strip():   errors.append("Vollständiger Name erforderlich")
+        if not old:                            errors.append("Ursprüngliches System erforderlich")
         if not slug:                           errors.append("Slug requerido")
-        elif not is_safe_component(slug):      errors.append("Slug inválido (sin espacios ni separadores)")
-        if old and not is_safe_component(old): errors.append("Sistema original inválido")
-        if not d.get("rompath","").strip():    errors.append("Ruta de ROMs requerida")
+        elif not is_safe_component(slug):      errors.append("Ungültiger Slug (ohne Leerzeichen oder Trennzeichen)")
+        if old and not is_safe_component(old): errors.append("Ursprüngliches System ungültig")
+        if not d.get("rompath","").strip():    errors.append("ROM-Pfad erforderlich")
         if not d.get("extensions","").strip(): errors.append("Extensiones requeridas")
         if errors:
-            log_event("warn", "sistemas", f"Actualización rechazada: {', '.join(errors)}")
+            log_event("warn", "sistemas", f"Aktualisierung abgelehnt: {', '.join(errors)}")
             self.send_json({"ok":False,"errors":errors}); return
         cfg_dir  = s["es_cfg_dir"]
         old_cfg  = os.path.join(cfg_dir, f"es_systems_{old}.cfg")
         new_cfg  = os.path.join(cfg_dir, f"es_systems_{slug}.cfg")
         if old != slug and os.path.exists(new_cfg):
-            self.send_json({"ok":False,"errors":[f"El slug '{slug}' ya existe"]}); return
+            self.send_json({"ok":False,"errors":[f"Der Slug '{slug}' existiert bereits"]}); return
         xml_str = build_xml(d, s)
         dry = bool(d.get("dry_run"))
         if dry:
-            log.append(f"[SIMULACIÓN] CFG se {'crearía' if old!=slug else 'reescribiría'} en: {new_cfg}")
-            if old != slug: log.append(f"[SIMULACIÓN] Se eliminaría: {old_cfg}")
-            log.append("[SIMULACIÓN] No se modificó ningún archivo.")
+            log.append(f"[SIMULATION] CFG würde {'angelegt' if old!=slug else 'überschrieben'} en: {new_cfg}")
+            if old != slug: log.append(f"[SIMULATION] Gelöscht würde: {old_cfg}")
+            log.append("[SIMULATION] Es wurde keine Datei verändert.")
         else:
             try:
                 os.makedirs(cfg_dir, exist_ok=True)
@@ -8086,7 +8086,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 try:
                     os.makedirs(confine_to_base(s["roms_base"], d.get("rompath","").strip()), exist_ok=True)
                     log.append("✔ Dir ROMs creado")
-                except ValueError: log.append("⚠ Ruta de ROMs fuera de la base permitida; no se creó")
+                except ValueError: log.append("⚠ ROM-Pfad außerhalb der erlaubten Basis; nicht angelegt")
                 except Exception as e: log.append(f"⚠ {e}")
             if d.get("batocera_conf_entry") and d.get("emulator") and d.get("core"):
                 try:
@@ -8096,12 +8096,12 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                     with open(s["batocera_conf"],"a",encoding="utf-8") as f:
                         f.write(f"\n# {comment}\n{slug}.emulator={emu}\n{slug}.core={core}\n")
                     log.append("✔ batocera.conf actualizado")
-                except ValueError as e: log.append(f"⚠ Valor inválido para batocera.conf: {e}")
+                except ValueError as e: log.append(f"⚠ Ungültiger Wert für batocera.conf: {e}")
                 except Exception as e: log.append(f"⚠ {e}")
-        log.append(f"\n✅ Sistema '{slug}' {'simulado' if dry else 'actualizado'}.")
-        if not dry: log.append("   Reinicia EmulationStation para que los cambios tengan efecto.")
+        log.append(f"\n✅ System '{slug}' {'simulado' if dry else 'actualizado'}.")
+        if not dry: log.append("   Starte EmulationStation neu, damit die Änderungen wirksam werden.")
         log_event("debug" if dry else "info", "sistemas",
-                  f"Sistema {'simulado' if dry else 'actualizado'}: {slug}")
+                  f"System {'simulado' if dry else 'actualizado'}: {slug}")
         self.send_json({"ok":True,"log":log,"xml":xml_str,"cfg_path":new_cfg})
 
     def _upload_logo(self, s):
@@ -8111,13 +8111,13 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             d    = json.loads(body or b"{}")
             slug = (d.get("slug") or "").strip()
             if not is_safe_component(slug):
-                self.send_json({"ok":False,"error":"Slug inválido"}); return
+                self.send_json({"ok":False,"error":"Ungültiger Slug"}); return
             if not HAS_PIL:
-                self.send_json({"ok":False,"error":"PIL no disponible"}); return
+                self.send_json({"ok":False,"error":"PIL nicht verfügbar"}); return
             try:
                 dest_file = safe_path_under(s["themes_user"], detect_active_theme(s), slug, "art", "logo.png")
             except ValueError:
-                self.send_json({"ok":False,"error":"Ruta inválida"}); return
+                self.send_json({"ok":False,"error":"Ungültiger Pfad"}); return
             try:
                 dest_file.parent.mkdir(parents=True, exist_ok=True)
                 dest_file.write_bytes(make_placeholder_png(slug.upper()))
@@ -8127,13 +8127,13 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         fields, files = parse_multipart({"CONTENT_TYPE":ct}, body)
         slug  = (fields.get("slug") or "").strip()
         if not is_safe_component(slug):
-            self.send_json({"ok":False,"error":"Slug inválido"}); return
+            self.send_json({"ok":False,"error":"Ungültiger Slug"}); return
         try:
             dest_file = safe_path_under(s["themes_user"], detect_active_theme(s), slug, "art", "logo.png")
         except ValueError:
-            self.send_json({"ok":False,"error":"Ruta inválida"}); return
+            self.send_json({"ok":False,"error":"Ungültiger Pfad"}); return
         if "logo" not in files:
-            self.send_json({"ok":False,"error":"No se recibió archivo"}); return
+            self.send_json({"ok":False,"error":"Keine Datei empfangen"}); return
         try:
             dest_file.parent.mkdir(parents=True, exist_ok=True)
             img_data = files["logo"]["data"]
@@ -8149,13 +8149,13 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         ct   = self.headers.get("Content-Type","")
         fields, files = parse_multipart({"CONTENT_TYPE":ct}, body)
         if not files:
-            self.send_json({"ok":False,"error":"No se recibió archivo"}); return
+            self.send_json({"ok":False,"error":"Keine Datei empfangen"}); return
         subpath  = fields.get("subpath","").strip().strip("/")
         try:
             roms_base = system_dir(s, system)
             dest_dir  = safe_path_under(roms_base, subpath) if subpath else roms_base
         except ValueError:
-            self.send_json({"ok":False,"error":"Ruta inválida"}); return
+            self.send_json({"ok":False,"error":"Ungültiger Pfad"}); return
         # Validar extensiones soportadas por el sistema (si las conocemos)
         allowed = get_system_extensions(system, s)
         rejected = []
@@ -8167,15 +8167,15 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                     kept[k] = fdata
                 else:
                     rejected.append({"file":fdata["filename"],
-                                     "error":f"Extensión no permitida para {system} (permitidas: {', '.join(sorted(allowed))})"})
+                                     "error":f"Dateiendung nicht erlaubt für {system} (permitidas: {', '.join(sorted(allowed))})"})
             files = kept
         if rejected:
             self.send_json({"ok":False,"error":"Archivos rechazados","rejected":rejected}); return
         # Validar nombres de archivo (sin separadores ni "..")
         bad = [f["filename"] for f in files.values() if not is_safe_component(f["filename"])]
         if bad:
-            self.send_json({"ok":False,"error":"Nombre de archivo inválido",
-                            "rejected":[{"file":b,"error":"nombre inseguro"} for b in bad]}); return
+            self.send_json({"ok":False,"error":"Ungültiger Dateiname",
+                            "rejected":[{"file":b,"error":"unsicherer Name"} for b in bad]}); return
         dest_dir.mkdir(parents=True, exist_ok=True)
         saved = []
         for fdata in files.values():
@@ -8190,7 +8190,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         ct   = self.headers.get("Content-Type","")
         fields, files = parse_multipart({"CONTENT_TYPE":ct}, body)
         if not files:
-            self.send_json({"ok":False,"error":"No se recibió archivo"}); return
+            self.send_json({"ok":False,"error":"Keine Datei empfangen"}); return
         bios_dir = Path(s.get("bios_dir","/userdata/bios"))
         target_system = fields.get("system","").strip()
         target_file   = fields.get("file","").strip()
@@ -8201,14 +8201,14 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             try:
                 safe_path_under(bios_dir, target_file)
             except ValueError:
-                self.send_json({"ok":False,"error":"Ruta BIOS inválida"}); return
+                self.send_json({"ok":False,"error":"Ungültiger BIOS-Pfad"}); return
         saved = []
         for fdata in files.values():
             if target_file:
                 dest = bios_dir / target_file
             else:
                 if not is_safe_component(fdata["filename"]):
-                    self.send_json({"ok":False,"error":"Nombre de archivo inválido"}); return
+                    self.send_json({"ok":False,"error":"Ungültiger Dateiname"}); return
                 dest = bios_dir / fdata["filename"]
             dest.parent.mkdir(parents=True, exist_ok=True)
             dest.write_bytes(fdata["data"])
@@ -8236,20 +8236,20 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         old_name = d.get("old_name","")
         new_name = d.get("new_name","").strip()
         if not all([system, old_name, new_name]):
-            self.send_json({"ok":False,"error":"Faltan parámetros"}); return
+            self.send_json({"ok":False,"error":"Parameter fehlen"}); return
         if not (is_safe_component(old_name) and is_safe_component(new_name)):
-            self.send_json({"ok":False,"error":"Nombre inválido"}); return
+            self.send_json({"ok":False,"error":"Ungültiger Name"}); return
         try:
             roms_base = system_dir(s, system)
             base_dir  = safe_path_under(roms_base, subpath) if subpath else roms_base
         except ValueError:
-            self.send_json({"ok":False,"error":"Ruta inválida"}); return
+            self.send_json({"ok":False,"error":"Ungültiger Pfad"}); return
         src  = base_dir / old_name
         dest = base_dir / new_name
         if not src.exists():
             self.send_json({"ok":False,"error":"Archivo no encontrado"}); return
         if dest.exists():
-            self.send_json({"ok":False,"error":"Ya existe ese nombre"}); return
+            self.send_json({"ok":False,"error":"Dieser Name existiert bereits"}); return
         try: src.rename(dest); invalidate_rom_cache(); self.send_json({"ok":True})
         except Exception as e: self.send_json({"ok":False,"error":str(e)})
 
@@ -8265,13 +8265,13 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         query = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
         url = urllib.parse.unquote((query.get("url") or [""])[0]).strip()
         if urllib.parse.urlparse(url).scheme not in ("http", "https"):
-            self.send_json({"ok":False,"error":"URL no válida"}, 400); return
+            self.send_json({"ok":False,"error":"Ungültige URL"}, 400); return
         if not scraper_proxy_allowed(url):
             self.send_json({"ok":False,"error":"Host no permitido"}, 400); return
         cfg = resolve_scraper_creds(s, {})
         ctype, data, err = scraper_proxy_image(url, cfg)
         if err or data is None:
-            self.send_json({"ok":False,"error":err or "No se pudo descargar la imagen"}, 502); return
+            self.send_json({"ok":False,"error":err or "Bild konnte nicht heruntergeladen werden"}, 502); return
         self.send_response(200)
         self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(data)))
@@ -8320,7 +8320,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                             "source":found,"image_url":image_url,"tried":tried,
                             "quota":quota})
         else:
-            self.send_json({"ok":False,"error":err or "Sin resultados",
+            self.send_json({"ok":False,"error":err or "Keine Ergebnisse",
                             "tried":tried,"quota":quota})
 
     def _scraper_download(self, s):
@@ -8335,26 +8335,26 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
 
         results   = {"images":[],"meta":False,"errors":[]}
         if not (is_safe_component(system) and is_safe_component(filename)):
-            self.send_json({"ok":False,"error":"Nombre inválido"}); return
+            self.send_json({"ok":False,"error":"Ungültiger Name"}); return
         try:
             sys_root  = system_dir(s, system)
         except ValueError:
-            self.send_json({"ok":False,"error":"Ruta inválida"}); return
+            self.send_json({"ok":False,"error":"Ungültiger Pfad"}); return
         rom_stem  = Path(filename).stem
         image_rel = None
 
         if source == "thegamesdb":
             game_id = game.get("id")
-            img_url, err = tgdb_get_image(game_id, cfg.get("tgdb_apikey","")) if game_id else (None,"Sin ID de juego")
+            img_url, err = tgdb_get_image(game_id, cfg.get("tgdb_apikey","")) if game_id else (None,"Keine Spiel-ID")
             if img_url:
                 dest, rel = batocera_media_path(sys_root, rom_stem, "image", ".jpg")
                 ok, msg = download_image_generic(img_url, dest)
                 if ok:
                     results["images"].append({"type":"boxart","path":str(dest)})
                     image_rel = rel
-                else:  results["errors"].append(f"Imagen: {msg}")
+                else:  results["errors"].append(f"Bild: {msg}")
             else:
-                results["errors"].append(f"Imagen: {err}")
+                results["errors"].append(f"Bild: {err}")
             if d.get("save_meta", True):
                 meta = tgdb_build_meta(game, cfg.get("tgdb_apikey",""))
                 meta.update({"system":system,"subpath":subpath,"filename":filename})
@@ -8371,9 +8371,9 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 if ok:
                     results["images"].append({"type":"cover","path":str(dest)})
                     image_rel = rel
-                else:  results["errors"].append(f"Imagen: {msg}")
+                else:  results["errors"].append(f"Bild: {msg}")
             else:
-                results["errors"].append("Sin imagen de portada en IGDB")
+                results["errors"].append("Kein Cover auf IGDB")
             if d.get("save_meta", True):
                 meta = igdb_build_meta(game)
                 meta.update({"system":system,"subpath":subpath,"filename":filename})
@@ -8388,7 +8388,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             for itype in img_types:
                 url, ext = ss_media_url(game, itype, cfg.get("ss_region","wor"))
                 if not url:
-                    results["errors"].append(f"Imagen {itype}: sin disponibilidad en ScreenScraper")
+                    results["errors"].append(f"Bild {itype}: auf ScreenScraper nicht verfügbar")
                     continue
                 dest, rel = batocera_media_path(sys_root, rom_stem, itype, ext or ".png")
                 url = ss_media_signed_url(url, cfg)
@@ -8398,7 +8398,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                     if is_gamelist_image_type(itype) and image_rel is None:
                         image_rel = rel
                 else:
-                    results["errors"].append(f"Imagen {itype}: {msg}")
+                    results["errors"].append(f"Bild {itype}: {msg}")
             if d.get("save_meta", True) and game:
                 meta = ss_build_meta(game, cfg["ss_region"], cfg["ss_lang"])
                 meta.update({"system":system,"subpath":subpath,"filename":filename})
@@ -8423,9 +8423,9 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         if source == "thegamesdb" and not cfg.get("tgdb_apikey"):
             self.send_json({"ok":False,"error":"Configura tu API Key de TheGamesDB"}); return
         if source == "igdb" and not (cfg.get("igdb_client_id") and cfg.get("igdb_client_secret")):
-            self.send_json({"ok":False,"error":"Configura Client ID y Secret de IGDB (Twitch)"}); return
+            self.send_json({"ok":False,"error":"Richte Client-ID und Secret für IGDB (Twitch) ein"}); return
         if source == "screenscraper" and not (cfg.get("ss_user") and cfg.get("ss_password")):
-            self.send_json({"ok":False,"error":"Configura usuario y contraseña de ScreenScraper"}); return
+            self.send_json({"ok":False,"error":"Richte Benutzer und Passwort für ScreenScraper ein"}); return
         results = do_scrape_system(s, system, source, cfg, d)
         results["es_reload"] = reload_es_after_scrape(results.get("meta_saved", 0) > 0)
         self.send_json({"ok":True,"results":results})
@@ -8447,16 +8447,16 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         d = self.read_json()
         systems = d.get("systems", [])
         if not systems:
-            self.send_json({"ok":False,"error":"Selecciona al menos un sistema"}); return
+            self.send_json({"ok":False,"error":"Wähle mindestens ein System"}); return
         source = d.get("source", "screenscraper")
         creds = resolve_scraper_creds(s, d)
         # Validate
         if source == "thegamesdb" and not creds.get("tgdb_apikey"):
             self.send_json({"ok":False,"error":"Configura tu API Key de TheGamesDB"}); return
         if source == "igdb" and not (creds.get("igdb_client_id") and creds.get("igdb_client_secret")):
-            self.send_json({"ok":False,"error":"Configura Client ID y Secret de IGDB"}); return
+            self.send_json({"ok":False,"error":"Richte Client-ID und Secret für IGDB ein"}); return
         if source == "screenscraper" and not (creds.get("ss_user") and creds.get("ss_password")):
-            self.send_json({"ok":False,"error":"Configura usuario y contraseña de ScreenScraper"}); return
+            self.send_json({"ok":False,"error":"Richte Benutzer und Passwort für ScreenScraper ein"}); return
         job_id = str(_uuid.uuid4())[:8]
         job = {
             "id": job_id,
@@ -8483,7 +8483,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
             _scraper_jobs[job_id] = job
         _start_batch_worker()
         log_event("info", "scraper",
-                  f"Trabajo {job_id} creado: {len(systems)} sistema(s) desde {source}")
+                  f"Trabajo {job_id} creado: {len(systems)} System(e) aus {source}")
         self.send_json({"ok":True,"job_id":job_id})
 
     def _scraper_batch_list(self, s):
@@ -8620,7 +8620,7 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
                 continue
 
         # 4. Sin imagen — devolver 404 JSON
-        self.send_json({"error":"Sin imagen"},404)
+        self.send_json({"error":"Kein Bild"},404)
 
     def _serve_system_logo(self, system, s):
         """Sirve el logo de un sistema desde el tema activo (usuario o sistema)."""
@@ -8677,14 +8677,14 @@ class BatoceraHandler(http.server.BaseHTTPRequestHandler):
         subpath  = d.get("subpath","").strip().strip("/")
         filename = d.get("filename","")
         if not system or not filename:
-            self.send_json({"ok":False,"error":"Faltan parámetros"}); return
+            self.send_json({"ok":False,"error":"Parameter fehlen"}); return
         if not (is_safe_component(system) and is_safe_component(filename)):
-            self.send_json({"ok":False,"error":"Nombre inválido"}); return
+            self.send_json({"ok":False,"error":"Ungültiger Name"}); return
 
         try:
             sys_dir = system_dir(s, system)
         except ValueError:
-            self.send_json({"ok":False,"error":"Sistema inválido"}); return
+            self.send_json({"ok":False,"error":"Ungültiges System"}); return
         rom_relpath = f"{subpath}/{filename}" if subpath else filename
         gl_path  = sys_dir / "gamelist.xml"
 
@@ -8783,7 +8783,7 @@ def render_index():
             "\n".join(f'<option value="{v}">{k}</option>' for k,v in EXT_PRESETS.items()))
         html = html.replace("{{has_pil}}", "true" if HAS_PIL else "false")
         return html
-    return "<h1>Error: templates/index.html no encontrado</h1>"
+    return "<h1>Fehler: templates/index.html nicht gefunden</h1>"
 
 # ─── Entry point ──────────────────────────────────────────────────
 if __name__ == "__main__":
@@ -8801,13 +8801,13 @@ if __name__ == "__main__":
     except Exception: local_ip = "127.0.0.1"
     print("="*55)
     print(f"  Batocera System Manager Web  v{APP_VERSION}")
-    print(f"  PIL/Pillow: {'disponible' if HAS_PIL else 'no disponible'}")
+    print(f"  PIL/Pillow: {'verfügbar' if HAS_PIL else 'nicht verfügbar'}")
     print(f"  -> http://localhost:{PORT}")
-    print(f"  -> http://{local_ip}:{PORT}  (desde tu red)")
+    print(f"  -> http://{local_ip}:{PORT}  (aus deinem Netzwerk)")
     print("="*55)
     server = http.server.ThreadingHTTPServer((HOST,PORT), BatoceraHandler)
-    log_event("info", "servidor", f"Manager v{APP_VERSION} arrancado en el puerto {PORT}")
+    log_event("info", "servidor", f"Manager v{APP_VERSION} gestartet auf Port {PORT}")
     log_event("info", "servidor",
-              "Frontend: SPA de React" if spa_available() else "Frontend: interfaz clásica")
+              "Frontend: SPA de React" if spa_available() else "Frontend: klassische Oberfläche")
     try: server.serve_forever()
-    except KeyboardInterrupt: print("\n  Servidor detenido."); server.server_close()
+    except KeyboardInterrupt: print("\n  Server gestoppt."); server.server_close()

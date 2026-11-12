@@ -26,7 +26,7 @@ export function Sidebar({ onNavigate, version, esRunning }: SidebarProps) {
             Batocera Manager
           </p>
           <p className="truncate text-[11px] font-medium text-muted-foreground">
-            {version ? `Batocera ${version}` : 'Sistema Manager Web'}
+            {version ? `Batocera ${version}` : 'System Manager Web'}
           </p>
         </div>
       </div>
@@ -52,7 +52,7 @@ export function Sidebar({ onNavigate, version, esRunning }: SidebarProps) {
                     <Icon className="size-4 shrink-0" />
                     <span className="flex-1 truncate">{item.label}</span>
                     <span className="rounded-full border border-border px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide">
-                      Pronto
+                      Bald
                     </span>
                   </div>
                 )
@@ -109,7 +109,7 @@ export function Sidebar({ onNavigate, version, esRunning }: SidebarProps) {
             )}
           />
           <span className="text-[11px] font-medium text-muted-foreground">
-            EmulationStation {esRunning ? 'activo' : 'detenido'}
+            EmulationStation {esRunning ? 'aktiv' : 'gestoppt'}
           </span>
         </div>
         <p className="mt-1.5 text-[10px] text-muted-foreground/80">

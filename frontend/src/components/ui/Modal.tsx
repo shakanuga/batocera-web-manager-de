@@ -60,7 +60,7 @@ export function Modal({ open, onClose, title, description, children, footer, cla
               <button
                 type="button"
                 onClick={onClose}
-                aria-label="Cerrar"
+                aria-label="Schließen"
                 className="-mt-1 -mr-1 cursor-pointer rounded-lg p-1.5 text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
               >
                 <X className="size-4" />

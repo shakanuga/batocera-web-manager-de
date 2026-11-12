@@ -80,7 +80,7 @@ export function NotifyProvider({ children }: { children: ReactNode }) {
         footer={
           esError ? (
             <Button variant="primary" size="sm" onClick={close}>
-              Cerrar
+              Schließen
             </Button>
           ) : undefined
         }
@@ -130,6 +130,6 @@ export function NotifyProvider({ children }: { children: ReactNode }) {
 
 export function useNotify(): NotifyContextValue {
   const ctx = useContext(NotifyContext)
-  if (!ctx) throw new Error('useNotify debe usarse dentro de <NotifyProvider>')
+  if (!ctx) throw new Error('useNotify muss innerhalb von <NotifyProvider> verwendet werden')
   return ctx
 }

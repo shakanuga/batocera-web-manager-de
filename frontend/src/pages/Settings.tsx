@@ -26,20 +26,20 @@ import type { ServiceStatus, Settings, UiTheme } from '@/lib/types'
 const EASE = [0.16, 1, 0.3, 1] as const
 
 const THEME_OPTIONS: { label: string; value: UiTheme }[] = [
-  { label: 'Oscuro', value: 'dark' },
-  { label: 'Claro', value: 'light' },
-  { label: 'Automático', value: 'auto' },
+  { label: 'Dunkel', value: 'dark' },
+  { label: 'Hell', value: 'light' },
+  { label: 'Automatisch', value: 'auto' },
 ]
 
 const PATH_FIELDS: { key: keyof Settings; label: string; hint?: string }[] = [
-  { key: 'es_cfg_dir', label: 'Configuraciones de EmulationStation' },
-  { key: 'roms_base', label: 'Base de ROMs' },
-  { key: 'themes_user', label: 'Temas del usuario' },
-  { key: 'themes_sys', label: 'Temas del sistema' },
-  { key: 'bios_dir', label: 'Directorio de BIOS' },
-  { key: 'batocera_conf', label: 'Fichero batocera.conf' },
-  { key: 'python_path', label: 'Ruta de configgen (emulatorlauncher.py)' },
-  { key: 'app_path', label: 'Ruta de app.py' },
+  { key: 'es_cfg_dir', label: 'EmulationStation-Konfigurationen' },
+  { key: 'roms_base', label: 'ROM-Basisordner' },
+  { key: 'themes_user', label: 'Benutzer-Themes' },
+  { key: 'themes_sys', label: 'System-Themes' },
+  { key: 'bios_dir', label: 'BIOS-Verzeichnis' },
+  { key: 'batocera_conf', label: 'Datei batocera.conf' },
+  { key: 'python_path', label: 'Pfad zu configgen (emulatorlauncher.py)' },
+  { key: 'app_path', label: 'Pfad zu app.py' },
 ]
 
 export function SettingsPage() {
@@ -76,12 +76,12 @@ export function SettingsPage() {
 
       await api.saveSettings(payload)
       triggerHaptic('success')
-      showToast('Ajustes guardados.', 'success')
+      showToast('Einstellungen gespeichert.', 'success')
       setRaKey('')
       settings.refresh()
     } catch {
       triggerHaptic('error')
-      showToast('No se pudieron guardar los ajustes.', 'error')
+      showToast('Einstellungen konnten nicht gespeichert werden.', 'error')
     } finally {
       setSaving(false)
     }
@@ -96,15 +96,15 @@ export function SettingsPage() {
       else await api.serviceRestart()
       showToast(
         action === 'install'
-          ? 'Arranque automático instalado.'
+          ? 'Autostart eingerichtet.'
           : action === 'remove'
-            ? 'Arranque automático retirado.'
-            : 'Servicio reiniciado.',
+            ? 'Autostart entfernt.'
+            : 'Dienst neu gestartet.',
         'success',
       )
       service.refresh()
     } catch {
-      showToast('La operación no se pudo completar.', 'error')
+      showToast('Der Vorgang konnte nicht abgeschlossen werden.', 'error')
     } finally {
       setBusy(null)
     }
@@ -120,13 +120,13 @@ export function SettingsPage() {
   return (
     <>
       <Topbar
-        title="Configuración"
-        subtitle="Rutas, tema de la interfaz y arranque automático"
+        title="Einstellungen"
+        subtitle="Pfade, Design der Oberfläche und Autostart"
         onMenu={openMenu}
         actions={
           <Button size="sm" variant="primary" onClick={save} disabled={saving}>
             <Save className="size-3.5" />
-            {saving ? 'Guardando…' : 'Guardar'}
+            {saving ? 'Wird gespeichert…' : 'Speichern'}
           </Button>
         }
       />
@@ -135,8 +135,8 @@ export function SettingsPage() {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           {/* Tema */}
           <PanelCard
-            title="Tema de la interfaz"
-            subtitle="Se aplica al instante y se guarda en el manager"
+            title="Design der Oberfläche"
+            subtitle="Wird sofort übernommen und im Manager gespeichert"
             icon={<RefreshCw className="size-4" />}
           >
             <PillBar>
@@ -154,14 +154,14 @@ export function SettingsPage() {
               ))}
             </PillBar>
             <p className="mt-3 text-xs text-muted-foreground">
-              «Automático» sigue la preferencia del sistema (claro u oscuro).
+              „Automatisch“ folgt der Systemeinstellung (hell oder dunkel).
             </p>
           </PanelCard>
 
           {/* Servicio */}
           <PanelCard
-            title="Arranque automático"
-            subtitle={status?.autostart.installed ? 'Instalado en custom.sh' : 'No instalado'}
+            title="Autostart"
+            subtitle={status?.autostart.installed ? 'In custom.sh eingerichtet' : 'Nicht eingerichtet'}
             icon={<Power className="size-4" />}
             actions={
               status?.autostart.installed ? (
@@ -172,7 +172,7 @@ export function SettingsPage() {
                     onClick={() => serviceAction('restart')}
                     disabled={busy !== null}
                   >
-                    Reiniciar
+                    Neu starten
                   </Button>
                   <Button
                     size="sm"
@@ -180,7 +180,7 @@ export function SettingsPage() {
                     onClick={() => serviceAction('remove')}
                     disabled={busy !== null}
                   >
-                    Quitar
+                    Entfernen
                   </Button>
                 </>
               ) : (
@@ -190,59 +190,59 @@ export function SettingsPage() {
                   onClick={() => serviceAction('install')}
                   disabled={busy !== null}
                 >
-                  Instalar
+                  Installieren
                 </Button>
               )
             }
           >
             <div className="space-y-1">
               <StatRow
-                label="Estado"
-                value={status?.autostart.installed ? 'Instalado' : 'No instalado'}
+                label="Status"
+                value={status?.autostart.installed ? 'Installiert' : 'Nicht eingerichtet'}
               />
               <StatRow
-                label="Proceso"
+                label="Prozess"
                 value={
                   status?.process.running
-                    ? `Activo · PID ${status.process.pid ?? '—'}`
-                    : 'Detenido'
+                    ? `Aktiv · PID ${status.process.pid ?? '—'}`
+                    : 'Gestoppt'
                 }
               />
               <StatRow
-                label="Puerto en marcha"
+                label="Laufender Port"
                 value={status?.process.port ? String(status.process.port) : '—'}
               />
-              <StatRow label="Fichero" value={status?.custom_sh ?? '—'} />
+              <StatRow label="Datei" value={status?.custom_sh ?? '—'} />
             </div>
             {status?.autostart.manual_mode && (
               <p className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] font-medium text-amber-600 dark:text-amber-400">
-                El manager se está ejecutando en modo manual: no arrancó con el sistema.
+                Der Manager läuft im manuellen Modus: Er wurde nicht mit dem System gestartet.
               </p>
             )}
             <div className="mt-3">
-              <p className="text-xs font-medium text-foreground">Bloque en custom.sh</p>
+              <p className="text-xs font-medium text-foreground">Block in custom.sh</p>
               <pre className="mt-1 overflow-auto rounded-xl border border-border bg-stage p-3 font-mono text-[10px] leading-relaxed text-muted-foreground">
-                {status?.autostart.block?.trim() || '(sin bloque)'}
+                {status?.autostart.block?.trim() || '(kein Block)'}
               </pre>
             </div>
           </PanelCard>
 
           {/* Información del sistema */}
           <PanelCard
-            title="Información del sistema"
-            subtitle="Qué está sirviendo ahora mismo el manager"
+            title="Systeminformationen"
+            subtitle="Was der Manager gerade ausliefert"
             icon={<Info className="size-4" />}
           >
             <div className="space-y-1">
-              <StatRow label="Versión del manager" value={info.data ? `v${info.data.version}` : '—'} />
+              <StatRow label="Manager-Version" value={info.data ? `v${info.data.version}` : '—'} />
               <StatRow
-                label="Interfaz"
+                label="Oberfläche"
                 value={
                   !info.data
                     ? '—'
                     : info.data.frontend === 'react'
-                      ? 'SPA de React + Tailwind'
-                      : 'Interfaz clásica (un fichero)'
+                      ? 'React- + Tailwind-SPA'
+                      : 'Klassische Oberfläche (eine Datei)'
                 }
               />
               <StatRow label="Python" value={info.data?.python_version ?? '—'} />
@@ -252,42 +252,42 @@ export function SettingsPage() {
                   !info.data
                     ? '—'
                     : info.data.node_version
-                      ? `${info.data.node_version} · instalado`
-                      : 'no instalado · no hace falta'
+                      ? `${info.data.node_version} · installiert`
+                      : 'nicht installiert · nicht nötig'
                 }
               />
               <StatRow
                 label="Pillow (logos)"
                 value={
-                  !info.data ? '—' : info.data.has_pil ? 'disponible' : 'no disponible'
+                  !info.data ? '—' : info.data.has_pil ? 'verfügbar' : 'nicht verfügbar'
                 }
               />
-              <StatRow label="Puerto" value={info.data ? String(info.data.port) : '—'} />
-              <StatRow label="Bundle del frontend" value={info.data?.dist_dir ?? '—'} />
-              <StatRow label="Script de arranque" value={info.data?.custom_sh ?? '—'} />
+              <StatRow label="Port" value={info.data ? String(info.data.port) : '—'} />
+              <StatRow label="Frontend-Bundle" value={info.data?.dist_dir ?? '—'} />
+              <StatRow label="Startskript" value={info.data?.custom_sh ?? '—'} />
             </div>
             <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
               {info.data?.frontend === 'react'
-                ? 'El frontend se sirve ya compilado desde frontend/dist: la consola no necesita Node para funcionar.'
-                : 'No hay bundle compilado en frontend/dist, así que se sirve la interfaz clásica de un solo fichero. Compila el frontend para usar la versión React.'}
+                ? 'Das Frontend wird fertig kompiliert aus frontend/dist ausgeliefert: Die Konsole braucht kein Node, um zu funktionieren.'
+                : 'In frontend/dist gibt es kein kompiliertes Bundle, daher wird die klassische Ein-Datei-Oberfläche ausgeliefert. Kompiliere das Frontend, um die React-Version zu nutzen.'}
             </p>
           </PanelCard>
 
           {/* Instrucciones */}
           <PanelCard
-            title="Instrucciones"
-            subtitle="Instalar, actualizar y recompilar"
+            title="Anleitung"
+            subtitle="Installieren, aktualisieren und neu kompilieren"
             icon={<Terminal className="size-4" />}
           >
             <div className="space-y-3">
               <div>
-                <p className="text-xs font-medium text-foreground">Acceso</p>
+                <p className="text-xs font-medium text-foreground">Zugriff</p>
                 <pre className="mt-1 overflow-auto rounded-xl border border-border bg-stage p-3 font-mono text-[10px] leading-relaxed text-muted-foreground">
-                  {`http://<IP-DE-LA-CONSOLA>:${info.data?.port ?? 5000}`}
+                  {`http://<IP-DER-KONSOLE>:${info.data?.port ?? 5000}`}
                 </pre>
               </div>
               <div>
-                <p className="text-xs font-medium text-foreground">Instalar o actualizar (por SSH)</p>
+                <p className="text-xs font-medium text-foreground">Installieren oder aktualisieren (per SSH)</p>
                 <pre className="mt-1 overflow-auto rounded-xl border border-border bg-stage p-3 font-mono text-[10px] leading-relaxed text-muted-foreground">
                   {`cd ${installDir}
 git pull
@@ -296,7 +296,7 @@ bash install.sh`}
               </div>
               <div>
                 <p className="text-xs font-medium text-foreground">
-                  Recompilar el frontend en la consola (opcional, requiere Node)
+                  Frontend auf der Konsole neu kompilieren (optional, braucht Node)
                 </p>
                 <pre className="mt-1 overflow-auto rounded-xl border border-border bg-stage p-3 font-mono text-[10px] leading-relaxed text-muted-foreground">
                   {`cd ${installDir}/frontend
@@ -305,18 +305,16 @@ npm run build`}
                 </pre>
               </div>
               <p className="text-xs leading-relaxed text-muted-foreground">
-                La consola no trae Node de serie: <code className="font-mono text-foreground">bash install.sh</code>{' '}
-                lo puede instalar por ti (tarball oficial de nodejs.org, con el sha256 verificado) y
-                dejar los enlaces listos para cada arranque. El bundle se despliega compilado, así que
-                el manager funciona igual sin Node.
+                Die Konsole bringt Node nicht von Haus aus mit: <code className="font-mono text-foreground">bash install.sh</code>{' '}
+                kann es für dich installieren (offizielles Tarball von nodejs.org, mit geprüftem SHA256) und die Links für jeden Start einrichten. Das Bundle wird kompiliert ausgeliefert, der Manager funktioniert also auch ohne Node.
               </p>
             </div>
           </PanelCard>
 
           {/* Rutas */}
           <PanelCard
-            title="Rutas del sistema"
-            subtitle="Dónde busca y escribe el manager"
+            title="Systempfade"
+            subtitle="Wo der Manager sucht und schreibt"
             icon={<FolderCog className="size-4" />}
           >
             <div className="grid grid-cols-1 gap-4">
@@ -329,7 +327,7 @@ npm run build`}
                   />
                 </Field>
               ))}
-              <Field label="Puerto del servidor" hint="Se aplica al reiniciar el manager.">
+              <Field label="Server-Port" hint="Wird nach einem Neustart des Managers übernommen.">
                 <Input
                   type="number"
                   value={value('server_port')}
@@ -344,18 +342,18 @@ npm run build`}
           {/* RetroAchievements */}
           <PanelCard
             title="RetroAchievements"
-            subtitle="Progreso y logros dentro del panel"
+            subtitle="Fortschritt und Erfolge im Panel"
             icon={<Trophy className="size-4" />}
           >
             <Toggle
               checked={draft.ra_enabled ?? false}
               onChange={(v) => setDraft((prev) => ({ ...prev, ra_enabled: v }))}
-              label="Activar RetroAchievements"
-              description="Al desactivarlo el panel deja de consultar la API."
+              label="RetroAchievements aktivieren"
+              description="Wenn deaktiviert, fragt das Panel die API nicht mehr ab."
             />
 
             <div className="mt-4 grid grid-cols-1 gap-4">
-              <Field label="Usuario" htmlFor="ra_user">
+              <Field label="Benutzer" htmlFor="ra_user">
                 <Input
                   id="ra_user"
                   value={value('ra_user')}
@@ -368,8 +366,8 @@ npm run build`}
                 htmlFor="ra_key"
                 hint={
                   settings.data?.ra_api_key_set
-                    ? 'Ya hay una clave guardada. Escríbela para sustituirla.'
-                    : 'Todavía no hay ninguna clave guardada.'
+                    ? 'Es ist bereits ein Schlüssel gespeichert. Gib einen neuen ein, um ihn zu ersetzen.'
+                    : 'Es ist noch kein Schlüssel gespeichert.'
                 }
               >
                 <Input
@@ -387,26 +385,26 @@ npm run build`}
 
           {/* Servidor */}
           <PanelCard
-            title="Servidor"
-            subtitle="Proceso del manager en ejecución"
+            title="Server"
+            subtitle="Manager-Prozess läuft"
             icon={<Server className="size-4" />}
           >
             <div className="space-y-1">
-              <StatRow label="Estado del servicio" value={status?.process.running ? 'Activo' : 'Detenido'} />
+              <StatRow label="Dienststatus" value={status?.process.running ? 'Aktiv' : 'Gestoppt'} />
               <StatRow
-                label="Modo"
-                value={status?.autostart.manual_mode ? 'Manual' : 'Arranque automático'}
+                label="Modus"
+                value={status?.autostart.manual_mode ? 'Manuell' : 'Autostart'}
               />
               <StatRow
                 label="PID"
                 value={status?.process.pid ? String(status.process.pid) : '—'}
               />
               <StatRow
-                label="Puerto en marcha"
+                label="Laufender Port"
                 value={status?.process.port ? String(status.process.port) : '—'}
               />
               <StatRow
-                label="Puerto configurado"
+                label="Konfigurierter Port"
                 value={value('server_port') || '—'}
               />
             </div>
@@ -421,8 +419,7 @@ npm run build`}
               transition={{ duration: 0.25, ease: EASE }}
               className="mt-3 text-xs leading-relaxed text-muted-foreground"
             >
-              La interfaz se sirve desde el mismo proceso que expone la API: no hay ningún otro
-              servicio implicado.
+              Die Oberfläche wird vom selben Prozess ausgeliefert, der die API bereitstellt: Kein anderer Dienst ist beteiligt.
             </motion.p>
           </PanelCard>
         </div>

@@ -13,26 +13,26 @@ import type { LibraryDatSistema, LibraryFaltante, LibraryFaltantes, LibraryJob }
  * hash que una por título, así que se dice de dónde salió cada una.
  */
 const METODOS: Record<string, string> = {
-  nombre: 'por el nombre',
-  hash: 'por el hash',
-  gamecode: 'por el codigo del disco',
-  serial: 'por el serial',
-  titulo: 'por el titulo (conviene revisarlo)',
+  nombre: 'über den Namen',
+  hash: 'über den Hash',
+  gamecode: 'über den Disc-Code',
+  serial: 'über die Seriennummer',
+  titulo: 'über den Titel (besser prüfen)',
 }
 
 /** Por qué falta esa versión. */
 function motivo(faltante: LibraryFaltante): string {
   switch (faltante.motivo) {
     case 'disco':
-      return `te falta el disco ${faltante.detalle}`
+      return `dir fehlt Disc ${faltante.detalle}`
     case 'region':
-      return `otra región (${faltante.detalle})`
+      return `andere Region (${faltante.detalle})`
     case 'revision':
-      return 'otra revisión'
+      return 'andere Revision'
     case 'idioma':
-      return `otro idioma (${faltante.detalle})`
+      return `andere Sprache (${faltante.detalle})`
     default:
-      return 'otra versión'
+      return 'andere Version'
   }
 }
 
@@ -94,8 +94,8 @@ export function FaltantesPanel({
 
   return (
     <PanelCard
-      title="Lo que falta"
-      subtitle="Las otras versiones de los juegos que ya tienes"
+      title="Was fehlt"
+      subtitle="Die anderen Versionen der Spiele, die du schon hast"
       icon={<PackageSearch className="size-4" />}
       actions={
         <>
@@ -103,18 +103,18 @@ export function FaltantesPanel({
             value={sistema}
             onChange={(event) => onSistema(event.target.value)}
             className="h-9 w-52 text-xs"
-            aria-label="Sistema con DAT"
+            aria-label="System mit DAT"
           >
-            {sistemas.length === 0 && <option value="">sin DAT instalado</option>}
+            {sistemas.length === 0 && <option value="">kein DAT installiert</option>}
             {sistemas.map((s) => (
               <option key={s.sistema} value={s.sistema}>
-                {s.sistema} · {s.juegos_dat.toLocaleString('es-ES')} juegos
+                {s.sistema} · {s.juegos_dat.toLocaleString('de-DE')} Spiele
               </option>
             ))}
           </Select>
           <Button size="sm" variant="primary" disabled={busy || !sistema} onClick={onComparar}>
             <Search className="size-4" />
-            Comparar con el DAT
+            Mit dem DAT vergleichen
           </Button>
         </>
       }
@@ -122,8 +122,8 @@ export function FaltantesPanel({
       {sistemas.length === 0 ? (
         <EmptyState
           icon={<PackageSearch className="size-5" />}
-          title="No hay DAT instalado"
-          description="Los DAT son metadatos (la lista de juegos con sus hashes, sin una sola ROM) y se descargan desde la sección de herramientas."
+          title="Kein DAT installiert"
+          description="DATs sind Metadaten (die Liste der Spiele mit ihren Hashes, ohne ein einziges ROM) und werden im Werkzeug-Bereich heruntergeladen."
         />
       ) : trabajando && trabajo ? (
         <div className="rounded-2xl border border-border bg-muted/40 px-4 py-4">
@@ -131,54 +131,51 @@ export function FaltantesPanel({
             value={trabajo.porcentaje}
             label={
               trabajo.total
-                ? `${trabajo.mensaje || 'Comparando'} · ${trabajo.hechos} de ${trabajo.total}`
-                : (trabajo.mensaje || 'Comparando')
+                ? `${trabajo.mensaje || 'Comparando'} · ${trabajo.hechos} von ${trabajo.total}`
+                : (trabajo.mensaje || 'Vergleiche')
             }
           />
           {trabajo.actual && (
             <p className="mt-2 truncate text-[11px] text-muted-foreground">
-              Ahora: {trabajo.actual}
+              Gerade: {trabajo.actual}
             </p>
           )}
           <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground/80">
-            Se compara el sistema entero con su DAT: puede tardar un rato. El trabajo sigue en el
-            servidor, asi que no hace falta cerrar la ventana.
+            Das ganze System wird mit seinem DAT verglichen: Das kann eine Weile dauern. Die Arbeit läuft auf dem Server weiter, du musst das Fenster also nicht offen lassen.
           </p>
         </div>
       ) : !resultado ? (
         <EmptyState
           icon={<PackageSearch className="size-5" />}
-          title="Todavia no hay comparacion"
-          description="Elige un sistema y pulsa «Comparar con el DAT»: se busca que otras versiones hay de los juegos que ya tienes. No se toca nada."
+          title="Noch kein Vergleich"
+          description="Wähle ein System und klicke auf „Mit dem DAT vergleichen“: Es wird gesucht, welche anderen Versionen es von deinen Spielen gibt. Es wird nichts verändert."
         />
       ) : resultado.detalle.length === 0 ? (
         <p className="text-xs text-muted-foreground">
           {resultado.sin_dat > 0 ? (
             <>
-              Los {resultado.encontrados} juegos de este sistema estan en su DAT y no hay mas
-              versiones de ellos. Hay {resultado.sin_dat} juegos que no salen en el DAT (mods,
-              traducciones o homebrew).
+              Die {resultado.encontrados} Spiele dieses Systems sind in seinem DAT und es gibt keine weiteren Versionen davon. Es gibt {resultado.sin_dat} Spiele, die nicht im DAT stehen (Mods, Übersetzungen oder Homebrew).
             </>
           ) : (
-            'No hay nada que comparar: este sistema no tiene juegos en la biblioteca.'
+            'Nichts zu vergleichen: Dieses System hat keine Spiele in der Bibliothek.'
           )}
         </p>
       ) : (
         <div className="space-y-4">
           {/* El resumen */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <Resumen valor={resultado.grupos} texto="juegos con más versiones" />
-            <Resumen valor={resultado.faltantes} texto="versiones que no tienes" />
-            <Resumen valor={resultado.mejores} texto="versiones que son mejores" />
-            <Resumen valor={resultado.discos} texto="juegos a los que falta un disco" />
+            <Resumen valor={resultado.grupos} texto="Spiele mit weiteren Versionen" />
+            <Resumen valor={resultado.faltantes} texto="Versionen, die du nicht hast" />
+            <Resumen valor={resultado.mejores} texto="Versionen, die besser sind" />
+            <Resumen valor={resultado.discos} texto="Spiele, denen eine Disc fehlt" />
           </div>
 
           <p className="text-[11px] leading-relaxed text-muted-foreground">
-            Comparado <span className="font-medium text-foreground">{resultado.sistema}</span> ·{' '}
-            {resultado.encontrados.toLocaleString('es-ES')} juegos emparejados con el DAT ·{' '}
-            {resultado.sin_dat.toLocaleString('es-ES')} que no salen en el DAT
+            Verglichen <span className="font-medium text-foreground">{resultado.sistema}</span> ·{' '}
+            {resultado.encontrados.toLocaleString('de-DE')} Spiele mit dem DAT abgeglichen ·{' '}
+            {resultado.sin_dat.toLocaleString('de-DE')} die nicht im DAT stehen
             {resultado.quizas
-              ? ` · ${resultado.quizas.toLocaleString('es-ES')} con coincidencia dudosa (quiza ya los tienes)`
+              ? ` · ${resultado.quizas.toLocaleString('de-DE')} mit unsicherer Übereinstimmung (vielleicht hast du sie schon)`
               : ''}
           </p>
 
@@ -186,14 +183,13 @@ export function FaltantesPanel({
           {resultado.quizas_lista && resultado.quizas_lista.length > 0 && (
             <details className="rounded-2xl border border-border px-3 py-2">
               <summary className="cursor-pointer text-[11px] text-muted-foreground">
-                {resultado.quizas?.toLocaleString('es-ES') ?? resultado.quizas_lista.length} juegos con
-                coincidencia dudosa: quiza ya los tienes y el nombre no cuadra
+                {resultado.quizas?.toLocaleString('de-DE') ?? resultado.quizas_lista.length} Spiele mit unsicherer Übereinstimmung: Vielleicht hast du sie schon und der Name passt nicht
               </summary>
               <ul className="mt-2 space-y-1">
                 {resultado.quizas_lista.map((quiza) => (
                   <li key={quiza.fichero} className="text-[11px] text-muted-foreground">
                     <span className="text-foreground">{quiza.fichero}</span>
-                    {' · quiza sea «'}
+                    {' · vielleicht ist es «'}
                     {quiza.candidato}
                     {'»'}
                   </li>
@@ -205,13 +201,13 @@ export function FaltantesPanel({
           {/* Los filtros */}
           <PillBar>
             <Pill active={filtro === 'todo'} onClick={() => setFiltro('todo')}>
-              Todo ({resultado.grupos})
+              Alle ({resultado.grupos})
             </Pill>
             <Pill active={filtro === 'discos'} onClick={() => setFiltro('discos')}>
-              Juegos con discos que faltan ({resultado.discos})
+              Spiele mit fehlenden Discs ({resultado.discos})
             </Pill>
             <Pill active={filtro === 'mejores'} onClick={() => setFiltro('mejores')}>
-              Juegos con versión mejor ({resultado.grupos_mejores ?? gruposConMejores})
+              Spiele mit besserer Version ({resultado.grupos_mejores ?? gruposConMejores})
             </Pill>
           </PillBar>
 
@@ -223,14 +219,14 @@ export function FaltantesPanel({
                   <p className="text-sm font-semibold">{grupo.titulo}</p>
                   {grupo.discos_faltantes.length > 0 && (
                     <span className="rounded-full bg-destructive/15 px-2 py-0.5 text-[11px] font-medium text-destructive">
-                      te falta el disco {grupo.discos_faltantes.join(', ')}
+                      dir fehlt Disc {grupo.discos_faltantes.join(', ')}
                     </span>
                   )}
                 </div>
 
                 <div className="mt-2 grid gap-3 md:grid-cols-2">
                   <div>
-                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Tienes</p>
+                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Du hast</p>
                     <ul className="mt-1 space-y-1">
                       {grupo.variantes.map((variante) => (
                         <li key={variante.fichero} className="text-xs">
@@ -244,7 +240,7 @@ export function FaltantesPanel({
                     </ul>
                   </div>
                   <div>
-                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Faltan</p>
+                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Fehlen</p>
                     <ul className="mt-1 space-y-1">
                       {grupo.faltan.map((faltante) => (
                         <li key={faltante.nombre} className="text-xs">
@@ -255,7 +251,7 @@ export function FaltantesPanel({
                           <span className="text-muted-foreground"> · {motivo(faltante)}</span>
                           {faltante.mejor && (
                             <span className="ml-1 rounded-full bg-primary/15 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                              versión mejor
+                              bessere Version
                             </span>
                           )}
                         </li>
@@ -269,13 +265,12 @@ export function FaltantesPanel({
 
           {resultado.detalle_recortado && (
             <p className="text-[11px] text-muted-foreground">
-              Se enseñan {resultado.detalle.length} de {resultado.grupos} juegos: hay mas.
+              Angezeigt werden {resultado.detalle.length} von {resultado.grupos} Spiele: Es gibt noch mehr.
             </p>
           )}
           {!resultado.hasheado && (
             <p className="text-[11px] leading-relaxed text-muted-foreground/80">
-              Los ficheros grandes no se han hasheado (hasher una ISO de 4 GB lleva un rato), asi que
-              algunos juegos se han emparejado por el nombre o por el titulo. El DAT no se toca.
+              Große Dateien wurden nicht gehasht (eine 4-GB-ISO zu hashen dauert), daher wurden manche Spiele über den Namen oder den Titel abgeglichen. Das DAT wird nicht verändert.
             </p>
           )}
         </div>
@@ -288,7 +283,7 @@ export function FaltantesPanel({
 function Resumen({ valor, texto }: { valor: number; texto: string }) {
   return (
     <div className="rounded-2xl border border-border bg-muted/30 px-3 py-2">
-      <p className="text-lg font-semibold tabular-nums">{valor.toLocaleString('es-ES')}</p>
+      <p className="text-lg font-semibold tabular-nums">{valor.toLocaleString('de-DE')}</p>
       <p className="text-[11px] leading-tight text-muted-foreground">{texto}</p>
     </div>
   )

@@ -2,495 +2,513 @@
 
 # 🕹️ Batocera System Manager Web
 
-**Interfaz web para gestionar tu Batocera desde el navegador**: sistemas personalizados,
-ROMs, BIOS, temas, carátulas y scraping — sin tocar la línea de comandos.
+**Weboberfläche, um dein Batocera im Browser zu verwalten**: eigene Systeme,
+ROMs, BIOS, Themes, Cover und Scraping — ganz ohne Kommandozeile.
 
-> **Un solo proyecto, un solo repositorio.** La interfaz es una SPA en React + Tailwind CSS y el
-> backend sigue siendo **Python puro** (sin dependencias). La interfaz clásica de un solo
-> fichero (`templates/index.html`) se conserva como **respaldo**: si el bundle compilado no está
-> en la consola, el backend sirve esa en su lugar.
+> **Ein Projekt, ein Repository.** Die Oberfläche ist eine SPA in React + Tailwind CSS, das
+> Backend bleibt **reines Python** (ohne Abhängigkeiten). Die klassische Oberfläche in einer
+> einzigen Datei (`templates/index.html`) bleibt als **Ausweichlösung** erhalten: Liegt das
+> kompilierte Bundle nicht auf der Konsole, liefert das Backend stattdessen diese aus.
 >
-> Durante el desarrollo el proyecto estuvo partido en **dos repositorios** con el mismo backend.
-> Se unificaron porque mantener dos copias del mismo `app.py` obligaba a propagar cada cambio a
-> los dos sitios. El [motivo de la unificación](#-por-qué-un-solo-repositorio) está contado más
-> abajo.
+> Während der Entwicklung war das Projekt auf **zwei Repositorys** mit demselben Backend aufgeteilt.
+> Sie wurden zusammengelegt, weil zwei Kopien derselben `app.py` jede Änderung an zwei Stellen
+> nötig machten. Der [Grund für die Zusammenlegung](#-warum-nur-ein-repository) steht weiter
+> unten.
 
-[![Versión](https://img.shields.io/badge/versi%C3%B3n-2.0-5a69d1?style=flat)](https://github.com/Thundertruck4K/batocera-web-manager/releases)
-[![Licencia: MIT](https://img.shields.io/badge/licencia-MIT-3da639?style=flat)](LICENSE)
+> 🇩🇪 **Deutsche Übersetzung.** Diese README und die Oberfläche wurden aus dem spanischen Original
+> ins Deutsche übersetzt. Das spanische Original liegt als [README.es.md](README.es.md) daneben.
+
+[![Version](https://img.shields.io/badge/Version-2.0-5a69d1?style=flat)](https://github.com/Thundertruck4K/batocera-web-manager/releases)
+[![Lizenz: MIT](https://img.shields.io/badge/Lizenz-MIT-3da639?style=flat)](LICENSE)
 [![Batocera v43+](https://img.shields.io/badge/Batocera-v43%2B-8a5cf6?style=flat)](https://batocera.org)
 [![Python 3 · stdlib](https://img.shields.io/badge/Python%203-stdlib-3776AB?logo=python&logoColor=white)](https://docs.python.org/3/)
-[![Backend sin dependencias](https://img.shields.io/badge/backend-sin%20dependencias-16a34a)]()
+[![Backend ohne Abhängigkeiten](https://img.shields.io/badge/Backend-ohne%20Abh%C3%A4ngigkeiten-16a34a)]()
 [![React](https://img.shields.io/badge/React-19-61dafb?style=flat&logo=react&logoColor=black)](frontend)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-38bdf8?style=flat&logo=tailwindcss&logoColor=white)](frontend)
-[![Tests](https://img.shields.io/badge/tests-991%20OK-success)](tests)
-[![Estrellas](https://img.shields.io/github/stars/Thundertruck4K/batocera-web-manager?label=estrellas&color=yellow)](https://github.com/Thundertruck4K/batocera-web-manager/stargazers)
-[![Forks](https://img.shields.io/github/forks/Thundertruck4K/batocera-web-manager?label=forks)](https://github.com/Thundertruck4K/batocera-web-manager/forks)
-[![Incidencias](https://img.shields.io/github/issues/Thundertruck4K/batocera-web-manager?label=incidencias)](https://github.com/Thundertruck4K/batocera-web-manager/issues)
-[![Último commit](https://img.shields.io/github/last-commit/Thundertruck4K/batocera-web-manager?label=%C3%BAltimo%20commit)](https://github.com/Thundertruck4K/batocera-web-manager/commits/master)
-[![Tamaño](https://img.shields.io/github/repo-size/Thundertruck4K/batocera-web-manager?label=tama%C3%B1o)](https://github.com/Thundertruck4K/batocera-web-manager)
+[![Tests](https://img.shields.io/badge/Tests-991%20OK-success)](tests)
+[![Sterne](https://img.shields.io/github/stars/Thundertruck4K/batocera-web-manager?label=Sterne&color=yellow)](https://github.com/Thundertruck4K/batocera-web-manager/stargazers)
+[![Forks](https://img.shields.io/github/forks/Thundertruck4K/batocera-web-manager?label=Forks)](https://github.com/Thundertruck4K/batocera-web-manager/forks)
+[![Issues](https://img.shields.io/github/issues/Thundertruck4K/batocera-web-manager?label=Issues)](https://github.com/Thundertruck4K/batocera-web-manager/issues)
+[![Letzter Commit](https://img.shields.io/github/last-commit/Thundertruck4K/batocera-web-manager?label=letzter%20Commit)](https://github.com/Thundertruck4K/batocera-web-manager/commits/master)
+[![Größe](https://img.shields.io/github/repo-size/Thundertruck4K/batocera-web-manager?label=Gr%C3%B6%C3%9Fe)](https://github.com/Thundertruck4K/batocera-web-manager)
 
-![Banner de Batocera System Manager Web](docs/media/banner.png)
+![Banner von Batocera System Manager Web](docs/media/banner.png)
 
-**Proyecto de código abierto** · Licencia MIT · Backend en Python puro (sin dependencias) · Interfaz en React + Tailwind CSS  
-[Instalación](#-instalación) · [Capturas](#-capturas) · [API](#-api-rest) · [FAQ](#-preguntas-frecuentes) · [Apoyar el proyecto](#-apoyar-el-proyecto)
+**Open-Source-Projekt** · MIT-Lizenz · Backend in reinem Python (ohne Abhängigkeiten) · Oberfläche in React + Tailwind CSS  
+[Installation](#-installation) · [Screenshots](#-screenshots) · [API](#-rest-api) · [FAQ](#-häufige-fragen) · [Projekt unterstützen](#-projekt-unterstützen)
 
 </div>
 
 ---
 
-## 🧭 Índice
+## 🧭 Inhalt
 
 | | | |
 |:--|:--|:--|
-| [¿Qué es?](#-qué-es) | [Instalación](#-instalación) | [API REST](#-api-rest) |
-| [Un solo repositorio](#-por-qué-un-solo-repositorio) | [Características](#-características) | [Uso](#-uso) |
-| [Capturas](#-capturas) | [Tests](#-tests) | [Scraper de carátulas](#-scraper-de-carátulas) |
-| [BIOS](#-bios) | [Estructura del proyecto](#-estructura-del-proyecto) | [Arquitectura](#-arquitectura) |
-| [Requisitos](#-requisitos-y-compatibilidad) | [Seguridad](#-seguridad) | [Preguntas frecuentes](#-preguntas-frecuentes) |
-| [Roadmap](#-roadmap) | [Contribuir](#-contribuir) | [Apoyar el proyecto](#-apoyar-el-proyecto) |
-| [Herramientas de ROMs](#-herramientas-de-roms) | [Licencia](#-licencia) | |
+| [Was ist das?](#-was-ist-das) | [Installation](#-installation) | [REST-API](#-rest-api) |
+| [Nur ein Repository](#-warum-nur-ein-repository) | [Funktionen](#-funktionen) | [Bedienung](#-bedienung) |
+| [Screenshots](#-screenshots) | [Tests](#-tests) | [Cover-Scraper](#-cover-scraper) |
+| [BIOS](#-bios) | [Projektstruktur](#-projektstruktur) | [Architektur](#-architektur) |
+| [Voraussetzungen](#-voraussetzungen-und-kompatibilität) | [Sicherheit](#-sicherheit) | [Häufige Fragen](#-häufige-fragen) |
+| [Roadmap](#-roadmap) | [Mitmachen](#-mitmachen) | [Projekt unterstützen](#-projekt-unterstützen) |
+| [ROM-Werkzeuge](#-rom-werkzeuge) | [Lizenz](#-lizenz) | |
 
 ---
 
-## ❓ ¿Qué es?
+## ❓ Was ist das?
 
-**Batocera System Manager Web** es una interfaz web autocontenida para administrar un equipo con
-[Batocera](https://batocera.org) desde cualquier navegador de la casa: el móvil, la tablet o el PC.
+**Batocera System Manager Web** ist eine eigenständige Weboberfläche, mit der du ein Gerät mit
+[Batocera](https://batocera.org) von jedem Browser im Haus aus verwaltest: Handy, Tablet oder PC.
 
-EmulationStation sólo muestra los sistemas que ya están definidos en sus ficheros `es_systems.cfg`
-(escritos a mano, en XML, por SSH). Esta herramienta convierte esa tarea en un formulario:
-eligues un sistema de referencia de Batocera, ajustas nombre, extensiones, emulador, núcleo y tema,
-y el manager escribe el `es_systems_<slug>.cfg` correcto y crea las carpetas necesarias.
+EmulationStation zeigt nur die Systeme an, die bereits in seinen `es_systems.cfg`-Dateien definiert
+sind (von Hand geschrieben, in XML, per SSH). Dieses Werkzeug macht daraus ein Formular:
+Du wählst ein Referenzsystem von Batocera, passt Name, Dateiendungen, Emulator, Core und Theme an,
+und der Manager schreibt die richtige `es_systems_<slug>.cfg` und legt die nötigen Ordner an.
 
-Además del gestor de sistemas, incluye un **panel de control en vivo** (CPU, GPU, RAM, disco y
-ventiladores, más el estado de EmulationStation y las últimas versiones de Batocera, leídos de
-`/proc` y `/sys`), un **monitor de ROMs y BIOS** que agrupa los sistemas por tipo de equipo, una
-**sección de BIOS** que verifica cada fichero contra el catálogo oficial de la propia consola (y lo
-repara sin salir de la SD), un **scraper multi-fuente** y un asistente de **arranque automático**.
+Neben der Systemverwaltung enthält er eine **Live-Übersicht** (CPU, GPU, RAM, Laufwerk und
+Lüfter, dazu der Status von EmulationStation und die neuesten Batocera-Versionen, gelesen aus
+`/proc` und `/sys`), einen **ROM- und BIOS-Monitor**, der die Systeme nach Gerätetyp gruppiert, einen
+**BIOS-Bereich**, der jede Datei gegen den offiziellen Katalog der Konsole selbst prüft (und sie
+repariert, ohne die SD zu verlassen), einen **Scraper mit mehreren Quellen** und einen Assistenten für
+den **Autostart**.
 
-En el dispositivo **no hay que compilar nada**: el bundle de la interfaz ya viene compilado en el
-repositorio y el backend lo sirve tal cual. El backend **no tiene ni una dependencia**: es un
-servidor HTTP de la librería estándar de Python. Node sólo hace falta si quieres tocar la interfaz;
-para usarla en Batocera, ni siquiera eso.
+Auf dem Gerät **muss nichts kompiliert werden**: Das Bundle der Oberfläche liegt bereits kompiliert im
+Repository, und das Backend liefert es unverändert aus. Das Backend hat **keine einzige Abhängigkeit**:
+Es ist ein HTTP-Server aus der Python-Standardbibliothek. Node brauchst du nur, wenn du an der
+Oberfläche etwas ändern willst; um sie auf Batocera zu benutzen, nicht einmal das.
 
-La interfaz que se sirve es una **SPA de React + Tailwind CSS** (en `frontend/`, compilada y
-versionada). La interfaz clásica de un solo fichero (`templates/index.html`) sigue viva como
-**respaldo**: si el bundle no está en la consola, el backend sirve esa en su lugar sin que te
-enteres. Las dos hablan con la misma API.
+Ausgeliefert wird eine **SPA in React + Tailwind CSS** (in `frontend/`, kompiliert und
+versioniert). Die klassische Ein-Datei-Oberfläche (`templates/index.html`) lebt als
+**Ausweichlösung** weiter: Liegt das Bundle nicht auf der Konsole, liefert das Backend unbemerkt
+diese aus. Beide sprechen mit derselben API.
 
-## 🧩 ¿Por qué un solo repositorio?
+## 🧩 Warum nur ein Repository?
 
-El proyecto llegó a este estado por una razón práctica: durante buena parte del desarrollo se
-mantuvieron **dos repositorios** con el mismo backend.
+Das Projekt ist aus einem praktischen Grund so aufgebaut: Während eines Großteils der Entwicklung
+gab es **zwei Repositorys** mit demselben Backend.
 
-| | Variante React | Variante «Python puro» |
+| | React-Variante | Variante „reines Python“ |
 |:--|:--|:--|
-| Interfaz | `frontend/` — SPA de React + Tailwind | `templates/index.html` — todo en un fichero |
-| Backend | `app.py` | `app.py` **idéntico** salvo `APP_REPO` |
-| Instalador | `install.sh` con fase de Node | `install.sh` sin fase de Node |
+| Oberfläche | `frontend/` — SPA in React + Tailwind | `templates/index.html` — alles in einer Datei |
+| Backend | `app.py` | `app.py` **identisch** bis auf `APP_REPO` |
+| Installer | `install.sh` mit Node-Phase | `install.sh` ohne Node-Phase |
 
-Mantener dos copias del mismo backend (unas 6000 líneas) no sale gratis: cada corrección tenía que
-aplicarse en los dos repositorios, y hacía falta un comprobador automático para que no se
-desincronizaran en silencio. Para un proyecto de una persona, eso es mantenimiento puro sin
-beneficio para quien lo usa.
+Zwei Kopien desselben Backends (etwa 6000 Zeilen) zu pflegen, ist nicht umsonst: Jede Korrektur
+musste in beiden Repositorys eingespielt werden, und es brauchte eine automatische Prüfung, damit
+sie nicht unbemerkt auseinanderliefen. Für ein Ein-Personen-Projekt ist das reiner Wartungsaufwand
+ohne Nutzen für die Anwender.
 
-La unificación deja las cosas así:
+Nach der Zusammenlegung sieht es so aus:
 
-- **Un solo backend** (`app.py`), una sola API y un solo instalador.
-- **Dos interfaces sobre ese backend**: la SPA de React es la principal; la clásica de un solo
-  fichero queda como respaldo y el backend la sirve automáticamente si el bundle no está.
-- **El repositorio de la variante «Python puro» se eliminó** —era `batocera-web-manager`, el mismo
-  nombre que recupera este— y su historial quedó aquí: su `master` es un ancestro directo de
-  este, así que no se perdió ni un commit.
-- La API no cambia: las dos interfaces consumen los mismos endpoints `/api/*`.
+- **Ein einziges Backend** (`app.py`), eine API und ein Installer.
+- **Zwei Oberflächen auf diesem Backend**: Die React-SPA ist die Hauptoberfläche; die klassische
+  Ein-Datei-Oberfläche bleibt als Ausweichlösung, und das Backend liefert sie automatisch aus, wenn
+  das Bundle fehlt.
+- **Das Repository der Variante „reines Python“ wurde gelöscht** — es hieß `batocera-web-manager`,
+  derselbe Name, den dieses jetzt trägt — und seine Historie ist hier gelandet: Sein `master` ist ein
+  direkter Vorfahre von diesem, es ging also kein einziger Commit verloren.
+- Die API ändert sich nicht: Beide Oberflächen nutzen dieselben `/api/*`-Endpunkte.
 
-## ✨ Características
+## ✨ Funktionen
 
-- **🕹️ Gestor de sistemas** — crea, edita y elimina sistemas personalizados con formulario completo,
-  vista previa del XML y registro de lo que se escribe en disco.
-- **📊 Panel de control en vivo** — velocímetros de CPU (uso, núcleos, temperatura), GPU (modelo,
-  uso, VRAM, consumo) y RAM; almacenamiento y ventiladores; estado/PID de EmulationStation y las últimas
-  versiones oficiales de Batocera. Con refresco automático opcional.
-  - **Con color, sin rediseño**: cada tarjeta lleva un tono de acento (CPU en ámbar, RAM en cian,
-    temperatura en rosa, disco en violeta…) y la página tiene un halo ambiental muy tenue arriba. El
-    diseño, los gráficos y la rejilla son los de siempre: sólo cambia el acento de cada elemento.
-    Los tonos son tokens de CSS y cada componente de gráfico acepta un prop `tone`; **sin ese prop,
-    el gráfico sigue monocromo**, así que el resto de la aplicación no cambia de aspecto.
-- **📚 Biblioteca de ROMs: inventario, duplicados y auditoría** — la sección **ROMs y BIOS** tiene dos
-  pestañas. La de ROMs radiografía la biblioteca entera sin hashearla (una **huella rápida** de tamaño
-  y los extremos del fichero), avisa de duplicados, fichas sin fichero, ficheros vacíos, media sin
-  juego y games repetidos entre sistemas, y lo que sobra lo mueve a una **cuarentena** con un botón
-  de **deshacer**. También limpia el `gamelist.xml` de las fichas que ya no existen.
-- **🧭 «Lo que falta»: las otras versiones de los juegos que ya tienes** — en vez de listar los 13.000
-  juegos que te faltan de un DAT de PlayStation 2, dice **qué otras versiones hay de los juegos que
-  ya tienes** (otra región, otra revisión, otro idioma, el disco 2), con el motivo y la etiqueta
-  **«versión mejor»** cuando lo que falta es mejor que lo que tienes. Nada se borra ni se renombra:
-  esta sección sólo informa.
-- **🔧 Los formatos que se ofrecen dependen del sistema, no sólo del fichero** — el mapa sale del
-  `es_systems.cfg` de la propia consola (con los sistemas personalizados incluidos) y de la wiki
-  oficial: un PSP no admite un ZIP y un GameCube no admite un CHD, así que esas conversiones ya no se
-  ofrecen. El panel del sistema enseña qué formatos admite, cuál es el preferido y la nota de la
-  wiki; el de utilidades, qué programa hace falta para cada una y si está en la consola.
-- **📥 El instalador deja las utilidades de conversión listas** — el `rom-converto`, el `nodtool` y el
-  `3dstool` se bajan de la release oficial de cada proyecto, se comprueba su `sha256` (fijada en el
-  código, no bajada de la red) y se dejan en `/userdata/system/bin`, enlazados en `/usr/bin`. Con
-  `BM_UTILS=auto|all|skip` se controla, y a mano con `python3 -m romtools utilidades --list|--install|--remove`.
-- **🎲 Juego al azar + estadísticas** — tarjeta con carátula, ficha y descripción de un juego aleatorio
-  de tu biblioteca, ranking de más jugados y horas totales. Se rellena sola al abrir la app (con sistema,
-  carátula y metadatos) y el botón **Girar** sigue ahí para pedir otro cuando quieras.
-- **📚 Contadores que cuentan el disco** — las tarjetas de *Sistemas* y *Juegos* del panel cuentan lo que
-  hay **de verdad en la SD**: los sistemas con juegos (no sólo los personalizados) y los juegos reales
-  (ficheros de juego y carpetas de juego), no lo que diga el `gamelist.xml`.
-- **🎨 Tarjetas con gráficos propios** — todo el panel usa un lenguaje de tarjetas redondeadas con
-  color propio: velocímetros de 240°, sparklines de área, un donut de reparto del disco y barras
-  redondeadas. En la SPA se dibujan con Recharts; en la interfaz clásica, en CSS/JS puro.
-- **🚀 Arranque automático** — añade o quita el manager del `custom.sh` de Batocera con un clic, y
-  avisa en pantalla si está corriendo en modo manual (lanzado a mano, sin arranque automático).
-- **🧩 Dos interfaces, un backend** — la SPA de React es la que se sirve por defecto; la clásica de
-  un solo fichero queda de respaldo si el bundle no está compilado en la consola.
-- **🌗 Tema claro/oscuro** — la interfaz se puede ver en oscuro (por defecto) o en claro, y también
-  seguir la preferencia del sistema. El botón del sidebar alterna al instante; en Configuración se
-  elige el modo. Se guarda en el manager, así que se aplica igual desde el móvil o el PC.
-- **🐞 Depuración en vivo** — una vista de depuración con el flujo de eventos del manager en tiempo
-  real: cada petición, acción y aviso llega por SSE y se puede filtrar por nivel (debug, info, aviso,
-  error) y por texto. El historial vive en memoria en el servidor (los 500 últimos eventos).
-- **🏆 Dashboard de logros** — los juegos de RetroAchievements en los que más has desbloqueado, en
-  tarjetas con **la carátula que dejó el scraper** en tu biblioteca, el porcentaje de completitud y el
-  estado de cada juego (dominado, completado, batido, en progreso). Se puede ordenar por logros
-  obtenidos, por porcentaje o por logros totales. Si no hay cuenta configurada, la sección avisa y te
-  lleva a Configuración.
-- **🧲 Scraper en la SPA** — los sistemas de tu biblioteca en tarjetas con un icono temático, su
-  nombre, una breve descripción y el número de ROMs. Al abrir uno, sus ROMs se reparten en *media
-  presente* y *media ausente*; con un modal flotante se escapea el sistema entero o un juego suelto,
-  con la carátula a la vista y las tres fuentes en orden de prioridad (ScreenScraper primero y
-  TheGamesDB e IGDB como respaldo).
-- **🔄 La comprobación de BIOS del primer arranque** — al abrir el manager por primera vez,
-  revise qué BIOS pide Batocera para **tus** sistemas, baja de la fuente las que falten **con barra de
-  progreso** y te dice qué encontró y qué no. La instalación no hace el escaneo (eso necesita la
-  consola ya arrancada): sólo lo arma y avisa. Y siempre queda el botón **Escanear el sistema** para
-  repetirlo a mano.
-- **🧰 Herramientas de ROMs** — dos páginas nuevas en el sidebar, bajo **Herramientas**:
-  **Formatos** (detectar, convertir, comprimir y parchear las imágenes de tus sistemas de discos)
-  y **Renombrado** (ordenar la biblioteca con la convención de los sets, como hace Romulus
-  Manager, usando los DAT oficiales de Redump y No-Intro).
-- **🌐 Cero dependencias** — sólo la librería estándar de Python. Opcionalmente Pillow, y sólo para
-  generar logos de relleno.
+- **🕹️ Systemverwaltung** — eigene Systeme anlegen, bearbeiten und löschen, mit vollständigem Formular,
+  XML-Vorschau und Protokoll dessen, was auf die Platte geschrieben wird.
+- **📊 Live-Übersicht** — Tachos für CPU (Auslastung, Kerne, Temperatur), GPU (Modell,
+  Auslastung, VRAM, Verbrauch) und RAM; Speicher und Lüfter; Status/PID von EmulationStation und die
+  neuesten offiziellen Batocera-Versionen. Mit optionaler automatischer Aktualisierung.
+  - **Mit Farbe, ohne Neugestaltung**: Jede Karte hat einen Akzentton (CPU in Bernstein, RAM in Cyan,
+    Temperatur in Rosa, Laufwerk in Violett …), und oben auf der Seite liegt ein sehr dezenter
+    Farbschimmer. Layout, Diagramme und Raster sind wie immer: Nur der Akzent jedes Elements ändert
+    sich. Die Töne sind CSS-Tokens, und jede Diagrammkomponente akzeptiert ein `tone`-Prop; **ohne
+    dieses Prop bleibt das Diagramm einfarbig**, der Rest der App sieht also unverändert aus.
+- **📚 ROM-Bibliothek: Inventar, Duplikate und Audit** — Der Bereich **ROMs und BIOS** hat zwei
+  Reiter. Der ROM-Reiter durchleuchtet die ganze Bibliothek, ohne sie zu hashen (ein
+  **Schnell-Fingerabdruck** aus Größe und Anfang/Ende der Datei), meldet Duplikate, Einträge ohne
+  Datei, leere Dateien, Medien ohne Spiel und Spiele, die in mehreren Systemen doppelt vorkommen, und
+  verschiebt Überflüssiges in eine **Quarantäne** mit **Rückgängig**-Button. Außerdem bereinigt er
+  die `gamelist.xml` von Einträgen, die es nicht mehr gibt.
+- **🧭 „Was fehlt“: die anderen Versionen der Spiele, die du schon hast** — Statt die 13.000 Spiele
+  aufzulisten, die dir aus einem PlayStation-2-DAT fehlen, zeigt es **welche anderen Versionen es von
+  den Spielen gibt, die du schon hast** (andere Region, andere Revision, andere Sprache, Disc 2), mit
+  Begründung und der Markierung **„bessere Version“**, wenn das Fehlende besser ist als das, was du
+  hast. Es wird nichts gelöscht oder umbenannt: Dieser Bereich informiert nur.
+- **🔧 Die angebotenen Formate hängen vom System ab, nicht nur von der Datei** — Die Zuordnung stammt
+  aus der `es_systems.cfg` der Konsole selbst (inklusive eigener Systeme) und aus der offiziellen
+  Wiki: Eine PSP unterstützt kein ZIP und ein GameCube kein CHD, also werden diese Konvertierungen
+  gar nicht erst angeboten. Das System-Panel zeigt, welche Formate unterstützt werden, welches
+  bevorzugt ist und den Hinweis aus der Wiki; das Werkzeug-Panel zeigt, welches Programm für jede
+  Konvertierung gebraucht wird und ob es auf der Konsole ist.
+- **📥 Der Installer richtet die Konvertierungswerkzeuge ein** — `rom-converto`, `nodtool` und
+  `3dstool` werden aus dem offiziellen Release des jeweiligen Projekts geladen, ihre `sha256` wird
+  geprüft (fest im Code hinterlegt, nicht aus dem Netz geladen), und sie landen in
+  `/userdata/system/bin`, verlinkt nach `/usr/bin`. Gesteuert wird das mit `BM_UTILS=auto|all|skip`,
+  von Hand mit `python3 -m romtools utilidades --list|--install|--remove`.
+- **🎲 Zufallsspiel + Statistiken** — Karte mit Cover, Eintrag und Beschreibung eines zufälligen
+  Spiels aus deiner Bibliothek, Rangliste der meistgespielten Spiele und Gesamtstunden. Sie füllt sich
+  beim Öffnen der App von selbst (mit System, Cover und Metadaten), und der Button **Drehen** ist
+  weiterhin da, um jederzeit ein anderes zu holen.
+- **📚 Zähler, die die Platte zählen** — Die Karten *Systeme* und *Spiele* der Übersicht zählen, was
+  **wirklich auf der SD liegt**: Systeme mit Spielen (nicht nur die eigenen) und echte Spiele
+  (Spieldateien und Spielordner), nicht das, was in der `gamelist.xml` steht.
+- **🎨 Karten mit eigenen Diagrammen** — Die ganze Übersicht nutzt abgerundete Karten mit eigener
+  Farbe: 240°-Tachos, Flächen-Sparklines, ein Donut zur Platten-Belegung und abgerundete Balken. In
+  der SPA werden sie mit Recharts gezeichnet, in der klassischen Oberfläche mit reinem CSS/JS.
+- **🚀 Autostart** — Fügt den Manager mit einem Klick zur `custom.sh` von Batocera hinzu oder entfernt
+  ihn, und weist auf dem Bildschirm darauf hin, wenn er im manuellen Modus läuft (von Hand gestartet,
+  ohne Autostart).
+- **🧩 Zwei Oberflächen, ein Backend** — Standardmäßig wird die React-SPA ausgeliefert; die klassische
+  Ein-Datei-Oberfläche bleibt als Ausweichlösung, falls das Bundle auf der Konsole nicht kompiliert ist.
+- **🌗 Helles/dunkles Design** — Die Oberfläche lässt sich dunkel (Standard) oder hell anzeigen oder
+  folgt der Systemeinstellung. Der Button in der Seitenleiste schaltet sofort um; in den Einstellungen
+  wählst du den Modus. Er wird im Manager gespeichert und gilt daher auf Handy und PC gleichermaßen.
+- **🐞 Live-Fehlersuche** — Eine Debug-Ansicht mit dem Ereignisstrom des Managers in Echtzeit: Jede
+  Anfrage, Aktion und Warnung kommt per SSE an und lässt sich nach Stufe (debug, info, Warnung,
+  Fehler) und nach Text filtern. Der Verlauf liegt im Speicher des Servers (die letzten 500 Ereignisse).
+- **🏆 Erfolgs-Dashboard** — Die RetroAchievements-Spiele, in denen du am meisten freigeschaltet hast,
+  in Karten mit **dem Cover, das der Scraper** in deiner Bibliothek abgelegt hat, dem Fortschritt in
+  Prozent und dem Status jedes Spiels (gemeistert, abgeschlossen, durchgespielt, in Arbeit). Sortieren
+  lässt sich nach erreichten Erfolgen, nach Prozent oder nach Gesamtzahl. Ist kein Konto eingerichtet,
+  weist der Bereich darauf hin und führt dich zu den Einstellungen.
+- **🧲 Scraper in der SPA** — Die Systeme deiner Bibliothek als Karten mit thematischem Symbol, Name,
+  kurzer Beschreibung und Anzahl der ROMs. Öffnest du eins, werden die ROMs in *Medien vorhanden* und
+  *Medien fehlen* aufgeteilt; über ein schwebendes Fenster scrapst du das ganze System oder ein
+  einzelnes Spiel, mit sichtbarem Cover und den drei Quellen nach Priorität (zuerst ScreenScraper,
+  TheGamesDB und IGDB als Ausweichquellen).
+- **🔄 BIOS-Prüfung beim ersten Start** — Beim ersten Öffnen des Managers prüft er, welche BIOS
+  Batocera für **deine** Systeme braucht, lädt fehlende **mit Fortschrittsbalken** aus der Quelle und
+  sagt dir, was er gefunden hat und was nicht. Die Installation selbst scannt nicht (dafür muss die
+  Konsole schon laufen): Sie richtet es nur ein und weist darauf hin. Und es gibt immer den Button
+  **System scannen**, um es von Hand zu wiederholen.
+- **🧰 ROM-Werkzeuge** — zwei neue Seiten in der Seitenleiste unter **Werkzeuge**:
+  **Formate** (die Images deiner Disc-Systeme erkennen, konvertieren, komprimieren und patchen)
+  und **Umbenennen** (die Bibliothek nach der Konvention der Sets ordnen, wie es Romulus
+  Manager macht, mit den offiziellen DATs von Redump und No-Intro).
+- **🌐 Null Abhängigkeiten** — nur die Python-Standardbibliothek. Optional Pillow, und das nur, um
+  Platzhalter-Logos zu erzeugen.
 
-### Lo que aún está en la interfaz clásica
+### Was noch in der klassischen Oberfläche ist
 
-El backend y la API lo tienen todo, pero estas secciones **todavía no están en la SPA** (en el menú
-aparecen marcadas como *Pronto*). Hasta entonces se usan desde la interfaz clásica, que el backend
-sigue sirviendo:
+Backend und API können alles, aber diese Bereiche **sind noch nicht in der SPA** (im Menü sind sie
+als *Bald* markiert). Bis dahin nutzt du sie über die klassische Oberfläche, die das Backend weiterhin
+ausliefert:
 
-- **💾 Monitor de ROMs** — inventario por sistema (número de ROMs, extensiones, subcarpetas),
-  agrupado en secciones plegables por tipo de equipo (Arcade, Consolas, Portátiles, Ordenadores, Otros)
-  con filtros combinables por tipo y por fabricante. La **verificación de BIOS** ya está en la SPA
-  (sección *ROMs y BIOS*), donde además se puede reparar lo que está mal colocado.
-- **🎨 Temas y assets** — temas instalados, tema activo, estructura de assets esperada y subida de
-  logos, que se guardan como `art/logo.png` dentro del tema activo (si no tienes uno, Pillow genera
-  un logo de relleno).
-- **✏️ Edición de ROMs** — renombrar ficheros, actualizar metadatos, ver información de imágenes y
-  subir/borrar carátulas por tipo.
+- **💾 ROM-Monitor** — Inventar pro System (Anzahl ROMs, Dateiendungen, Unterordner), gruppiert in
+  aufklappbare Abschnitte nach Gerätetyp (Arcade, Konsolen, Handhelds, Computer, Sonstige) mit
+  kombinierbaren Filtern nach Typ und Hersteller. Die **BIOS-Prüfung** ist schon in der SPA
+  (Bereich *ROMs und BIOS*), wo sich falsch abgelegte Dateien auch reparieren lassen.
+- **🎨 Themes und Assets** — installierte Themes, aktives Theme, erwartete Asset-Struktur und
+  Logo-Upload; Logos werden als `art/logo.png` im aktiven Theme gespeichert (hast du keins, erzeugt
+  Pillow ein Platzhalter-Logo).
+- **✏️ ROM-Bearbeitung** — Dateien umbenennen, Metadaten aktualisieren, Bildinfos ansehen und Cover
+  nach Typ hoch- oder herunterladen bzw. löschen.
 
 ---
 
-## 📸 Capturas
+## 📸 Screenshots
 
-Todas están hechas sobre una **instalación real** (Batocera 43.1) de la interfaz React, que es la
-que sirve el manager por defecto.
+Alle stammen von einer **echten Installation** (Batocera 43.1) der React-Oberfläche, die der Manager
+standardmäßig ausliefert. *(Die Screenshots zeigen noch die spanische Originaloberfläche.)*
 
-### 📊 Panel de control
+### 📊 Übersicht
 
-La portada resume el estado de la máquina: velocímetros de CPU, RAM, temperatura y disco; contadores
-de sistemas, procesos, particiones y juegos; la actividad de juego de los últimos días y los procesos
-que más CPU consumen. Arriba a la derecha se elige cada cuánto se refresca (automático, cada 30 s o
-manual) y el tema (claro u oscuro).
+Die Startseite fasst den Zustand des Geräts zusammen: Tachos für CPU, RAM, Temperatur und Laufwerk;
+Zähler für Systeme, Prozesse, Partitionen und Spiele; die Spielaktivität der letzten Tage und die
+Prozesse mit der höchsten CPU-Last. Oben rechts wählst du, wie oft aktualisiert wird (automatisch,
+alle 30 s oder manuell), und das Design (hell oder dunkel).
 
-Los contadores del medio miran **la biblioteca de verdad**: *Sistemas* enseña los sistemas que tienen
-juegos (con el número de personalizados en el texto de apoyo) y *Juegos* cuenta los juegos que hay en el
-disco. La tarjeta *Juego al azar* no se queda vacía: al abrir la app ya trae un juego con su carátula y
-sus metadatos, y **Girar** cambia de juego.
+Die Zähler in der Mitte schauen auf **die echte Bibliothek**: *Systeme* zeigt die Systeme mit Spielen
+(mit der Zahl der eigenen Systeme im Hilfstext), und *Spiele* zählt die Spiele auf der Platte. Die
+Karte *Zufallsspiel* bleibt nicht leer: Beim Öffnen der App zeigt sie schon ein Spiel mit Cover und
+Metadaten, und **Drehen** wechselt das Spiel.
 
-![Panel de control](docs/screenshots/01-dashboard.png)
+![Übersicht](docs/screenshots/01-dashboard.png)
 
-*Panel de control con los velocímetros en vivo, los contadores de la biblioteca y los gráficos de
-actividad y de carga. Cada tarjeta lleva su propio tono de acento: el diseño es el de siempre, pero
-con un poco más de color.*
+*Übersicht mit Live-Tachos, den Zählern der Bibliothek und den Diagrammen zu Aktivität und Last.
+Jede Karte hat ihren eigenen Akzentton: Das Layout ist wie immer, nur etwas farbiger.*
 
-### 🕹️ Sistemas Personalizados
+### 🕹️ Eigene Systeme
 
-Los sistemas personalizados creados con el manager, con su carpeta de ROMs, su tema, su tipo de
-hardware y el fichero `es_systems_<slug>.cfg` que los define. Desde aquí se editan.
+Die mit dem Manager angelegten eigenen Systeme, mit ROM-Ordner, Theme, Hardware-Typ und der Datei
+`es_systems_<slug>.cfg`, die sie definiert. Von hier aus werden sie bearbeitet.
 
-![Sistemas personalizados](docs/screenshots/02-sistemas.png)
+![Eigene Systeme](docs/screenshots/02-sistemas.png)
 
-*Listado de sistemas creados, con buscador y acceso directo a editar cada uno.*
+*Liste der angelegten Systeme mit Suche und Direktzugriff zum Bearbeiten.*
 
-### ✏️ Añadir sistema
+### ✏️ System hinzufügen
 
-El formulario de creación: eliges un sistema de referencia del catálogo de Batocera, el formulario se
-rellena solo y ajustas la identidad (nombre, slug, fabricante, año, tipo de equipo, plataforma), las
-ROMs y extensiones, el tema y la descripción. A la derecha se ve **la vista previa del XML** que se
-escribirá, y se puede **simular sin escribir nada**.
+Das Formular zum Anlegen: Du wählst ein Referenzsystem aus dem Batocera-Katalog, das Formular füllt
+sich von selbst, und du passt Identität (Name, Slug, Hersteller, Jahr, Gerätetyp, Plattform), ROMs
+und Dateiendungen, Theme und Beschreibung an. Rechts siehst du **die XML-Vorschau** dessen, was
+geschrieben wird, und du kannst **simulieren, ohne etwas zu schreiben**.
 
-![Añadir sistema](docs/screenshots/03-anadir-sistema.png)
+![System hinzufügen](docs/screenshots/03-anadir-sistema.png)
 
-*Formulario de creación de un sistema personalizado, con la vista previa del `es_systems_<slug>.cfg`.*
+*Formular zum Anlegen eines eigenen Systems, mit Vorschau der `es_systems_<slug>.cfg`.*
 
-### 🏆 Logros
+### 🏆 Erfolge
 
-Los juegos de RetroAchievements donde más has desbloqueado. Cada tarjeta lleva **la carátula que dejó
-el scraper** en tu biblioteca (si el juego no está emparejado con un ROM local, se usa el icono de
-RetroAchievements), los logros conseguidos sobre el total, el porcentaje, el estado y cuándo
-conseguiste el último.
+Die RetroAchievements-Spiele, in denen du am meisten freigeschaltet hast. Jede Karte zeigt **das
+Cover, das der Scraper** in deiner Bibliothek abgelegt hat (ist das Spiel keinem lokalen ROM
+zugeordnet, wird das RetroAchievements-Symbol verwendet), die erreichten Erfolge von der Gesamtzahl,
+den Prozentsatz, den Status und wann du den letzten geholt hast.
 
-Los datos se **descargan una vez y se guardan** (en memoria y en disco, junto a los ajustes del
-manager), así que entrar en la sección no llama a la API de RetroAchievements: se muestran los datos
-guardados y sólo el botón de recargar pide datos frescos, respetando siempre un intervalo mínimo
-entre peticiones. La API de RA no publica una cuota numérica, pero su documentación pide ser
-razonable con las peticiones, de ahí la caché.
+Die Daten werden **einmal heruntergeladen und gespeichert** (im Speicher und auf der Platte, neben den
+Einstellungen des Managers). Der Bereich ruft also beim Öffnen nicht die RetroAchievements-API auf:
+Angezeigt werden die gespeicherten Daten, und nur der Neu-laden-Button holt frische Daten, immer mit
+einem Mindestabstand zwischen Anfragen. Die RA-API veröffentlicht kein festes Kontingent, bittet in
+ihrer Doku aber um maßvolle Anfragen — daher der Cache.
 
-![Logros](docs/screenshots/06-logros.png)
+![Erfolge](docs/screenshots/06-logros.png)
 
-*Dashboard de logros: las carátulas son las del scraper y el anillo marca el porcentaje completado.*
+*Erfolgs-Dashboard: Die Cover kommen vom Scraper, der Ring zeigt den Fortschritt in Prozent.*
 
 ### 🧲 Scraper
 
-Los sistemas de tu biblioteca en tarjetas: cada una con un icono temático (una palanca para los
-arcade, un mando para las consolas, una pantalla para los portátiles, un disco para las consolas de
-CD), el nombre del sistema, una breve descripción y el número de ROMs. Los filtros acotan por texto,
-por tipo de equipo y por estado (con media, sin media, vacíos) y el orden es por número de ROMs o
-por cobertura de carátulas.
+Die Systeme deiner Bibliothek als Karten: jede mit thematischem Symbol (ein Joystick für Arcade, ein
+Controller für Konsolen, ein Bildschirm für Handhelds, eine Disc für CD-Konsolen), dem Systemnamen,
+einer kurzen Beschreibung und der Anzahl der ROMs. Die Filter grenzen nach Text, Gerätetyp und Status
+ein (mit Medien, ohne Medien, leer), sortiert wird nach Anzahl der ROMs oder nach Cover-Abdeckung.
 
 ![Scraper](docs/screenshots/07-scraper.png)
 
-*Tarjetas de los sistemas con su icono temático, el número de ROMs y la cobertura de carátulas.*
+*Systemkarten mit thematischem Symbol, Anzahl der ROMs und Cover-Abdeckung.*
 
-Al abrir un sistema, sus ROMs se reparten en **media presente** y **media ausente**:
+Öffnest du ein System, werden seine ROMs in **Medien vorhanden** und **Medien fehlen** aufgeteilt:
 
-![ROMs del sistema](docs/screenshots/08-scraper-roms.png)
+![ROMs des Systems](docs/screenshots/08-scraper-roms.png)
 
-*Los ROMs del sistema con su carátula, y el reparto entre los que ya tienen imagen y los que no.*
+*Die ROMs des Systems mit Cover und der Aufteilung in die, die schon ein Bild haben, und die ohne.*
 
-En la lista **sólo aparecen los juegos**: el `_info.txt` de cada sistema, el `gamelist.xml` y los
-guardados de estado (`.srm`, `.dat`, `.keys`…) no se listan ni se pueden escrapear.
+In der Liste **erscheinen nur Spiele**: Die `_info.txt` jedes Systems, die `gamelist.xml` und
+Spielstände (`.srm`, `.dat`, `.keys` …) werden weder aufgelistet noch gescrapt.
 
-Desde ahí, un modal flotante permite **escapear el sistema entero** o un juego suelto con
-ScreenScraper, TheGamesDB o IGDB: se elige la fuente y las opciones, y con **Actualizar**, **Editar**
-y **Guardar** se verifican y validan las credenciales, que se guardan en la consola y nunca se
-muestran.
+Von dort aus kannst du in einem schwebenden Fenster **das ganze System** oder ein einzelnes Spiel mit
+ScreenScraper, TheGamesDB oder IGDB **scrapen**: Du wählst Quelle und Optionen, und mit
+**Aktualisieren**, **Bearbeiten** und **Speichern** werden die Zugangsdaten geprüft und bestätigt; sie
+werden auf der Konsole gespeichert und nie angezeigt.
 
-En el modal de un juego se ve **la carátula** que ofrece la fuente (la que se descargará), de qué
-fuelle viene y qué imágenes hay disponibles para bajar (caja 2D, fanart, captura, logo…). Las fuentes
-se pueden activar o desactivar una a una y aparecen **numeradas por orden de prioridad**: primero
-ScreenScraper y, si no encuentra el juego, TheGamesDB e IGDB como respaldo. El botón **Volver** está
-siempre en la barra superior, así que no hay que subir hasta arriba para cambiar de sistema.
+Im Fenster eines Spiels siehst du **das Cover**, das die Quelle anbietet (das heruntergeladen wird),
+woher es stammt und welche Bilder zum Herunterladen verfügbar sind (2D-Box, Fanart, Screenshot,
+Logo …). Die Quellen lassen sich einzeln ein- und ausschalten und erscheinen **nach Priorität
+nummeriert**: zuerst ScreenScraper und, falls das Spiel dort nicht gefunden wird, TheGamesDB und IGDB
+als Ausweichquellen. Der **Zurück**-Button ist immer in der oberen Leiste, du musst also nicht nach
+oben scrollen, um das System zu wechseln.
 
-Al guardar, la tabla se actualiza al instante: el juego pasa de **media ausente** a **media presente**
-sin recargar la página, y un aviso en modal confirma el éxito (se cierra solo a los pocos segundos).
-Si algo falla, el aviso se queda en pantalla con **el log del error** y un botón **Cerrar**.
+Beim Speichern aktualisiert sich die Tabelle sofort: Das Spiel wandert von **Medien fehlen** zu
+**Medien vorhanden**, ohne die Seite neu zu laden, und ein Hinweisfenster bestätigt den Erfolg (es
+schließt sich nach ein paar Sekunden von selbst). Geht etwas schief, bleibt der Hinweis mit **dem
+Fehlerprotokoll** und einem **Schließen**-Button stehen.
 
-Y si el scraping **no encuentra nada** con el nombre del archivo, el modal ofrece **editar ese
-nombre** para acotar la búsqueda («007: Agent Under Fire», «Super Mario Sunshine»…), con un botón
-**Buscar** al lado. El ROM no se renombra: los datos se siguen guardando en el fichero original.
+Und wenn das Scraping mit dem Dateinamen **nichts findet**, bietet das Fenster an, **diesen Namen zu
+bearbeiten**, um die Suche einzugrenzen („007: Agent Under Fire“, „Super Mario Sunshine“ …), mit einem
+**Suchen**-Button daneben. Das ROM wird nicht umbenannt: Die Daten werden weiterhin in der
+Originaldatei gespeichert.
 
-Y si el juego **ya tiene su ficha**, no se vuelve a scrapear: al pincharlo se abre su **información
-local** (la que ya está en el `gamelist.xml`) con **su carátula de la biblioteca**, y sólo se
-raspa lo que aún no tiene media. La ficha se puede **editar** a mano, y «Escapear» sigue ahí por si
-quieresactualizarla desde las fuentes.
+Und wenn das Spiel **schon seinen Eintrag hat**, wird es nicht erneut gescrapt: Ein Klick öffnet
+seine **lokalen Infos** (die schon in der `gamelist.xml` stehen) mit **seinem Cover aus der
+Bibliothek**, und gescrapt wird nur, was noch keine Medien hat. Der Eintrag lässt sich von Hand
+**bearbeiten**, und „Scrapen“ ist weiterhin da, falls du ihn aus den Quellen aktualisieren willst.
 
-![Modal de scraping](docs/screenshots/09-scraper-modal.png)
+![Scraping-Fenster](docs/screenshots/09-scraper-modal.png)
 
-*El modal de un juego: la carátula, las fuentes por orden de prioridad y las imágenes a descargar.*
+*Das Fenster eines Spiels: das Cover, die Quellen nach Priorität und die herunterzuladenden Bilder.*
 
-### 🐞 Depuración
+### 🐞 Fehlersuche
 
-El flujo de eventos del manager en tiempo real: cada petición, acción y aviso llega por SSE. Se
-filtra por nivel (debug, info, aviso, error) y por texto, se puede pausar y limpiar, y el historial
-vive en memoria en el servidor (los 500 últimos eventos).
+Der Ereignisstrom des Managers in Echtzeit: Jede Anfrage, Aktion und Warnung kommt per SSE an. Er
+lässt sich nach Stufe (debug, info, Warnung, Fehler) und Text filtern, pausieren und leeren, und der
+Verlauf liegt im Speicher des Servers (die letzten 500 Ereignisse).
 
-![Depuración](docs/screenshots/04-depuracion.png)
+![Fehlersuche](docs/screenshots/04-depuracion.png)
 
-*Flujo de eventos en vivo, con los contadores por nivel y el filtro de búsqueda.*
+*Live-Ereignisstrom mit Zählern pro Stufe und Suchfilter.*
 
-### ⚙️ Configuración
+### ⚙️ Einstellungen
 
-El estado del servicio (arranque automático, PID, puerto y el bloque de `custom.sh` a la vista), el
-tema de la interfaz, la **información del sistema** (versión del manager, qué interfaz se está
-sirviendo, Python, Node, Pillow, puerto, bundle y script de arranque) y las **instrucciones**
-integradas para instalar, actualizar o recompilar.
+Der Dienststatus (Autostart, PID, Port und der Block in `custom.sh` zum Ansehen), das Design der
+Oberfläche, die **Systeminformationen** (Version des Managers, welche Oberfläche gerade ausgeliefert
+wird, Python, Node, Pillow, Port, Bundle und Startskript) und die eingebauten **Anleitungen** zum
+Installieren, Aktualisieren oder Neukompilieren.
 
-![Configuración](docs/screenshots/05-configuracion.png)
+![Einstellungen](docs/screenshots/05-configuracion.png)
 
-*Configuración con el estado del servicio, la información del sistema y las instrucciones.*
+*Einstellungen mit Dienststatus, Systeminformationen und Anleitungen.*
 
 ---
 
-## 🚀 Instalación
+## 🚀 Installation
 
-Todo se instala desde la propia Batocera, por SSH. **No hace falta nada más que Python 3**, que ya
-viene incluido en el sistema.
+Alles wird direkt auf Batocera per SSH installiert. **Du brauchst nur Python 3**, und das ist im
+System schon enthalten.
 
-Antes de instalar nada el instalador **valida las utilidades**: si Git y Node ya están, sigue sin
-preguntar nada; si falta alguno, avisa de que es necesario instalarlo y lo instala (Git con
-micromamba contra el canal `conda-forge`, Node con el tarball oficial de nodejs.org; en ambos casos
-se verifica el sha256 antes de descomprimir nada). Con `BM_GIT=skip` y `BM_NODE=skip` te saltas esa
-parte.
+Bevor irgendetwas installiert wird, **prüft der Installer die Hilfsprogramme**: Sind Git und Node
+schon da, macht er ohne Rückfrage weiter; fehlt eins, weist er darauf hin, dass es nötig ist, und
+installiert es (Git mit micromamba aus dem Kanal `conda-forge`, Node mit dem offiziellen Tarball von
+nodejs.org; in beiden Fällen wird vor dem Entpacken die sha256 geprüft). Mit `BM_GIT=skip` und
+`BM_NODE=skip` überspringst du diesen Teil.
 
 ```bash
 ssh root@BATOCERA
 
-git clone https://github.com/Thundertruck4K/batocera-web-manager.git /userdata/system/batocera_web
+git clone https://github.com/shakanuga/batocera-web-manager-de.git /userdata/system/batocera_web
 cd /userdata/system/batocera_web
 bash install.sh
 ```
 
-(También puedes ejecutarlo directamente: `./install.sh`, ya es ejecutable.)
+(Du kannst ihn auch direkt starten: `./install.sh`, er ist bereits ausführbar.)
 
-**Sin git** (Batocera no lo trae por defecto): puedes descargar la última release y
-extraerla (la carpeta queda lista, sin renombrar):
+> 🇩🇪 Dieses Repository ist die deutsche Fassung (Fork von
+> [Thundertruck4K/batocera-web-manager](https://github.com/Thundertruck4K/batocera-web-manager)).
+
+**Ohne git** (Batocera bringt es standardmäßig nicht mit): Du kannst den aktuellen Stand als Archiv
+herunterladen und entpacken:
 
 ```bash
 cd /userdata/system
-wget -O batocera_web.tar.gz https://github.com/Thundertruck4K/batocera-web-manager/releases/latest/download/batocera_web.tar.gz
+wget -O batocera_web.tar.gz https://github.com/shakanuga/batocera-web-manager-de/archive/refs/heads/master.tar.gz
 tar -xzf batocera_web.tar.gz
+mv batocera-web-manager-de-master batocera_web
 chmod +x batocera_web/install.sh
 cd batocera_web
 ./install.sh
 ```
 
-El instalador valida primero las **utilidades** (Git y Node): si ya están, sigue con la
-instalación sin preguntar nada; si faltan, avisa de que es necesario instalarlas y las
-instala. Después comprueba Python y Pillow (opcional), valida el puerto, deja los ficheros en
-`/userdata/system/batocera_web/` y **pregunta si quieres arranque automático**: si aceptas, escribe un
-bloque marcado en `/userdata/system/custom.sh` y arranca el manager en ese momento.
+Der Installer prüft zuerst die **Hilfsprogramme** (Git und Node): Sind sie schon da, geht die
+Installation ohne Rückfrage weiter; fehlen sie, weist er darauf hin und installiert sie. Danach prüft
+er Python und Pillow (optional), validiert den Port, legt die Dateien in
+`/userdata/system/batocera_web/` ab und **fragt, ob du den Autostart willst**: Wenn ja, schreibt er
+einen markierten Block in `/userdata/system/custom.sh` und startet den Manager sofort.
 
-Al final **instala también las utilidades de conversión** que se pueden bajar solas (el
-`rom-converto`, el `nodtool` y el `3dstool`): se descargan de la release oficial de cada
-proyecto, se comprueba su `sha256` y se dejan en `/userdata/system/bin`, enlazados en
-`/usr/bin`. Se puede cambiar con `BM_UTILS=auto|all|skip`.
+Zum Schluss **installiert er auch die Konvertierungswerkzeuge**, die sich automatisch laden lassen
+(`rom-converto`, `nodtool` und `3dstool`): Sie werden aus dem offiziellen Release jedes Projekts
+geladen, ihre `sha256` wird geprüft, und sie landen in `/userdata/system/bin`, verlinkt nach
+`/usr/bin`. Ändern lässt sich das mit `BM_UTILS=auto|all|skip`.
 
-**Las sumas están fijadas en el código** (`romtools/utilidades.py`), no se bajan de la red: si una
-release cambiase, no puede colar un binario distinto del esperado. Si la suma no cuadra, **no se
-instala nada** y se avisa. La descarga **enseña el porcentaje** y el instalador avisa de que no
-hace falta cerrar la ventana (son unos 50 MB).
+**Die Prüfsummen sind fest im Code hinterlegt** (`romtools/utilidades.py`) und werden nicht aus dem
+Netz geladen: Ändert sich ein Release, kann kein anderes Binary als das erwartete untergeschoben
+werden. Passt die Summe nicht, **wird nichts installiert** und es gibt eine Warnung. Der Download
+**zeigt den Fortschritt in Prozent**, und der Installer weist darauf hin, dass du das Fenster nicht
+schließen musst (es sind etwa 50 MB).
 
-Las utilidades también se manejan a mano, sin el instalador:
+Die Werkzeuge lassen sich auch von Hand verwalten, ohne Installer:
 
 ```bash
 cd /userdata/system/batocera_web
-python3 -m romtools utilidades --list      # lo que hay y lo que falta
-python3 -m romtools utilidades --install   # instala las que falten
-python3 -m romtools utilidades --remove    # las quita
+python3 -m romtools utilidades --list      # was da ist und was fehlt
+python3 -m romtools utilidades --install   # installiert fehlende
+python3 -m romtools utilidades --remove    # entfernt sie
 ```
 
-Lo que **no** se puede instalar se dice con el motivo, en vez de ocultarlo: el `dolphin-tool`
-(Dolphin compila con `-DENABLE_CLI_TOOL=OFF`), el `wiitool` (no hay release con binarios), el
-`ndstool` (el único precompilado necesita el cargador musl de `/opt/wonderful`), el `extract-xiso`
-(no declara licencia), el `maxcso` (su release sólo trae el binario de Windows) y el `xorriso`, el
-`cdrdao` y el `makecue` (o no se publica el binario, o el manager ya lo hace en Python). La lista
-completa, con licencias y repositorios, está en
-[`docs/utilidades-conversion.md`](docs/utilidades-conversion.md).
+Was sich **nicht** installieren lässt, wird mit Begründung angezeigt statt verschwiegen: `dolphin-tool`
+(Dolphin wird mit `-DENABLE_CLI_TOOL=OFF` kompiliert), `wiitool` (kein Release mit Binaries),
+`ndstool` (das einzige vorkompilierte braucht den musl-Loader aus `/opt/wonderful`), `extract-xiso`
+(keine Lizenzangabe), `maxcso` (das Release enthält nur das Windows-Binary) sowie `xorriso`,
+`cdrdao` und `makecue` (entweder wird kein Binary veröffentlicht oder der Manager erledigt es schon in
+Python). Die vollständige Liste mit Lizenzen und Repositorys steht in
+[`docs/utilidades-conversion.md`](docs/utilidades-conversion.md) (spanisch).
 
-El bloque de arranque se **reescribe** en cada instalación (no se duplica ni se queda con el puerto
-antiguo) y empieza con un `pkill` que mata la instancia anterior, para que el manager nuevo no se
-quede sin puerto si estaba levantado a mano. Si el manager ya estaba corriendo, el instalador lo
-para y lo vuelve a arrancar con el código nuevo.
+Der Startblock wird bei jeder Installation **neu geschrieben** (er wird nicht verdoppelt und behält
+keinen alten Port) und beginnt mit einem `pkill`, der die vorherige Instanz beendet, damit der neue
+Manager nicht ohne Port dasteht, falls er von Hand gestartet war. Lief der Manager schon, hält der
+Installer ihn an und startet ihn mit dem neuen Code neu.
 
-Al terminar verás algo así:
+Am Ende siehst du etwa Folgendes:
 
 ```
   ╭─────────────────────────────────────────────────────────
-  │  Batocera System Manager · instalador
-  │  destino: /userdata/system/batocera_web
+  │  Batocera System Manager · Installer
+  │  Ziel: /userdata/system/batocera_web
   ╰─────────────────────────────────────────────────────────
 
   ◆ Python 3               ✔ Python 3.12.x
-  ◆ Pillow (logos)         ✔ disponible
+  ◆ Pillow (logos)         ✔ verfügbar
   ◆ Git                    ✔ git version 2.56.0 · /usr/bin/git
   ◆ Node.js                ✔ v26.13.0 · /usr/bin/node
-  ◆ Utilidades             ✔ git y node listos
+  ◆ Werkzeuge              ✔ git und node bereit
 
-  ¿Añadir el manager al inicio de Batocera?
-     Así se levanta solo cada vez que enciendas la consola.
-  [S]í / [n]o: s
-  ◆ Arranque automático    ✔ bloque en /userdata/system/custom.sh
-  ✔ Arrancado ahora mismo en el puerto 5000
+  Den Manager zum Autostart von Batocera hinzufügen?
+     Dann startet er jedes Mal von selbst, wenn du die Konsole einschaltest.
+  [J]a / [n]ein: j
+  ◆ Autostart              ✔ Block in /userdata/system/custom.sh
+  ✔ Jetzt gestartet auf Port 5000
 
-  ╰─ Listo. Abre http://BATOCERA:5000
+  ╰─ Fertig. Öffne http://BATOCERA:5000
 ```
 
-### Git (opcional)
+### Git (optional)
 
-Git no es necesario para **usar** el manager, pero sí es la forma cómoda de actualizarlo
-(`git pull`). Batocera es **Buildroot**: no trae `git`, ni gestor de paquetes, ni compilador.
+Git brauchst du nicht, um den Manager zu **benutzen**, aber es ist der bequeme Weg, ihn zu
+aktualisieren (`git pull`). Batocera ist **Buildroot**: Es bringt weder `git` noch einen
+Paketmanager oder Compiler mit.
 
-Si no lo encuentra, el instalador avisa de que hace falta y lo instala con **micromamba**, un
-binario estático, contra el canal `conda-forge`:
+Findet der Installer es nicht, weist er darauf hin und installiert es mit **micromamba**, einem
+statischen Binary, aus dem Kanal `conda-forge`:
 
-1. Se descarga micromamba (2.10.0) y se **verifica su sha256** contra el hash fijado en el
-   propio script: si no cuadra, no se descomprime nada.
-2. Se crea el entorno en `/userdata/system/mamba/envs/git` con `micromamba create` (que
-   comprueba el sha256 de cada paquete que descarga).
-3. Se enlaza `git` en `/usr/bin` y se borra la caché de paquetes, que ocupa cientos de MB.
-4. Se escribe un bloque `# [batocera-git]` en `custom.sh` para que el enlace se recree en
-   cada arranque (`/usr` es un overlay que se pierde al reiniciar).
+1. micromamba (2.10.0) wird heruntergeladen und **seine sha256 wird** gegen den im Skript
+   hinterlegten Hash **geprüft**: Passt sie nicht, wird nichts entpackt.
+2. Die Umgebung wird mit `micromamba create` in `/userdata/system/mamba/envs/git` angelegt (das
+   prüft die sha256 jedes heruntergeladenen Pakets).
+3. `git` wird nach `/usr/bin` verlinkt und der Paket-Cache gelöscht, der Hunderte MB belegt.
+4. In `custom.sh` wird ein Block `# [batocera-git]` geschrieben, damit der Link bei jedem Start neu
+   angelegt wird (`/usr` ist ein Overlay, das beim Neustart verloren geht).
 
-Ojo: el paquete `git` de conda-forge arrastra unas 250 MB (trae Perl, OpenSSL, curl…).
-Si prefieres no instalar nada, usa la vía del tarball de la release y actualiza a mano.
+Achtung: Das `git`-Paket von conda-forge zieht etwa 250 MB nach sich (Perl, OpenSSL, curl …).
+Wenn du lieber nichts installieren willst, nimm den Weg über das Release-Tarball und aktualisiere
+von Hand.
 
-### Node.js (opcional)
+### Node.js (optional)
 
-**No hace falta para usar el manager**: el frontend se despliega ya compilado en `frontend/dist/`, así
-que la consola no necesita Node ni un paso de build. Node sólo sirve para *recompilar* el bundle en la
-propia consola.
+**Zum Benutzen des Managers nicht nötig**: Das Frontend wird schon kompiliert in `frontend/dist/`
+ausgeliefert, die Konsole braucht also weder Node noch einen Build-Schritt. Node dient nur dazu, das
+Bundle auf der Konsole selbst *neu zu kompilieren*.
 
-Si no lo encuentra, el instalador pregunta si quieres instalarlo. La consola es **Buildroot** (sin
-`apt`, `dpkg` ni gestor de paquetes), así que se hace con el tarball oficial de nodejs.org:
+Findet der Installer es nicht, fragt er, ob du es installieren willst. Die Konsole ist **Buildroot**
+(ohne `apt`, `dpkg` oder Paketmanager), daher geschieht das mit dem offiziellen Tarball von nodejs.org:
 
-1. Se descarga el tarball de la **última LTS** (o la que fije `BM_NODE_VERSION`).
-2. Se **verifica el sha256 contra el `SHASUMS256.txt` oficial**: si no cuadra, no se descomprime nada.
-3. Se extrae en `/userdata/system/node/` y se crea el enlace `current`.
-4. Se enlazan `node`, `npm`, `npx` y `corepack` en `/usr/bin`.
-5. Se escribe un bloque `# [batocera-node]` en `custom.sh` para que los enlaces se recreen en cada
-   arranque (`/usr` es un overlay que se pierde al reiniciar) y para persistir `npm_config_prefix` y
-   `npm_config_cache` en la SD.
+1. Das Tarball der **neuesten LTS** wird geladen (oder der in `BM_NODE_VERSION` festgelegten Version).
+2. **Die sha256 wird gegen die offizielle `SHASUMS256.txt` geprüft**: Passt sie nicht, wird nichts entpackt.
+3. Es wird nach `/userdata/system/node/` entpackt und der Link `current` angelegt.
+4. `node`, `npm`, `npx` und `corepack` werden nach `/usr/bin` verlinkt.
+5. In `custom.sh` wird ein Block `# [batocera-node]` geschrieben, damit die Links bei jedem Start neu
+   angelegt werden (`/usr` ist ein Overlay, das beim Neustart verloren geht) und damit
+   `npm_config_prefix` und `npm_config_cache` dauerhaft auf der SD liegen.
 
-### Opciones del instalador
+### Optionen des Installers
 
-| Variable | Por defecto | Para qué sirve |
+| Variable | Standard | Wofür |
 |---|---|---|
-| `BM_PORT` | `5000` | Puerto del servidor web (debe estar entre 1 y 65535) |
-| `BM_BASE_DIR` | `/userdata/system` | Carpeta base de Batocera |
-| `BM_CUSTOM_SH` | `$BM_BASE_DIR/custom.sh` | Script de arranque que se modifica |
-| `BM_PYTHON` | `python3` | Intérprete a usar |
-| `BM_AUTOSTART` | *(pregunta)* | `s` / `n` para instalaciones desatendidas |
-| `BM_GIT` | `auto` | `auto` (lo instala si no está), `install` (lo instala sí o sí) o `skip` |
-| `BM_GIT_DIR` | `$BM_BASE_DIR/mamba` | Dónde se instala Git (el entorno queda en `$BM_GIT_DIR/envs/git`) |
-| `BM_GIT_BIN_DIR` | `/usr/bin` | Dónde se enlazan los binarios |
-| `BM_MICROMAMBA_URL` | `https://micro.mamba.pm/api/micromamba` | Espejo de micromamba (por si hace falta otro) |
-| `BM_MICROMAMBA_VERSION` | `2.10.0` | Versión de micromamba |
-| `BM_MICROMAMBA_SHA256` | *(el de conda-forge)* | Hash esperado: si no cuadra, no se instala nada |
-| `BM_CONDA_CHANNEL` | `conda-forge` | Canal de conda del que se toma Git |
-| `BM_NODE` | `auto` | `auto` (pregunta si no hay Node), `install` (lo instala sí o sí) o `skip` |
-| `BM_NODE_VERSION` | *(última LTS)* | Versión concreta de Node, p. ej. `v26.13.0` |
-| `BM_NODE_DIR` | `$BM_BASE_DIR/node` | Dónde se instala Node |
-| `BM_NODE_BIN_DIR` | `/usr/bin` | Dónde se enlazan los binarios |
-| `BM_NODE_URL` | `https://nodejs.org/dist` | Espejo de nodejs.org (por si hace falta otro) |
-| `BM_UTILS` | `auto` | `auto` (instala las que falten), `all` (las instala todas) o `skip` |
-| `BM_TOOLS_DIR` | `$BM_BASE_DIR/bin` | Dónde se dejan las utilidades de conversión |
-| `BM_TOOLS_BIN_DIR` | `/usr/bin` | Dónde se enlazan al `PATH` |
-| `NO_COLOR` | — | Desactiva el color de la salida |
+| `BM_PORT` | `5000` | Port des Webservers (zwischen 1 und 65535) |
+| `BM_BASE_DIR` | `/userdata/system` | Basisordner von Batocera |
+| `BM_CUSTOM_SH` | `$BM_BASE_DIR/custom.sh` | Startskript, das geändert wird |
+| `BM_PYTHON` | `python3` | Zu verwendender Interpreter |
+| `BM_AUTOSTART` | *(fragt)* | `j` / `n` (oder `s` / `y`) für unbeaufsichtigte Installationen |
+| `BM_GIT` | `auto` | `auto` (installiert es, falls es fehlt), `install` (installiert es auf jeden Fall) oder `skip` |
+| `BM_GIT_DIR` | `$BM_BASE_DIR/mamba` | Wo Git installiert wird (die Umgebung liegt in `$BM_GIT_DIR/envs/git`) |
+| `BM_GIT_BIN_DIR` | `/usr/bin` | Wohin die Binaries verlinkt werden |
+| `BM_MICROMAMBA_URL` | `https://micro.mamba.pm/api/micromamba` | Spiegel für micromamba (falls ein anderer nötig ist) |
+| `BM_MICROMAMBA_VERSION` | `2.10.0` | Version von micromamba |
+| `BM_MICROMAMBA_SHA256` | *(der von conda-forge)* | Erwarteter Hash: Passt er nicht, wird nichts installiert |
+| `BM_CONDA_CHANNEL` | `conda-forge` | Conda-Kanal, aus dem Git kommt |
+| `BM_NODE` | `auto` | `auto` (fragt, wenn kein Node da ist), `install` (installiert es auf jeden Fall) oder `skip` |
+| `BM_NODE_VERSION` | *(neueste LTS)* | Bestimmte Node-Version, z. B. `v26.13.0` |
+| `BM_NODE_DIR` | `$BM_BASE_DIR/node` | Wo Node installiert wird |
+| `BM_NODE_BIN_DIR` | `/usr/bin` | Wohin die Binaries verlinkt werden |
+| `BM_NODE_URL` | `https://nodejs.org/dist` | Spiegel für nodejs.org (falls ein anderer nötig ist) |
+| `BM_UTILS` | `auto` | `auto` (installiert fehlende), `all` (installiert alle) oder `skip` |
+| `BM_TOOLS_DIR` | `$BM_BASE_DIR/bin` | Wo die Konvertierungswerkzeuge abgelegt werden |
+| `BM_TOOLS_BIN_DIR` | `/usr/bin` | Wohin sie in den `PATH` verlinkt werden |
+| `NO_COLOR` | — | Schaltet die farbige Ausgabe ab |
 
-Ejemplo sin interacción: `BM_PORT=8080 BM_AUTOSTART=s bash install.sh`
+Beispiel ohne Rückfragen: `BM_PORT=8080 BM_AUTOSTART=j bash install.sh`
 
-Con Git y Node instalados a la fuerza, sin preguntas: `BM_GIT=install BM_NODE=install BM_AUTOSTART=s bash install.sh`
+Mit erzwungener Installation von Git und Node, ohne Rückfragen: `BM_GIT=install BM_NODE=install BM_AUTOSTART=j bash install.sh`
 
-Sin instalar Git (o Node): `BM_GIT=skip BM_NODE=skip BM_AUTOSTART=s bash install.sh`
+Ohne Git (oder Node) zu installieren: `BM_GIT=skip BM_NODE=skip BM_AUTOSTART=j bash install.sh`
 
-### Actualizar a la última versión
+### Auf die neueste Version aktualisieren
 
-Si ya lo tienes instalado y **tienes git** en la consola:
+Wenn er schon installiert ist und du **git** auf der Konsole hast:
 
 ```bash
 cd /userdata/system/batocera_web
@@ -498,546 +516,578 @@ git pull
 ./install.sh
 ```
 
-El instalador para la instancia que estuviera corriendo y arranca la nueva con el código recién
-descargado, así que no hace falta matar nada a mano.
+Der Installer hält die laufende Instanz an und startet die neue mit dem frisch geladenen Code, du
+musst also nichts von Hand beenden.
 
-Si **no tienes git** (Batocera no lo trae por defecto), descarga la última
-versión y sustituye la carpeta (tus ajustes, temas y ROMs están fuera de ella,
-así que no se pierden):
+> 🇩🇪 `git pull` holt den Stand dieses deutschen Forks. Neue Versionen des spanischen Originals
+> kommen erst hier an, wenn sie übernommen und übersetzt wurden.
+
+Wenn du **kein git** hast (Batocera bringt es standardmäßig nicht mit), lade die neueste Version
+herunter und ersetze den Ordner (deine Einstellungen, Themes und ROMs liegen außerhalb, gehen also
+nicht verloren):
 
 ```bash
 cd /userdata/system
 mv batocera_web batocera_web.bak
-wget -O batocera_web.tar.gz https://github.com/Thundertruck4K/batocera-web-manager/releases/latest/download/batocera_web.tar.gz
+wget -O batocera_web.tar.gz https://github.com/shakanuga/batocera-web-manager-de/archive/refs/heads/master.tar.gz
 tar -xzf batocera_web.tar.gz
+mv batocera-web-manager-de-master batocera_web
 chmod +x batocera_web/install.sh
 cd batocera_web
-BM_AUTOSTART=s ./install.sh
+BM_AUTOSTART=j ./install.sh
 ```
 
-El instalador detecta que los ficheros ya están en su sitio y solo reinicia el
-servicio con el código nuevo. Cuando compruebes que todo va bien, borra la copia
-de seguridad: `rm -rf /userdata/system/batocera_web.bak`.
+Der Installer erkennt, dass die Dateien schon an ihrem Platz sind, und startet nur den Dienst mit dem
+neuen Code neu. Wenn du geprüft hast, dass alles läuft, lösche die Sicherung:
+`rm -rf /userdata/system/batocera_web.bak`.
 
-### Arranque manual (sin autostart)
+### Manueller Start (ohne Autostart)
 
-Si prefieres lanzarlo a mano (o probarlo antes de dejarlo fijo):
+Wenn du ihn lieber von Hand startest (oder ihn ausprobieren willst, bevor du ihn fest einrichtest):
 
 ```bash
 python3 /userdata/system/batocera_web/app.py --port 5000
 ```
 
-El manager lo detecta: en **Configuración** aparece un aviso de *modo manual* y un botón para activar
-el arranque automático con un clic.
+Der Manager erkennt das: In den **Einstellungen** erscheint ein Hinweis auf den *manuellen Modus* und
+ein Button, um den Autostart mit einem Klick zu aktivieren.
 
-> **Pillow (opcional).** Sólo se usa para generar logos de relleno cuando un sistema no tiene logo.
-> Si quieres instalarlo: `python3 -m pip install pillow --break-system-packages`
-
----
-
-## 📖 Uso
-
-Una vez instalado, abre en el navegador:
-
-```
-http://BATOCERA:5000          # sustituye BATOCERA por el nombre o la IP de tu equipo
-```
-
-El servidor escucha en `0.0.0.0`, así que también funciona desde el móvil.
-
-| Sección | Para qué sirve |
-|---|---|
-| **Panel de control** | Estado del sistema en vivo, juego al azar, estadísticas y actividad |
-| **Sistemas Personalizados** | Los sistemas creados con el manager: ver su XML y editarlos |
-| **Añadir sistema** | Formulario para crear un sistema a partir de uno de referencia del catálogo |
-| **Depuración** | Flujo de eventos del manager en vivo, filtrable por nivel y por texto |
-| **Configuración** | Estado del servicio y arranque automático (con el bloque de `custom.sh` a la vista), tema de la interfaz, información del sistema e instrucciones |
-| **Logros** | Dashboard de RetroAchievements: los juegos con más logros, con la carátula de tu biblioteca |
-| **Scraper** | Scrapea carátulas y metadatos, por sistema completo o por juego, desde ScreenScraper, TheGamesDB o IGDB |
-| **ROMs y BIOS** | Inventario de la biblioteca (duplicados, auditoría y cuarentena con deshacer), verificación de las BIOS contra el catálogo oficial de la consola (qué está correcto, qué falta y qué está mal colocado, con reparación sin salir de la SD, subida manual y lista de omisiones) y **Lo que falta**: las otras versiones de los juegos que ya tienes |
-| **Herramientas → Formatos** | Detectar, convertir, comprimir y parchear las imágenes de tus sistemas de discos, según lo que admite cada sistema |
-| **Herramientas → Renombrado** | Ordenar la biblioteca con la convención de los sets (Redump y No-Intro), con plan previo, progreso en segundo plano y deshacer |
-
-Tras crear o modificar un sistema, Batocera necesita releer su configuración: el manager ofrece
-reiniciar EmulationStation desde la propia interfaz.
+> **Pillow (optional).** Wird nur verwendet, um Platzhalter-Logos zu erzeugen, wenn ein System kein
+> Logo hat. Zum Installieren: `python3 -m pip install pillow --break-system-packages`
 
 ---
 
-## 🧲 Scraper de carátulas
+## 📖 Bedienung
 
-El scraper funciona en tres modos (**un juego**, **un sistema completo** o **cola por lotes**) y
-soporta tres fuentes:
+Nach der Installation öffnest du im Browser:
 
-| Fuente | Credenciales |
+```
+http://BATOCERA:5000          # ersetze BATOCERA durch den Namen oder die IP deines Geräts
+```
+
+Der Server lauscht auf `0.0.0.0`, funktioniert also auch vom Handy aus.
+
+| Bereich | Wofür |
 |---|---|
-| **ScreenScraper.fr** (por defecto) | Usuario y contraseña de la cuenta |
-| **TheGamesDB** | API key |
-| **IGDB (Twitch)** | Client ID y Client Secret |
+| **Übersicht** | Systemstatus live, Zufallsspiel, Statistiken und Aktivität |
+| **Eigene Systeme** | Die mit dem Manager angelegten Systeme: XML ansehen und bearbeiten |
+| **System hinzufügen** | Formular, um ein System auf Basis eines Referenzsystems aus dem Katalog anzulegen |
+| **Fehlersuche** | Live-Ereignisstrom des Managers, filterbar nach Stufe und Text |
+| **Einstellungen** | Dienststatus und Autostart (mit sichtbarem Block aus `custom.sh`), Design der Oberfläche, Systeminformationen und Anleitungen |
+| **Erfolge** | RetroAchievements-Dashboard: die Spiele mit den meisten Erfolgen, mit dem Cover aus deiner Bibliothek |
+| **Scraper** | Scrapt Cover und Metadaten für ein ganzes System oder ein einzelnes Spiel von ScreenScraper, TheGamesDB oder IGDB |
+| **ROMs und BIOS** | Inventar der Bibliothek (Duplikate, Audit und Quarantäne mit Rückgängig), Prüfung der BIOS gegen den offiziellen Katalog der Konsole (was korrekt ist, was fehlt und was falsch abgelegt ist, mit Reparatur direkt auf der SD, manuellem Upload und Ausnahmeliste) und **Was fehlt**: die anderen Versionen der Spiele, die du schon hast |
+| **Werkzeuge → Formate** | Images deiner Disc-Systeme erkennen, konvertieren, komprimieren und patchen, je nachdem, was das System unterstützt |
+| **Werkzeuge → Umbenennen** | Die Bibliothek nach der Konvention der Sets (Redump und No-Intro) ordnen, mit Vorschau-Plan, Fortschritt im Hintergrund und Rückgängig |
 
-**ScreenScraper va siempre primero** y TheGamesDB e IGDB actúan de respaldo: si la
-primera fuente no tiene datos del juego, se prueban las siguientes en orden y gana la
-primera que lo encuentre. En la SPA cada fuente se puede activar o desactivar desde
-el propio modal, y se indica cuál acertó y cuáles no tenían información.
+Nachdem du ein System angelegt oder geändert hast, muss Batocera seine Konfiguration neu einlesen:
+Der Manager bietet an, EmulationStation direkt aus der Oberfläche neu zu starten.
 
-Las credenciales se leen de la configuración de Batocera (`batocera.conf`) y se guardan desde la
-propia web. Las imágenes se escriben con la nomenclatura de EmulationStation
-(`images/<rom>-image.png`, `-box`, `-wheel`, `-fanart`, `-marquee`, `-thumbnail`…), así que aparecen sin
-tocar nada más. Se respetan los límites de peticiones de cada API (hilos máximos y pausa mínima).
+---
 
-**Los juegos que son una carpeta.** En algunos sistemas el juego no es un fichero sino una carpeta
-(ScummVM: `Myst.scummvm/`, DOSBox: `Alone in the Dark.pc/`, MUGEN: `kof94.pc/`). Es la convención
-de EmulationStation: si el nombre de la carpeta lleva una extensión del sistema, **la carpeta es el
-juego**, y el `gamelist.xml` guarda su ruta (`<path>./Myst.scummvm</path>`). El manager lo tiene en
-cuenta y lo escrapea por el nombre de la carpeta (sin la extensión), que es el título del juego; la
-ficha y la carátula se guardan igual que las de un ROM normal.
+## 🧲 Cover-Scraper
 
-**Qué se considera un juego.** El criterio es el de EmulationStation: un fichero es un juego si su
-extensión está entre las del sistema (las del `es_systems.cfg`: el del usuario si define ese sistema,
-el oficial si no) **más** la lista global de extensiones de ROM, para no perder nada. Quedan fuera los
-ficheros que no son juego de ninguna manera —el `_info.txt` que documenta los formatos de cada sistema,
-el `gamelist.xml`, los guardados de estado (`.sav`, `.srm`, `.state`, `.autosave`, `.mstate`, `.save`,
-`.ram`), las teclas de imbalanceo (`.keys`), los `.dat` y los `.cfg`/`.ini`—: **no se listan y no se
-pueden escrapear**. Dos matices: si el propio sistema declara una extensión, manda su declaración (los
-`.dat` de **naomi**, atomiswave o systemsp *son* el juego), y los ficheros de configuración de los
-emuladores (`citron_config.xci_config`) quedan fuera siempre. El mismo criterio se usa para contar los
-juegos del panel de control y para el juego al azar.
+Der Scraper arbeitet in drei Modi (**ein Spiel**, **ein ganzes System** oder **Stapel-Warteschlange**)
+und unterstützt drei Quellen:
+
+| Quelle | Zugangsdaten |
+|---|---|
+| **ScreenScraper.fr** (Standard) | Benutzername und Passwort des Kontos |
+| **TheGamesDB** | API-Key |
+| **IGDB (Twitch)** | Client-ID und Client-Secret |
+
+**ScreenScraper kommt immer zuerst**, TheGamesDB und IGDB dienen als Ausweichquellen: Hat die erste
+Quelle keine Daten zum Spiel, werden die nächsten der Reihe nach probiert, und die erste, die es
+findet, gewinnt. In der SPA lässt sich jede Quelle direkt im Fenster ein- oder ausschalten, und es
+wird angezeigt, welche getroffen hat und welche keine Infos hatten.
+
+Die Zugangsdaten werden aus der Batocera-Konfiguration (`batocera.conf`) gelesen und über die
+Weboberfläche gespeichert. Die Bilder werden nach der Namenskonvention von EmulationStation
+geschrieben (`images/<rom>-image.png`, `-box`, `-wheel`, `-fanart`, `-marquee`, `-thumbnail` …), sie
+erscheinen also, ohne dass du sonst etwas ändern musst. Die Anfragelimits jeder API werden eingehalten
+(maximale Threads und Mindestpause).
+
+**Spiele, die ein Ordner sind.** Bei manchen Systemen ist das Spiel keine Datei, sondern ein Ordner
+(ScummVM: `Myst.scummvm/`, DOSBox: `Alone in the Dark.pc/`, MUGEN: `kof94.pc/`). Das ist die
+Konvention von EmulationStation: Trägt der Ordnername eine Dateiendung des Systems, **ist der Ordner
+das Spiel**, und die `gamelist.xml` speichert seinen Pfad (`<path>./Myst.scummvm</path>`). Der Manager
+berücksichtigt das und scrapt nach dem Ordnernamen (ohne Endung), also dem Spieltitel; Eintrag und
+Cover werden genauso gespeichert wie bei einem normalen ROM.
+
+**Was als Spiel gilt.** Maßstab ist EmulationStation: Eine Datei ist ein Spiel, wenn ihre Endung zu
+denen des Systems gehört (aus der `es_systems.cfg`: der des Benutzers, falls er das System definiert,
+sonst der offiziellen) **plus** die globale Liste der ROM-Endungen, damit nichts verloren geht.
+Draußen bleiben Dateien, die auf keinen Fall Spiele sind — die `_info.txt`, die die Formate jedes
+Systems dokumentiert, die `gamelist.xml`, Spielstände (`.sav`, `.srm`, `.state`, `.autosave`,
+`.mstate`, `.save`, `.ram`), Tastenbelegungen (`.keys`), `.dat` sowie `.cfg`/`.ini` —: **Sie werden
+weder aufgelistet noch gescrapt**. Zwei Feinheiten: Deklariert das System selbst eine Endung, gilt
+seine Deklaration (die `.dat` von **naomi**, atomiswave oder systemsp *sind* das Spiel), und
+Konfigurationsdateien von Emulatoren (`citron_config.xci_config`) bleiben immer draußen. Dasselbe
+Kriterium gilt für die Spielezähler der Übersicht und für das Zufallsspiel.
 
 ---
 
 ## 🧬 BIOS
 
-La sección **ROMs y BIOS** de la SPA revisa, sistema a sistema, que las BIOS que exige Batocera
-estén donde deben y con el contenido correcto.
+Der Bereich **ROMs und BIOS** der SPA prüft System für System, ob die BIOS, die Batocera verlangt,
+an der richtigen Stelle liegen und den richtigen Inhalt haben.
 
-**El catálogo sale de la propia consola**, no de una lista congelada en el manager: la lista de BIOS
-cambia con la versión de Batocera, así que se lee de `/usr/bin/batocera-systems` (el script
-oficial, con el slug del sistema, su nombre, la ruta de cada BIOS, su md5 y **qué fichero tiene que
-ir dentro de cada ZIP**), con el `readme.txt` de `/usr/share/batocera/datainit/bios/` como respaldo.
-Por eso el manager sabe lo que exige *tu* versión y no el de otra.
+**Der Katalog kommt von der Konsole selbst**, nicht aus einer im Manager eingefrorenen Liste: Die
+BIOS-Liste ändert sich mit der Batocera-Version, daher wird sie aus `/usr/bin/batocera-systems`
+gelesen (dem offiziellen Skript mit Slug und Name des Systems, dem Pfad jedes BIOS, seinem md5 und
+**welche Datei in jedem ZIP stecken muss**), mit der `readme.txt` aus
+`/usr/share/batocera/datainit/bios/` als Rückfallebene. Deshalb weiß der Manager, was *deine* Version
+verlangt, und nicht die einer anderen.
 
-**Cada BIOS tiene un estado**: `correcta` (en su sitio y con el hash que pide Batocera), `sin
-verificar` (en su sitio, pero Batocera no publica su hash), `hash distinto`, `falta un fichero`
-dentro del ZIP, `reparable` (el contenido está en otro ZIP o en otra carpeta de la SD), `ausente`,
-`omitida` (no la necesitas) e `ilegible`. Las tarjetas se ordenan por criticidad: primero lo que
-impide jugar.
+**Jedes BIOS hat einen Status**: `korrekt` (an seinem Platz und mit dem Hash, den Batocera verlangt),
+`ungeprüft` (an seinem Platz, aber Batocera veröffentlicht keinen Hash), `abweichender Hash`, `eine
+Datei fehlt` im ZIP, `reparierbar` (der Inhalt liegt in einem anderen ZIP oder Ordner auf der SD),
+`fehlt`, `übersprungen` (brauchst du nicht) und `unlesbar`. Die Karten sind nach Dringlichkeit
+sortiert: zuerst das, was das Spielen verhindert.
 
-**Verificar por contenido, no por nombre.** Batocera no compara el hash del ZIP (que es el de un ZIP
-concreto), sino el hash de lo que lleva **dentro**. El manager abre el ZIP y comprueba cada
-miembro, que es exactamente lo que hace Batocera. Por eso una BIOS puede estar perfectamente bien y
-aun así no tener su propio hash publicado.
+**Nach Inhalt prüfen, nicht nach Name.** Batocera vergleicht nicht den Hash des ZIPs (der zu einem
+bestimmten ZIP gehört), sondern den Hash dessen, was **darin** steckt. Der Manager öffnet das ZIP und
+prüft jedes Element — genau wie Batocera. Darum kann ein BIOS völlig in Ordnung sein und trotzdem
+keinen eigenen veröffentlichten Hash haben.
 
-**El hash no es un veredicto.** Batocera tampoco es rígido con el hash de las BIOS: si el fichero
-está en su sitio, el emulador funciona igual (las BIOS de triforce o hikaru, por ejemplo, lanzan los
-juegos con el hash que traía la tarjeta). Así que el estado se decide por **presencia y estructura**
-—que el fichero esté donde lo espera y que el ZIP lleve dentro lo que el catálogo pide—, y el md5 se
-calcula y se enseña como dato, no como veredicto.
+**Der Hash ist kein Urteil.** Auch Batocera ist beim BIOS-Hash nicht streng: Liegt die Datei an ihrem
+Platz, funktioniert der Emulator trotzdem (die BIOS von triforce oder hikaru zum Beispiel starten die
+Spiele mit dem Hash, der auf der Karte war). Der Status wird daher nach **Vorhandensein und Struktur**
+bestimmt — liegt die Datei dort, wo sie erwartet wird, und enthält das ZIP, was der Katalog verlangt —,
+und der md5 wird als Information berechnet und angezeigt, nicht als Urteil.
 
-**Reparar sin salir de la SD.** Cuando el contenido que falta ya está en la consola (dentro de otro
-ZIP o en otra carpeta), el manager lo reúne y lo coloca en la ruta exacta que pide el catálogo,
-comprueba el resultado y deja el fichero original en `/userdata/bios/.quarantine/`. Si no hay nada
-que poner, no toca el destino.
+**Reparieren, ohne die SD zu verlassen.** Liegt der fehlende Inhalt schon auf der Konsole (in einem
+anderen ZIP oder Ordner), stellt der Manager ihn zusammen, legt ihn genau in den Pfad, den der Katalog
+verlangt, prüft das Ergebnis und legt die Originaldatei in `/userdata/bios/.quarantine/` ab. Gibt es
+nichts einzusetzen, wird das Ziel nicht angefasst.
 
-**Si no está en la consola: Google o subida manual.** El botón *Reparar* no se queda en «no se ha
-encontrado»: si el contenido no está en la SD, la app ofrece las dos vías que quedan —**buscarlo en
-Google** (enlace directo con el nombre exacto del fichero entrecomillado y otro con las BIOS del
-sistema) o **subir el archivo** (la app lo deja en su sitio y comprueba que queda bien colocado—.
-Si el BIOS es un ZIP, hay que subir el ZIP completo.
+**Nicht auf der Konsole: Google oder manueller Upload.** Der Button *Reparieren* bleibt nicht bei
+„nicht gefunden“ stehen: Ist der Inhalt nicht auf der SD, bietet die App die beiden verbleibenden Wege
+an — **bei Google suchen** (direkter Link mit dem exakten, in Anführungszeichen gesetzten Dateinamen
+und ein weiterer mit den BIOS des Systems) oder **die Datei hochladen** (die App legt sie an ihren
+Platz und prüft, dass sie richtig liegt). Ist das BIOS ein ZIP, musst du das vollständige ZIP hochladen.
 
-### 🔄 La comprobación del primer arranque
+### 🔄 Die Prüfung beim ersten Start
 
-El catálogo de Batocera dice qué BIOS hace falta, pero **no las trae**: dice el nombre y el hash. Para
-que no tengas que buscar cada BIOS a mano, el manager las baja de **una fuente que ya las tiene
-todas**, en la misma disposición en que Batocera las espera (`Acorn/basic2.rom`,
-`enterprise/ep128emu/roms/exos21.rom`…), así que descargarlas es copiarlas a su sitio.
+Der Batocera-Katalog sagt, welche BIOS nötig sind, **liefert sie aber nicht mit**: Er nennt Name und
+Hash. Damit du nicht jedes BIOS von Hand suchen musst, lädt der Manager sie aus **einer Quelle, die
+sie alle schon hat**, in derselben Anordnung, in der Batocera sie erwartet (`Acorn/basic2.rom`,
+`enterprise/ep128emu/roms/exos21.rom` …), das Herunterladen ist also nur ein Kopieren an den richtigen
+Platz.
 
-**No se hace al instalar.** `install.sh` sólo **arma** la comprobación (borra el marcador de
-`/userdata/system/batocera_manager_bios_first.json`) y avisa de que va a pasar. El escaneo en sí
-necesita el catálogo de BIOS de la consola —que sólo existe con el manager arrancado— y el progreso
-sólo se puede enseñar en la interfaz, no en un terminal. Al **abrir el manager por primera vez** sale
-un modal que:
+**Das passiert nicht bei der Installation.** `install.sh` **richtet** die Prüfung nur **ein** (es
+löscht die Markierung in `/userdata/system/batocera_manager_bios_first.json`) und weist darauf hin.
+Der Scan selbst braucht den BIOS-Katalog der Konsole — den es nur bei laufendem Manager gibt —, und
+der Fortschritt lässt sich nur in der Oberfläche anzeigen, nicht im Terminal. Beim **ersten Öffnen
+des Managers** erscheint ein Fenster, das:
 
-- revisa qué BIOS pide Batocera para los sistemas que tienes;
-- baja de la fuente las que falten, **con barra de progreso** (y avisa de que no hace falta cerrar la
-  ventana);
-- informa de **cuántas se han revisado, cuántas se han descargado, cuántas no están en la fuente y
-  cuántas han dado problemas**, y enseña la lista de las que no se han encontrado.
+- prüft, welche BIOS Batocera für deine Systeme braucht;
+- fehlende aus der Quelle lädt, **mit Fortschrittsbalken** (und darauf hinweist, dass du das Fenster
+  nicht offen lassen musst);
+- meldet, **wie viele geprüft, wie viele heruntergeladen wurden, wie viele nicht in der Quelle sind
+  und wie viele Probleme gemacht haben**, und die Liste der nicht gefundenen zeigt.
 
-**El botón *Escanear el sistema*** está siempre a mano en la sección de BIOS (en la barra superior) y
-también en el propio modal, para repetir la comprobación cuando quieras.
+**Der Button *System scannen*** ist im BIOS-Bereich immer griffbereit (in der oberen Leiste) und auch
+im Fenster selbst, um die Prüfung jederzeit zu wiederholen.
 
-**La fuente es un índice de directorios**, así que no hace falta bajarse el árbol entero: se indexan
-**sólo las carpetas que hacen falta** (6 peticiones para 51 BIOS, frente a ~64 del árbol completo, que
-son varios minutos en la consola). El emparejamiento va en este orden: ruta exacta → ruta exacta
-ignorando mayúsculas → mismo nombre de fichero en otra carpeta.
+**Die Quelle ist ein Verzeichnisindex**, daher muss nicht der ganze Baum geladen werden: Indiziert
+werden **nur die benötigten Ordner** (6 Anfragen für 51 BIOS gegenüber ~64 für den ganzen Baum, was auf
+der Konsole mehrere Minuten wären). Zugeordnet wird in dieser Reihenfolge: exakter Pfad → exakter Pfad
+ohne Groß-/Kleinschreibung → gleicher Dateiname in einem anderen Ordner.
 
-**Lo que no está en la fuente no se inventa.** Si una BIOS no aparece, se informa con su nombre y se
-deja como estaba; no se busca en ningún otro sitio. **Lo que ya está bien no se toca**: sólo se baja
-lo que falta, y después de descargar se vuelve a escanear para comprobar que cada BIOS ha quedado
-donde Batocera la espera.
+**Was nicht in der Quelle ist, wird nicht erfunden.** Taucht ein BIOS nicht auf, wird es mit Namen
+gemeldet und bleibt, wie es war; es wird nirgendwo anders gesucht. **Was schon passt, wird nicht
+angefasst**: Es wird nur geladen, was fehlt, und nach dem Download wird erneut gescannt, um zu prüfen,
+dass jedes BIOS dort liegt, wo Batocera es erwartet.
 
-La fuente que se usa por defecto es
-`http://rgsretro1986.ds78102.seedhost.eu/update/Batocera/bios/` (un índice Apache con las BIOS en la
-misma disposición que Batocera). En la consola de desarrollo, de las 51 BIOS que faltaban, 49 se
-encontraron por su ruta exacta; las dos que no (`BBCMicro/dfs-2.26.rom` y `BBCMicro/os12.rom`) no
-están en la fuente y se informan como tales.
+Standardmäßig wird diese Quelle verwendet:
+`http://rgsretro1986.ds78102.seedhost.eu/update/Batocera/bios/` (ein Apache-Index mit den BIOS in
+derselben Anordnung wie bei Batocera). Auf der Entwicklungskonsole wurden von 51 fehlenden BIOS 49 über
+ihren exakten Pfad gefunden; die beiden anderen (`BBCMicro/dfs-2.26.rom` und `BBCMicro/os12.rom`) sind
+nicht in der Quelle und werden als solche gemeldet.
+
+> ⚖️ Hinweis: BIOS-Dateien sind urheberrechtlich geschützt. Ob du sie aus einer solchen Quelle laden
+> darfst, hängt von deiner Rechtslage ab (in der Regel nur von eigener Hardware).
 
 ---
 
-## 🧰 Herramientas de ROMs
+## 🧰 ROM-Werkzeuge
 
-En el menú lateral, **Herramientas** agrupa dos páginas que trabajan sobre los ficheros de la
-biblioteca: **Formatos** y **Renombrado**. El backend que las sostiene es el paquete `romtools/`,
-en Python de la librería estándar (sin dependencias, como el resto del proyecto).
+In der Seitenleiste fasst **Werkzeuge** zwei Seiten zusammen, die mit den Dateien der Bibliothek
+arbeiten: **Formate** und **Umbenennen**. Das Backend dahinter ist das Paket `romtools/`, in Python
+aus der Standardbibliothek (ohne Abhängigkeiten, wie der Rest des Projekts).
 
-### 🧬 Formatos: convertir, comprimir y parchear
+### 🧬 Formate: konvertieren, komprimieren und patchen
 
-**Formatos** lista los ficheros de un sistema con el formato detectado y deja actuar sobre ellos. El
-formato se decide **por la cabecera del fichero**, no por su extensión: un `.iso` de GameCube, un
-`.v64` mal puesto o un `.chd` se reconocen por lo que son de verdad. De la biblioteca real de una
-consola, el 64 % de los ficheros salía antes como «formato desconocido»; ahora se reconoce casi todo
-(BIN+CUE, ISO 9660 y de qué consola es, PBP, XDVDF, GCM, CHD, WBFS, WIA, RVZ, MDF/CCD, G64/NDD, 3DO,
-NSP, XCI, WAD, ZIP, IPS…) y, cuando no se puede convertir, la interfaz lo dice en vez de dejar un
-hueco.
+**Formate** listet die Dateien eines Systems mit dem erkannten Format auf und lässt dich damit
+arbeiten. Das Format wird **anhand des Datei-Headers** bestimmt, nicht anhand der Endung: Eine
+GameCube-`.iso`, eine falsch benannte `.v64` oder eine `.chd` werden als das erkannt, was sie
+wirklich sind. In der echten Bibliothek einer Konsole wurden früher 64 % der Dateien als „unbekanntes
+Format“ angezeigt; jetzt wird fast alles erkannt (BIN+CUE, ISO 9660 und von welcher Konsole, PBP,
+XDVDF, GCM, CHD, WBFS, WIA, RVZ, MDF/CCD, G64/NDD, 3DO, NSP, XCI, WAD, ZIP, IPS …), und wenn sich
+etwas nicht konvertieren lässt, sagt die Oberfläche das, statt eine Lücke zu lassen.
 
-**Las opciones que se ofrecen dependen del sistema, no sólo del formato.** El mapa sale del
-`es_systems.cfg` de la consola (el mismo que usa EmulationStation, con los sistemas personalizados
-incluidos) y de la wiki oficial: un PSP no admite un ZIP y un GameCube no admite un CHD, así que esas
-conversiones ya no se ofrecen. Con el sistema elegido, la página enseña los formatos que admite, cuál
-es el preferido y lo que hay que saber de él.
+**Welche Optionen angeboten werden, hängt vom System ab, nicht nur vom Format.** Die Zuordnung stammt
+aus der `es_systems.cfg` der Konsole (derselben, die EmulationStation nutzt, inklusive eigener
+Systeme) und aus der offiziellen Wiki: Eine PSP unterstützt kein ZIP und ein GameCube kein CHD, also
+werden diese Konvertierungen nicht angeboten. Mit gewähltem System zeigt die Seite die unterstützten
+Formate, das bevorzugte und was man darüber wissen sollte.
 
-- **Convertir** entre los formatos que se pueden reconstruir sin pérdida: BIN/CUE ↔ ISO, PBP ↔
-  BIN/CUE, XDVDF → ISO, GCM → ISO, Nintendo 64 entre sus tres byte orders (`.n64`, `.z64`, `.v64`),
-  Super Nintendo entre `.sfc`, `.smc` y `.fig`, ISO ↔ CSO/CISO/GCZ (PSP, GameCube y Wii), ISO ↔ CHD y
-  las imágenes de disco proprietarias (GDI, MDS, CCD) → ISO.
-- **Convertir en lote**: eliges un destino y se convierten todos los ficheros del sistema que lo
-  admitan, con filtro opcional por formato de origen. El lote acaba con un resumen de cuántos han
-  salido bien y por qué han fallado los que no.
-- **Comprimir** y **descomprimir** en **ZIP** y en **7Z**. La compresión es una propiedad del
-  **sistema**, no del formato: si el sistema admite `.zip` o `.7z`, se ofrecen para cualquier ROM. En
-  una SNES el ZIP ahorra mucho espacio; en un PSP, donde el ZIP no se lee, no se ofrece.
-- **Parchear** con un parche IPS, y deshacerlo.
+- **Konvertieren** zwischen Formaten, die sich verlustfrei wiederherstellen lassen: BIN/CUE ↔ ISO,
+  PBP ↔ BIN/CUE, XDVDF → ISO, GCM → ISO, Nintendo 64 zwischen seinen drei Byte-Reihenfolgen (`.n64`,
+  `.z64`, `.v64`), Super Nintendo zwischen `.sfc`, `.smc` und `.fig`, ISO ↔ CSO/CISO/GCZ (PSP,
+  GameCube und Wii), ISO ↔ CHD und proprietäre Disc-Images (GDI, MDS, CCD) → ISO.
+- **Stapelkonvertierung**: Du wählst ein Ziel, und alle Dateien des Systems, die es unterstützen,
+  werden konvertiert, optional gefiltert nach Quellformat. Am Ende gibt es eine Zusammenfassung, wie
+  viele geklappt haben und warum die anderen fehlgeschlagen sind.
+- **Komprimieren** und **entpacken** als **ZIP** und **7Z**. Komprimierung ist eine Eigenschaft des
+  **Systems**, nicht des Formats: Unterstützt das System `.zip` oder `.7z`, wird es für jedes ROM
+  angeboten. Bei einem SNES spart ZIP viel Platz; bei einer PSP, die kein ZIP lesen kann, wird es
+  nicht angeboten.
+- **Patchen** mit einem IPS-Patch und das Rückgängigmachen.
 
-Las utilidades externas se detectan en la consola: el **CHD** se hace con el `chdman` de MAME, que ya
-viene en Batocera (`/usr/bin/chdman`), y el **7Z** con el `7z` del p7zip.
+Externe Werkzeuge werden auf der Konsole erkannt: **CHD** wird mit `chdman` von MAME erstellt, das
+schon in Batocera steckt (`/usr/bin/chdman`), und **7Z** mit `7z` aus p7zip.
 
-El **RVZ** (el formato que recomienda la wiki de Batocera para GameCube y Wii) y el **WBFS** se hacen
-con el **`rom-converto`**, que no viene en la imagen pero **el `install.sh` lo instala solo** la
-primera vez que se ejecuta: es un binario de Linux con su `sha256` publicado, que se copia a
-`/userdata/system/bin` (la ruta que sobrevive a los reinicios) y se enlaza en `/usr/bin`. El
-`install.sh` deja un bloque en el `custom.sh` que vuelve a hacer ese enlace en cada arranque,
-porque `/usr` es un overlay que se pierde al reiniciar.
-Con él instalado, el manager convierte de verdad: ISO o GCM de GameCube → RVZ, ISO o WBFS de Wii →
-RVZ, GCZ o WIA → RVZ, RVZ → ISO y RVZ de Wii → WBFS.
-Del mismo modo se instalan el **`nodtool`** (los comprimidos de Dolphin) y el **`3dstool`**, cada
-uno con su `sha256` comprobado.
+**RVZ** (das von der Batocera-Wiki für GameCube und Wii empfohlene Format) und **WBFS** werden mit
+**`rom-converto`** erstellt. Es ist nicht im Image enthalten, aber **das `install.sh` installiert es
+selbst** beim ersten Durchlauf: Es ist ein Linux-Binary mit veröffentlichter `sha256`, das nach
+`/userdata/system/bin` kopiert wird (der Pfad, der Neustarts übersteht) und nach `/usr/bin` verlinkt
+wird. Das `install.sh` hinterlässt in der `custom.sh` einen Block, der diesen Link bei jedem Start
+wieder anlegt, weil `/usr` ein Overlay ist, das beim Neustart verloren geht.
+Damit installiert konvertiert der Manager wirklich: GameCube-ISO oder -GCM → RVZ, Wii-ISO oder -WBFS
+→ RVZ, GCZ oder WIA → RVZ, RVZ → ISO und Wii-RVZ → WBFS.
+Auf dieselbe Weise werden **`nodtool`** (die komprimierten Dolphin-Formate) und **`3dstool`**
+installiert, jeweils mit geprüfter `sha256`.
 
-Las que falten aparecen **desactivadas**, diciendo qué falta y cómo conseguirlo, en vez de fingir que
-se han hecho. La página incluye un **panel de utilidades** con la lista completa: para qué sirve cada
-una, su licencia y de dónde sale.
+Fehlende Werkzeuge erscheinen **deaktiviert** und sagen, was fehlt und wie du es bekommst, statt so
+zu tun, als hätte es geklappt. Die Seite enthält ein **Werkzeug-Panel** mit der vollständigen Liste:
+wofür jedes gut ist, seine Lizenz und woher es stammt.
 
-La lista completa, con licencias, repositorios y cómo instalarlas en Batocera, está en
-[`docs/utilidades-conversion.md`](docs/utilidades-conversion.md).
+Die vollständige Liste mit Lizenzen, Repositorys und Installationswegen für Batocera steht in
+[`docs/utilidades-conversion.md`](docs/utilidades-conversion.md) (spanisch).
 
-Cada conversión escribe el fichero nuevo **al lado del original**, nunca encima (si el nombre ya
-existe, se numera: «Juego (1).chd»), así que la operación siempre se puede deshacer a mano.
+Jede Konvertierung schreibt die neue Datei **neben das Original**, nie darüber (existiert der Name
+schon, wird nummeriert: „Spiel (1).chd“), der Vorgang lässt sich also jederzeit von Hand rückgängig
+machen.
 
-### 🏷️ Renombrado: la convención de los sets
+### 🏷️ Umbenennen: die Konvention der Sets
 
-**Renombrado** ordena la biblioteca con la convención que usan Romulus Manager y las sets de
-GoodTools: el título, la región y el idioma, el número de disco, el serial entre corchetes y las
-marcas de volcado (`[!]` verificado, `[b]` con datos malos, `[f]` arreglado, `[t]` traducido).
+**Umbenennen** ordnet die Bibliothek nach der Konvention, die Romulus Manager und die GoodTools-Sets
+verwenden: Titel, Region und Sprache, Disc-Nummer, Seriennummer in eckigen Klammern und die
+Dump-Markierungen (`[!]` verifiziert, `[b]` mit fehlerhaften Daten, `[f]` repariert, `[t]` übersetzt).
 
-**El nombre destino es el del DAT.** Un DAT (Redump o No-Intro) es la lista de juegos con el nombre
-oficial y los hashes de cada fichero; ese nombre *es* la convención, así que el manager lo copia tal
-cual en vez de inventar uno. Sólo cuando no hay DAT, o cuando el DAT no trae la entrada, se compone
-el nombre con la misma gramática a partir del fichero que ya tienes.
+**Der Zielname ist der aus dem DAT.** Ein DAT (Redump oder No-Intro) ist die Liste der Spiele mit dem
+offiziellen Namen und den Hashes jeder Datei; dieser Name *ist* die Konvention, also übernimmt der
+Manager ihn unverändert, statt einen zu erfinden. Nur wenn es kein DAT gibt oder das DAT den Eintrag
+nicht enthält, wird der Name nach derselben Grammatik aus der vorhandenen Datei zusammengesetzt.
 
-**Los DAT se descargan, no se alojan.** Van al espejo de `libretro-database` (Redump y No-Intro), al
-catálogo de DAT por sistema de libretro y al rebuild diario, que son metadatos: la lista de juegos con
-sus hashes, sin una sola ROM. Se guardan en `/userdata/system/batocera_manager_dats/` y el instalador
-puede bajarlos de entrada (paso 7, con `BM_DATS=auto|all|skip`).
+**DATs werden heruntergeladen, nicht mitgeliefert.** Sie kommen vom Spiegel der `libretro-database`
+(Redump und No-Intro), aus dem DAT-Katalog pro System von libretro und aus dem täglichen Rebuild, und
+sind Metadaten: die Liste der Spiele mit ihren Hashes, ohne ein einziges ROM. Gespeichert werden sie
+in `/userdata/system/batocera_manager_dats/`, und der Installer kann sie gleich mit herunterladen
+(Schritt 7, mit `BM_DATS=auto|all|skip`).
 
-**El cálculo del plan lleva su propia barra de progreso.** En un sistema grande el cálculo
-tarda (hay que identificar miles de ficheros y a veces hashear ISOs de 4 GB), así que va **en un
-hilo aparte**: la página enseña una barra con los ficheros que lleva revisados y el que está
-mirando ahora mismo, y el trabajo no se pierde aunque el usuario siga usando la aplicación. Los
-endpoints `GET /api/tools/rename/plan/start` y `POST /api/tools/rename/apply/start` devuelven el
-identificador del trabajo y `GET /api/tools/rename/job?id=…` dice cómo va.
+**Die Berechnung des Plans hat einen eigenen Fortschrittsbalken.** Bei einem großen System dauert die
+Berechnung (Tausende Dateien müssen identifiziert und manchmal 4-GB-ISOs gehasht werden), daher läuft
+sie **in einem eigenen Thread**: Die Seite zeigt einen Balken mit den bereits geprüften Dateien und der
+gerade bearbeiteten, und die Arbeit geht nicht verloren, auch wenn du die App weiter benutzt. Die
+Endpunkte `GET /api/tools/rename/plan/start` und `POST /api/tools/rename/apply/start` liefern die
+Kennung des Auftrags, und `GET /api/tools/rename/job?id=…` meldet den Stand.
 
-**Cada sistema tiene su DAT, y se dice de dónde sale.** La clave es el **nombre de la carpeta del
-sistema** en `/userdata/roms`, que es lo que usa el manager: con 122 sistemas mapeados sobre las
-carpetas que existen de verdad, el renombrado funciona en toda la biblioteca y no sólo en el 3DO. Para
-los sistemas que no están en el mapa, el DAT se busca **por nombre** contra el catálogo real, y sólo se
-acepta si el DAT cubre **todas** las palabras del sistema y con una confianza de 0,7 o más (si no,
-«Wolfenstein - Enemy Territory» acababa emparejado con «Wolfenstein 3D»). La interfaz lo enseña:
-«DAT listo», o «DAT por nombre (confianza 92 %)», o «este sistema no tiene DAT disponible».
+**Jedes System hat sein DAT, und es wird gesagt, woher es kommt.** Schlüssel ist der **Name des
+Systemordners** in `/userdata/roms`, denn den nutzt der Manager: Mit 122 auf die tatsächlich
+vorhandenen Ordner abgebildeten Systemen funktioniert das Umbenennen in der ganzen Bibliothek und nicht
+nur beim 3DO. Für Systeme, die nicht in der Zuordnung stehen, wird das DAT **über den Namen** im echten
+Katalog gesucht und nur akzeptiert, wenn es **alle** Wörter des Systems abdeckt und die Zuverlässigkeit
+0,7 oder mehr beträgt (sonst landete „Wolfenstein - Enemy Territory“ bei „Wolfenstein 3D“). Die
+Oberfläche zeigt das an: „DAT bereit“, „DAT über Namen (Zuverlässigkeit 92 %)“ oder „für dieses System
+ist kein DAT verfügbar“.
 
-**Cómo se empareja un fichero con su juego**, de más fiable a menos:
+**Wie eine Datei ihrem Spiel zugeordnet wird**, vom zuverlässigsten zum unsichersten:
 
-1. **Nombre y tamaño**: si el nombre del fichero y su tamaño coinciden con los del DAT, es el juego.
-   No toca el disco, y es el caso mayoritario.
-2. **Hash**: md5, sha1 y crc32 en una sola pasada. Es la prueba definitiva, pero obliga a leer el
-   fichero entero, así que el plan lleva un **presupuesto de 512 MB** por tanda: con bibliotecas de
-   40 GB no se hashea todo, se avisa y se sigue con lo demás.
-3. **Serial del disco**: el identificador que va dentro de la imagen (`SLUS_010.10`, `SLES-022.41`,
-   `GALE01`, `RVL-RZ4E`, `T-503 8914`…).
-4. **Título**: se comparan los títulos sin las etiquetas entre paréntesis, con una similitud que
-   mezcla secuencia de caracteres y palabras.
+1. **Name und Größe**: Stimmen Dateiname und Größe mit denen im DAT überein, ist es das Spiel. Die
+   Platte wird nicht angefasst, und das ist der häufigste Fall.
+2. **Hash**: md5, sha1 und crc32 in einem Durchgang. Das ist der endgültige Beweis, erfordert aber, die
+   ganze Datei zu lesen, daher hat der Plan ein **Budget von 512 MB** pro Durchgang: Bei Bibliotheken
+   mit 40 GB wird nicht alles gehasht; es gibt einen Hinweis, und mit dem Rest wird weitergemacht.
+3. **Seriennummer der Disc**: die Kennung im Image (`SLUS_010.10`, `SLES-022.41`, `GALE01`,
+   `RVL-RZ4E`, `T-503 8914` …).
+4. **Titel**: Die Titel werden ohne die Angaben in Klammern verglichen, mit einer Ähnlichkeit, die
+   Zeichenfolgen und Wörter kombiniert.
 
-Cuando el emparejamiento es por título es una **heurística**, y así se enseña: el plan marca la
-confianza y deja la fila para revisar. Entre los candidatos se elige **la variante del mismo juego**
-(el título y el disco identifican un juego; la región no), y dentro de ese juego gana la que
-prefieras: primero la región, luego la revisión, luego las marcas de volcado.
+Eine Zuordnung über den Titel ist eine **Heuristik** und wird auch so angezeigt: Der Plan markiert die
+Zuverlässigkeit und lässt die Zeile zum Prüfen stehen. Unter den Kandidaten wird **die Variante
+desselben Spiels** gewählt (Titel und Disc identifizieren ein Spiel, die Region nicht), und innerhalb
+dieses Spiels gewinnt die, die du bevorzugst: zuerst die Region, dann die Revision, dann die
+Dump-Markierungen.
 
-**Nada se renombra a ciegas.** El plan se enseña entero (nombre actual, nombre propuesto, método y
-confianza) antes de tocar nada; al aplicar se renombran también el CUE, la M3U y el resto de
-acompañantes; y cada tanda deja un journal en `/userdata/system/batocera_manager_renames.json`,
-con un botón para **deshacer** la última.
+**Nichts wird blind umbenannt.** Der Plan wird vollständig angezeigt (aktueller Name, vorgeschlagener
+Name, Methode und Zuverlässigkeit), bevor etwas verändert wird; beim Anwenden werden auch CUE, M3U und
+die übrigen Begleitdateien umbenannt; und jeder Durchgang hinterlässt ein Journal in
+`/userdata/system/batocera_manager_renames.json`, mit einem Button, um den letzten **rückgängig** zu
+machen.
 
-**En Wii se identifica por el código de juego.** El nombre del fichero no dice nada (el
-volcado se llama `REXP01.wbfs`), pero el disco lleva dentro su código de juego (`REXP`) y el
-hash MD5 del juego, y el DAT guarda ese mismo código en su serial (`RVL-REXP-EUR`). El cruce es
-por tanto exacto y no cuesta hashear los 620 MB del volcado. El plan enseña los dos lados: el
-código y el MD5 que lleva el disco, y el crc32/md5/sha1 que tiene el DAT (que son los de la ISO
-de 4,7 GB, no los del volcado). Cada juego de Wii es una carpeta (`Juego [REXP01]`), así que lo
-que se renombra es la carpeta, conservando el sufijo con el código del disco.
+**Bei Wii wird über den Spielcode identifiziert.** Der Dateiname verrät nichts (der Dump heißt
+`REXP01.wbfs`), aber die Disc enthält ihren Spielcode (`REXP`) und den MD5-Hash des Spiels, und das DAT
+speichert denselben Code in seiner Seriennummer (`RVL-REXP-EUR`). Der Abgleich ist also exakt, und die
+620 MB des Dumps müssen nicht gehasht werden. Der Plan zeigt beide Seiten: den Code und den MD5 aus der
+Disc sowie crc32/md5/sha1 aus dem DAT (die zur 4,7-GB-ISO gehören, nicht zum Dump). Jedes Wii-Spiel ist
+ein Ordner (`Spiel [REXP01]`), umbenannt wird also der Ordner, mit beibehaltenem Suffix aus dem
+Disc-Code.
 
-**Renombrar actualiza el `gamelist.xml`.** Un nombre nuevo sin actualizar la lista deja la
-biblioteca descuadrada: EmulationStation seguiría apuntando a ficheros que ya no existen y las
-carátulas se quedarían sin juego. Al aplicar, el manager actualiza el `<path>` de cada ficha,
-renombra la media que acompaña al juego (en `images/`, `videos/`, `manuals/` y `downloads/`) y
-repunta las etiquetas (`image`, `video`, `marquee`, `thumbnail`…), dejando el resto de metadatos
-intactos. La media sólo se renombra cuando el nombre es exactamente `<tallo>-<algo>`, así que
-«Clay Fighter-image.png» sí se renombra y «Clay Fighter 2-image.png» no. El `gamelist.xml` original
-se guarda en el journal: **deshacer** lo deja tal como estaba.
+**Umbenennen aktualisiert die `gamelist.xml`.** Ein neuer Name ohne aktualisierte Liste bringt die
+Bibliothek durcheinander: EmulationStation würde weiter auf Dateien zeigen, die es nicht mehr gibt, und
+die Cover stünden ohne Spiel da. Beim Anwenden aktualisiert der Manager den `<path>` jedes Eintrags,
+benennt die zum Spiel gehörenden Medien um (in `images/`, `videos/`, `manuals/` und `downloads/`) und
+biegt die Tags um (`image`, `video`, `marquee`, `thumbnail` …), die übrigen Metadaten bleiben
+unverändert. Medien werden nur umbenannt, wenn der Name genau `<stamm>-<etwas>` lautet, also wird
+„Clay Fighter-image.png“ umbenannt und „Clay Fighter 2-image.png“ nicht. Die ursprüngliche
+`gamelist.xml` wird im Journal gespeichert: **Rückgängig** stellt sie genau so wieder her.
 
-### 📚 Biblioteca de ROMs: duplicados y auditoría
+### 📚 ROM-Bibliothek: Duplikate und Audit
 
-La sección **ROMs y BIOS** (la ruta `/roms`) tenía un problema de coherencia: era solo BIOS. No había
-forma de ver la biblioteca de ROMs como conjunto ni de administrarla. Ahora es **una página con dos
-pestañas**, **ROMs** y **BIOS**, y la de ROMs hace la radiografía completa.
+Der Bereich **ROMs und BIOS** (der Pfad `/roms`) hatte ein Stimmigkeitsproblem: Er enthielt nur BIOS.
+Es gab keine Möglichkeit, die ROM-Bibliothek als Ganzes zu sehen oder zu verwalten. Jetzt ist es **eine
+Seite mit zwei Reitern**, **ROMs** und **BIOS**, und der ROM-Reiter macht die komplette Durchleuchtung.
 
-**La auditoría mira la biblioteca entera**, pero no la hashea: eso serían horas en una biblioteca de
-1,8 TB. Los duplicados se buscan con una **huella rápida** (el tamaño más los primeros y los últimos
-64 KB), que es gratis, y solo los candidatos se confirman con el hash completo. Esa confirmación tiene
-un **presupuesto de bytes** (8 GB), así que el grupo que no cabe sale marcado como *candidato* (la
-huella coincide) y no como duplicado confirmado: la interfaz no miente sobre lo que sabe.
+**Das Audit betrachtet die ganze Bibliothek**, hasht sie aber nicht: Das würde bei einer Bibliothek
+mit 1,8 TB Stunden dauern. Duplikate werden mit einem **Schnell-Fingerabdruck** gesucht (die Größe plus
+die ersten und letzten 64 KB), der nichts kostet, und nur die Kandidaten werden mit dem vollständigen
+Hash bestätigt. Diese Bestätigung hat ein **Byte-Budget** (8 GB), eine Gruppe, die nicht hineinpasst,
+wird also als *Kandidat* markiert (der Fingerabdruck stimmt überein) und nicht als bestätigtes Duplikat:
+Die Oberfläche lügt nicht über das, was sie weiß.
 
-Los juegos que son **carpetas** (Wii, ScummVM, DOSBox, los arcades de Lindbergh) se comparan
-**enteros**: su fichero más grande es el motor, que es el mismo para todos los juegos, así que
-hashearlo daría duplicados falsos.
+Spiele, die **Ordner** sind (Wii, ScummVM, DOSBox, die Lindbergh-Arcades), werden **vollständig**
+verglichen: Ihre größte Datei ist die Engine, die bei allen Spielen gleich ist, sie zu hashen würde
+also falsche Duplikate ergeben.
 
-Lo que encuentra:
+Was es findet:
 
-| Qué | Qué es |
+| Was | Bedeutung |
 |---|---|
-| **Duplicados** | Juegos repetidos, con cuántas copias hay y cuánto se puede liberar dejando una |
-| **Fichas sin fichero** | Entradas del `gamelist.xml` que apuntan a un juego que ya no está |
-| **Ficheros vacíos** | Juegos de 0 bytes: no arrancan |
-| **Ficheros que no son juegos** | Notas, listas y demás ficheros sueltos |
-| **Media sin juego** | Imágenes y vídeos cuyo juego ya no está |
-| **Repetidos entre sistemas** | El mismo juego en `naomi` y `atomiswave` (los arcades) |
-| **El espacio por sistema** | Dónde se lleva la memoria de la tarjeta |
+| **Duplikate** | Doppelte Spiele, mit Anzahl der Kopien und wie viel Platz frei wird, wenn eine bleibt |
+| **Einträge ohne Datei** | Einträge der `gamelist.xml`, die auf ein Spiel zeigen, das nicht mehr da ist |
+| **Leere Dateien** | Spiele mit 0 Bytes: Sie starten nicht |
+| **Dateien, die keine Spiele sind** | Notizen, Listen und andere lose Dateien |
+| **Medien ohne Spiel** | Bilder und Videos, deren Spiel nicht mehr da ist |
+| **Doppelt in mehreren Systemen** | Dasselbe Spiel in `naomi` und `atomiswave` (die Arcades) |
+| **Speicherplatz pro System** | Wo der Speicher der Karte hingeht |
 
-**Nada se borra.** Lo que sobra se mueve a una **cuarentena** (`/userdata/roms/.quarantine/`), que
-está dentro de la propia biblioteca: el move es un renombrado, así que es instantáneo y no copia 63 GB.
-Cada tanda queda en un journal y hay un botón de **deshacer** que lo devuelve todo a su sitio. Lo mismo
-con el `gamelist.xml`: al limpiarlo se guarda el texto original, y deshacer lo repone.
+**Nichts wird gelöscht.** Überflüssiges wird in eine **Quarantäne** verschoben
+(`/userdata/roms/.quarantine/`), die innerhalb der Bibliothek liegt: Das Verschieben ist ein
+Umbenennen, geht also sofort und kopiert keine 63 GB. Jeder Durchgang landet in einem Journal, und ein
+**Rückgängig**-Button bringt alles wieder an seinen Platz. Dasselbe gilt für die `gamelist.xml`: Beim
+Bereinigen wird der Originaltext gespeichert, und Rückgängig stellt ihn wieder her.
 
-Como el resto de los trabajos largos (el plan de renombrado), la auditoría va **en segundo plano con
-barra de progreso**: la página dice qué está haciendo y cuál es el fichero que está mirando, y avisa de
-que no hace falta cerrar la ventana.
+Wie die anderen langen Aufträge (der Umbenennungsplan) läuft das Audit **im Hintergrund mit
+Fortschrittsbalken**: Die Seite zeigt, was gerade passiert und welche Datei gerade geprüft wird, und
+weist darauf hin, dass du das Fenster nicht offen lassen musst.
 
-**Legal**: el manager no aloja ni descarga ROMs. Los DAT son metadatos públicos; las conversiones,
-compresiones y parches se hacen sobre los ficheros que ya están en tu SD.
+**Rechtliches**: Der Manager stellt keine ROMs bereit und lädt keine herunter. DATs sind öffentliche
+Metadaten; Konvertierungen, Komprimierungen und Patches werden auf die Dateien angewendet, die schon auf
+deiner SD liegen.
+
+> 💡 **Tipp zum Aufräumen:** Für „doppelte Versionen aussortieren“ ist dieser Reiter die richtige
+> Stelle. Starte **Bibliothek prüfen**, sieh dir die Gruppe **Doppelte Spiele** an, hake die
+> überflüssigen Kopien ab und verschiebe sie in die Quarantäne. Wenn du dir sicher bist, kannst du
+> den Ordner `/userdata/roms/.quarantine/` später von Hand leeren. Für verschiedene *Versionen*
+> desselben Spiels (z. B. Europa und USA) nutze zusätzlich **Was fehlt**, um zu sehen, welche Varianten
+> es gibt und welche als „bessere Version“ gilt.
 
 ---
 
-### 🧭 Lo que falta: las otras versiones de los juegos que tienes
+### 🧭 Was fehlt: die anderen Versionen der Spiele, die du hast
 
-El DAT de un sistema es la lista de **todos** sus juegos. Comparado con tu biblioteca dice qué te
-falta... pero la lista completa no informa de nada: el DAT de PlayStation 2 tiene 13.618 juegos y una
-biblioteca normal tiene 300. Decir «te faltan 13.300 juegos» no es información.
+Das DAT eines Systems ist die Liste **aller** seiner Spiele. Mit deiner Bibliothek verglichen sagt es,
+was dir fehlt … aber die vollständige Liste sagt nichts aus: Das PlayStation-2-DAT hat 13.618 Spiele,
+eine normale Bibliothek hat 300. „Dir fehlen 13.300 Spiele“ ist keine Information.
 
-Lo que sí informa es lo contrario: **de los juegos que ya tienes, qué otras versiones hay**. Si tienes
-«Super Mario 64 (Japan)» y el DAT tiene también la americana y la europea, quizá te interesa la
-americana. Y si el juego tiene tres discos y solo tienes el primero, ese disco sí falta de verdad.
+Aussagekräftig ist das Gegenteil: **Welche anderen Versionen gibt es von den Spielen, die du schon
+hast?** Hast du „Super Mario 64 (Japan)“ und das DAT enthält auch die amerikanische und die
+europäische, interessiert dich vielleicht die amerikanische. Und hat das Spiel drei Discs und du nur die
+erste, fehlt diese Disc wirklich.
 
-Por eso la sección **Lo que falta** no lista todo lo que falta, sino **las variantes de los juegos que
-tienes**. De cada juego:
+Deshalb listet der Bereich **Was fehlt** nicht alles auf, was fehlt, sondern **die Varianten der Spiele,
+die du hast**. Für jedes Spiel:
 
 | | |
 |---|---|
-| **Tienes** | El nombre que le da el DAT y **cómo se ha emparejado**: por el nombre, por el hash, por el código del disco, por el serial o por el título (este último, avisando de que conviene revisarlo) |
-| **Faltan** | Cada versión que no tienes, con el **motivo**: `te falta el disco 2`, `otra región (USA)`, `otra revisión`, `otro idioma` u `otra versión` |
+| **Du hast** | Den Namen, den das DAT ihm gibt, und **wie zugeordnet wurde**: über den Namen, den Hash, den Disc-Code, die Seriennummer oder den Titel (Letzteres mit dem Hinweis, dass es besser geprüft werden sollte) |
+| **Fehlen** | Jede Version, die du nicht hast, mit **Begründung**: `dir fehlt Disc 2`, `andere Region (USA)`, `andere Revision`, `andere Sprache` oder `andere Version` |
 
-Cuando la versión que falta **puntúa más alto** que la que tienes (un volcado verificado frente a uno
-con datos malos, por ejemplo), sale con la etiqueta **«versión mejor»**. Los filtros son *todo*,
-*juegos con discos que faltan* y *juegos con versión mejor*: cada cifra dice si cuenta juegos o
-versiones, para que dos números parecidos no se confundan.
+Wenn die fehlende Version **besser abschneidet** als die vorhandene (zum Beispiel ein verifizierter Dump
+gegenüber einem mit fehlerhaften Daten), erscheint sie mit der Markierung **„bessere Version“**. Die
+Filter sind *Alle*, *Spiele mit fehlenden Discs* und *Spiele mit besserer Version*: Jede Zahl sagt, ob
+sie Spiele oder Versionen zählt, damit zwei ähnliche Zahlen nicht verwechselt werden.
 
-La comparación es **por sistema y a petición**, y va **en segundo plano con barra de progreso**: cargar
-los 17 índices de golpe son 55 MB de JSON, que en la consola son cientos de MB de memoria. Además, los
-ficheros grandes no se hashean si no caben en el **presupuesto de 512 MB**: se emparejan por el nombre o
-por el título, y la interfaz lo dice.
+Der Vergleich erfolgt **pro System und auf Anforderung** und läuft **im Hintergrund mit
+Fortschrittsbalken**: Alle 17 Indizes auf einmal zu laden, wären 55 MB JSON, also Hunderte MB Speicher
+auf der Konsole. Außerdem werden große Dateien nicht gehasht, wenn sie nicht ins **Budget von 512 MB**
+passen: Sie werden über den Namen oder den Titel zugeordnet, und die Oberfläche sagt das.
 
-**No se afirma lo que no se sabe**, y para eso hay dos reglas:
+**Es wird nichts behauptet, was nicht bekannt ist**, und dafür gibt es zwei Regeln:
 
-- **El juego** lo dicen los títulos pelados (sin etiquetas): tienen que ser el mismo. «Tomb Raider  I»
-  y «Tomb Raider (USA)» se parecen mucho y son juegos distintos.
-- **La variante** la dice la región (o la revisión) que declara el nombre: tiene que ser la misma en
-  los dos lados. Si el DAT dice «(USA)» y tu fichero no dice nada, el juego está identificado pero
-  **la variante no**: esos van a **«quizá»** y no se cuentan ni como que los tienes ni como que te
-  faltan.
+- **Das Spiel** bestimmen die bloßen Titel (ohne Angaben): Sie müssen gleich sein. „Tomb Raider  I“
+  und „Tomb Raider (USA)“ sehen sich sehr ähnlich und sind verschiedene Spiele.
+- **Die Variante** bestimmt die Region (oder Revision), die im Namen steht: Sie muss auf beiden Seiten
+  gleich sein. Sagt das DAT „(USA)“ und deine Datei nichts, ist das Spiel identifiziert, **die Variante
+  aber nicht**: Solche landen bei **„vielleicht“** und zählen weder als vorhanden noch als fehlend.
 
-Y los que ni siquiera se parecen (mods, traducciones) se cuentan aparte, como los que no salen en el
-DAT.
+Und die, die sich nicht einmal ähneln (Mods, Übersetzungen), werden getrennt gezählt, wie die, die
+nicht im DAT stehen.
 
-**Nada se toca**: esta sección solo informa. No borra, no renombra y no descarga nada.
+**Es wird nichts verändert**: Dieser Bereich informiert nur. Er löscht nichts, benennt nichts um und
+lädt nichts herunter.
 
 ---
 
-## 🧱 Arquitectura
+## 🧱 Architektur
 
-Intencionadamente sencilla: **un proceso, un servidor y un cliente**.
+Absichtlich einfach: **ein Prozess, ein Server und ein Client**.
 
 ```
-Navegador  ──HTTP──▶  app.py (http.server)  ──▶  /userdata/system/…
+Browser    ──HTTP──▶  app.py (http.server)  ──▶  /userdata/system/…
                           │                      ├── configs/emulationstation/es_systems_<slug>.cfg
-                          │                      ├── roms/<sistema>/…
+                          │                      ├── roms/<system>/…
                           │                      ├── batocera.conf
                           │                      └── batocera_manager_settings.json
                           │
-                          ├── frontend/dist/     # SPA de React (contenido estático)
-                          ├── templates/         # interfaz clásica de respaldo
+                          ├── frontend/dist/     # React-SPA (statischer Inhalt)
+                          ├── templates/         # klassische Ausweich-Oberfläche
                           │   index.html
-                          └── romtools/          # paquete de DAT, renombrado y formatos
+                          └── romtools/          # Paket für DATs, Umbenennen und Formate
                               dats · identify · naming · sets · rename · formats
                               library · faltantes · progress · jobs
 ```
 
-- **`app.py`** — servidor HTTP puro (`http.server`) con todos los endpoints, lectura de
-  `/proc` y `/sys` para las métricas, escritura de configuraciones de EmulationStation y los clientes
-  de ScreenScraper, TheGamesDB e IGDB. Sin frameworks.
-- **`romtools/`** — paquete del backend para las herramientas de ROMs: catálogo y descarga de
-  DAT, identificación por hash, firma de disco y título, gramática de los nombres de set,
-  motor de renombrado con plan y deshacer, conversión, compresión y parches de formatos, y el
-  motor de trabajos en segundo plano con su barra de progreso.
-  Es Python de la librería estándar, como todo lo demás, y se importa de forma protegida:
-  si el paquete no está, la API de herramientas responde con un error claro y el resto de la
-  app sigue funcionando.
-- **`frontend/`** — la SPA de React + Tailwind. El servidor sirve `frontend/dist/` tal cual (con
-  la versión inyectada en un `<meta>`); si ese bundle no está, cae a `templates/index.html`.
-- **`templates/index.html`** — interfaz clásica completa (HTML, CSS y JavaScript en un solo
-  fichero). El servidor la sirve sustituyendo una serie de marcadores con los datos ya calculados,
-  así que la primera pantalla se ve sin esperas. Es el respaldo cuando no hay bundle.
-- **`batocera_systems.json`** — catálogo de referencia con los sistemas y emuladores que trae
-  Batocera; alimenta el formulario de creación (extensiones, núcleos y sistema de referencia).
-- **Sin estado en memoria** más allá de la caché de ROMs (60 s), la caché de metadatos de sistemas
-  (300 s) y los tokens de las APIs. Los handlers HTTP responden siempre: cualquier error inesperado se
-  devuelve como `500` en JSON con su traza en la consola, nunca como una respuesta vacía.
+- **`app.py`** — reiner HTTP-Server (`http.server`) mit allen Endpunkten, liest `/proc` und `/sys` für
+  die Messwerte, schreibt EmulationStation-Konfigurationen und enthält die Clients für ScreenScraper,
+  TheGamesDB und IGDB. Ohne Frameworks.
+- **`romtools/`** — Backend-Paket für die ROM-Werkzeuge: DAT-Katalog und -Download, Identifizierung
+  über Hash, Disc-Signatur und Titel, Grammatik der Set-Namen, Umbenennungs-Engine mit Plan und
+  Rückgängig, Konvertierung, Komprimierung und Patchen von Formaten sowie die Engine für
+  Hintergrundaufträge mit Fortschrittsbalken. Es ist Python aus der Standardbibliothek wie alles
+  andere und wird abgesichert importiert: Fehlt das Paket, antwortet die Werkzeug-API mit einer klaren
+  Fehlermeldung, und der Rest der App läuft weiter.
+- **`frontend/`** — die React- + Tailwind-SPA. Der Server liefert `frontend/dist/` unverändert aus (mit
+  der Version in einem `<meta>`-Tag); fehlt dieses Bundle, fällt er auf `templates/index.html` zurück.
+- **`templates/index.html`** — vollständige klassische Oberfläche (HTML, CSS und JavaScript in einer
+  Datei). Der Server liefert sie aus und ersetzt dabei eine Reihe von Platzhaltern durch bereits
+  berechnete Daten, sodass die erste Ansicht ohne Wartezeit erscheint. Sie ist die Ausweichlösung,
+  wenn kein Bundle da ist.
+- **`batocera_systems.json`** — Referenzkatalog mit den Systemen und Emulatoren, die Batocera
+  mitbringt; er speist das Anlegeformular (Dateiendungen, Cores und Referenzsystem).
+- **Kein Zustand im Speicher** außer dem ROM-Cache (60 s), dem Cache für Systemmetadaten (300 s) und
+  den API-Tokens. Die HTTP-Handler antworten immer: Jeder unerwartete Fehler wird als `500` in JSON
+  zurückgegeben, mit Traceback in der Konsole, nie als leere Antwort.
 
 ---
 
-## 🔌 API REST
+## 🔌 REST-API
 
-La interfaz se apoya en una API HTTP propia (JSON) que puedes usar por separado. **La SPA y la
-interfaz clásica consumen exactamente los mismos endpoints**:
+Die Oberfläche stützt sich auf eine eigene HTTP-API (JSON), die du auch separat nutzen kannst. **Die
+SPA und die klassische Oberfläche nutzen genau dieselben Endpunkte**:
 
-| Grupo | Endpoints |
+| Gruppe | Endpunkte |
 |---|---|
-| **Sistema** | `/api/info` · `/api/dashboard` · `/api/settings` · `/api/news` · `/api/fans` |
-| **Servicio** | `/api/service/status` · `/api/service/install` · `/api/service/remove` · `/api/service/restart` · `/api/service/kill` · `/api/service/read-sh` |
+| **System** | `/api/info` · `/api/dashboard` · `/api/settings` · `/api/news` · `/api/fans` |
+| **Dienst** | `/api/service/status` · `/api/service/install` · `/api/service/remove` · `/api/service/restart` · `/api/service/kill` · `/api/service/read-sh` |
 | **EmulationStation** | `/api/es/status` · `/api/es/restart` |
-| **Sistemas** | `/api/systems` · `/api/create` · `/api/preview` · `/api/batocera-systems` · `/api/themes` · `/api/upload-logo` |
+| **Systeme** | `/api/systems` · `/api/create` · `/api/preview` · `/api/batocera-systems` · `/api/themes` · `/api/upload-logo` |
 | **ROMs** | `/api/rom-systems` · `/api/rom/rename` · `/api/rom/update-meta` · `/api/rom-image-info` · `/api/game-stats` · `/api/random-game` |
-| **Biblioteca** | `/api/library/summary` · `/api/library/audit/start` · `/api/library/job` · `/api/library/journal` · `/api/library/quarantine` · `/api/library/gamelist/clean` · `/api/library/undo` · `/api/library/missing/systems` · `/api/library/missing/start` |
+| **Bibliothek** | `/api/library/summary` · `/api/library/audit/start` · `/api/library/job` · `/api/library/journal` · `/api/library/quarantine` · `/api/library/gamelist/clean` · `/api/library/undo` · `/api/library/missing/systems` · `/api/library/missing/start` |
 | **BIOS** | `/api/bios/catalog` · `/api/bios/summary` · `/api/bios/scan` · `/api/bios/repair` · `/api/bios/all` · `/api/bios/missing` · `/api/bios/fetch` · `/api/bios/upload` · `/api/bios/missing/skip` · `/api/bios/missing/skipped` · `/api/bios/missing/unskip` · `/api/bios/firstcheck` · `/api/bios/descargar/start` · `/api/bios/job` |
 | **Scraper** | `/api/scraper/config` · `/api/scraper/save-config` · `/api/scraper/search` · `/api/scraper/download` · `/api/scraper/scrape-system` · `/api/scraper/batch` · `/api/scraper/image` |
 | **RetroAchievements** | `/api/retroachievements` · `/api/retroachievements/test` · `/api/retroachievements/games` |
-| **Herramientas** | `/api/tools/systems` · `/api/tools/dats` · `/api/tools/dats/install` · `/api/tools/dats/remove` · `/api/tools/formats` · `/api/tools/formats/sistemas` · `/api/tools/formats/detect` · `/api/tools/formats/convert` · `/api/tools/formats/batch` · `/api/tools/formats/compress` · `/api/tools/formats/patch` · `/api/tools/roms` · `/api/tools/rename/plan` · `/api/tools/rename/plan/start` · `/api/tools/rename/apply` · `/api/tools/rename/apply/start` · `/api/tools/rename/job` · `/api/tools/rename/undo` · `/api/tools/rename/journal` |
-| **Actualización** | `/api/update` · `/api/app-update` |
+| **Werkzeuge** | `/api/tools/systems` · `/api/tools/dats` · `/api/tools/dats/install` · `/api/tools/dats/remove` · `/api/tools/formats` · `/api/tools/formats/sistemas` · `/api/tools/formats/detect` · `/api/tools/formats/convert` · `/api/tools/formats/batch` · `/api/tools/formats/compress` · `/api/tools/formats/patch` · `/api/tools/roms` · `/api/tools/rename/plan` · `/api/tools/rename/plan/start` · `/api/tools/rename/apply` · `/api/tools/rename/apply/start` · `/api/tools/rename/job` · `/api/tools/rename/undo` · `/api/tools/rename/journal` |
+| **Aktualisierung** | `/api/update` · `/api/app-update` |
 
-Los contadores de la biblioteca salen de `GET /api/info`: `rom_systems_count` (los sistemas con juegos),
-`disk_games_count` y `disk_systems_count` (los juegos y los sistemas que hay de verdad en el disco) y
-`systems_count` (los sistemas personalizados que gestiona el manager). `GET /api/random-game` devuelve
-un juego de la biblioteca con su carátula y sus metadatos.
+Die Zähler der Bibliothek kommen aus `GET /api/info`: `rom_systems_count` (die Systeme mit Spielen),
+`disk_games_count` und `disk_systems_count` (die Spiele und Systeme, die wirklich auf der Platte sind)
+und `systems_count` (die eigenen Systeme, die der Manager verwaltet). `GET /api/random-game` liefert ein
+Spiel aus der Bibliothek mit Cover und Metadaten.
 
 ---
 
 ## 🧪 Tests
 
-La lógica del backend y los ayudantes de la interfaz están cubiertos con **991 tests** de `pytest`
-(que no requiere dependencias del proyecto, sólo el propio pytest):
+Die Backend-Logik und die Hilfsfunktionen der Oberfläche sind mit **991 Tests** in `pytest` abgedeckt
+(es werden keine Projektabhängigkeiten gebraucht, nur pytest selbst):
 
 ```bash
 python -m pytest
 # 991 passed in ~60s
 ```
 
+> 🇩🇪 In der übersetzten Fassung schlagen einige Tests fehl, weil sie die ursprünglichen spanischen
+> Texte der Oberfläche und der Meldungen prüfen. Die Programmlogik selbst ist unverändert.
+
 ---
 
-## 📁 Estructura del proyecto
+## 📁 Projektstruktur
 
 ```
 batocera_web/
-├── app.py                    # servidor HTTP y toda la lógica (stdlib)
-├── frontend/                 # interfaz React + Tailwind (SPA)
+├── app.py                    # HTTP-Server und die gesamte Logik (stdlib)
+├── frontend/                 # Oberfläche in React + Tailwind (SPA)
 │   ├── src/
-│   │   ├── components/       # UI, layout y gráficos
-│   │   ├── pages/            # panel, sistemas, formulario y configuración
-│   │   ├── hooks/            # tema, toasts, haptics y carga de datos
-│   │   └── lib/              # cliente API tipado, tipos y normalizadores
-│   ├── dist/                 # bundle compilado (se versiona: el dispositivo no tiene Node)
+│   │   ├── components/       # UI, Layout und Diagramme
+│   │   ├── pages/            # Übersicht, Systeme, Formular und Einstellungen
+│   │   ├── hooks/            # Design, Toasts, Haptik und Datenladen
+│   │   └── lib/              # typisierter API-Client, Typen und Normalisierer
+│   ├── dist/                 # kompiliertes Bundle (versioniert: das Gerät hat kein Node)
 │   └── package.json
 ├── templates/
-│   └── index.html            # interfaz clásica (HTML + CSS + JS), sirve de respaldo
-├── romtools/                 # paquete del backend para DAT, renombrado y formatos
-│   ├── dats.py               # fuentes, descarga, caché y parseo de los DAT
-│   ├── identify.py           # hashes, firmas de disco y similitud de títulos
-│   ├── naming.py             # gramática de los nombres de set
-│   ├── sets.py               # puntuación de variantes y elección por juego
-│   ├── rename.py             # plan, aplicación y deshacer del renombrado
-│   ├── formats.py            # detección, conversión, compresión y parches
-│   ├── formatos_sistemas.py  # qué formatos admite cada sistema y qué herramienta hace falta
-│   ├── utilidades.py          # las utilidades de conversión que se instalan solas
-│   ├── library.py            # inventario de la biblioteca, duplicados y auditoría
-│   ├── faltantes.py          # qué otras versiones hay de los juegos que ya tienes
-│   ├── progress.py           # la cuenta de lo que lleva hecho un trabajo largo
-│   ├── jobs.py               # los trabajos en segundo plano, con su progreso
-│   └── __main__.py            # CLI: `python3 -m romtools dats --install` y `utilidades --install`
-├── batocera_systems.json     # catálogo de referencia de sistemas de Batocera
-├── install.sh                # instalador (bash: utilidades, ficheros y arranque automático)
-├── tests/                    # 991 tests con pytest
+│   └── index.html            # klassische Oberfläche (HTML + CSS + JS), dient als Ausweichlösung
+├── romtools/                 # Backend-Paket für DATs, Umbenennen und Formate
+│   ├── dats.py               # Quellen, Download, Cache und Parsen der DATs
+│   ├── identify.py           # Hashes, Disc-Signaturen und Titelähnlichkeit
+│   ├── naming.py             # Grammatik der Set-Namen
+│   ├── sets.py               # Bewertung der Varianten und Auswahl pro Spiel
+│   ├── rename.py             # Plan, Anwenden und Rückgängigmachen des Umbenennens
+│   ├── formats.py            # Erkennung, Konvertierung, Komprimierung und Patches
+│   ├── formatos_sistemas.py  # welche Formate jedes System unterstützt und welches Werkzeug nötig ist
+│   ├── utilidades.py          # die Konvertierungswerkzeuge, die sich selbst installieren
+│   ├── library.py            # Inventar der Bibliothek, Duplikate und Audit
+│   ├── faltantes.py          # welche anderen Versionen es von deinen Spielen gibt
+│   ├── progress.py           # Fortschrittszählung langer Aufträge
+│   ├── jobs.py               # Hintergrundaufträge mit Fortschritt
+│   └── __main__.py            # CLI: `python3 -m romtools dats --install` und `utilidades --install`
+├── batocera_systems.json     # Referenzkatalog der Batocera-Systeme
+├── install.sh                # Installer (bash: Hilfsprogramme, Dateien und Autostart)
+├── tests/                    # 991 Tests mit pytest
 ├── docs/
-│   ├── media/banner.png      # banner del proyecto (cabecera del README)
-│   ├── media/logo.png        # logo del proyecto
-│   ├── screenshots/          # capturas del README
-│   └── superpowers/          # diseño y planes del proyecto
-├── CHANGELOG.md              # historial de cambios por versión
-└── README.md
+│   ├── media/banner.png      # Projektbanner (Kopf der README)
+│   ├── media/logo.png        # Projektlogo
+│   ├── screenshots/          # Screenshots der README
+│   └── superpowers/          # Design und Pläne des Projekts
+├── CHANGELOG.md              # Änderungsverlauf pro Version
+├── README.md                 # diese Datei (deutsch)
+└── README.es.md              # spanisches Original
 ```
 
-### 🧑‍💻 Desarrollar el frontend
+### 🧑‍💻 Frontend entwickeln
 
-La interfaz se compila con Node; **el dispositivo Batocera no lo necesita**, porque el bundle ya está
-versionado en `frontend/dist/` y el backend lo sirve tal cual.
+Die Oberfläche wird mit Node kompiliert; **das Batocera-Gerät braucht es nicht**, weil das Bundle schon
+versioniert in `frontend/dist/` liegt und das Backend es unverändert ausliefert.
 
 ```bash
 cd frontend
-npm install          # sólo la primera vez
-npm run dev          # Vite en http://localhost:5173, hace de proxy de /api hacia el backend
-npm run build        # genera frontend/dist/
+npm install          # nur beim ersten Mal
+npm run dev          # Vite auf http://localhost:5173, leitet /api an das Backend weiter
+npm run build        # erzeugt frontend/dist/
 ```
 
-Arranca el backend en otra terminal (`python3 app.py`) para tener datos reales. Vite hace de proxy
-hacia `http://127.0.0.1:5000` por defecto; con `BATOCERA_BACKEND` le indicas otro (el entorno de
-desarrollo local usa el `:5001`, ver [Puertos en desarrollo](#puertos-en-desarrollo)). La API es la
-misma que usa la interfaz clásica, así que no hay nada nuevo que desplegar en el backend.
+Starte das Backend in einem anderen Terminal (`python3 app.py`), um echte Daten zu haben. Vite leitet
+standardmäßig an `http://127.0.0.1:5000` weiter; mit `BATOCERA_BACKEND` gibst du ein anderes an (die
+lokale Entwicklungsumgebung nutzt `:5001`, siehe [Ports in der Entwicklung](#ports-in-der-entwicklung)).
+Die API ist dieselbe wie bei der klassischen Oberfläche, im Backend muss also nichts Neues ausgerollt
+werden.
 
-> **¿Y en la propia consola?** La Batocera de desarrollo ya tiene **Node v26 LTS** instalado
-> (`/userdata/system/node/current`, enlazado en `/usr/bin/node`), así que también puedes recompilar
-> el frontend allí mismo:
+> **Und auf der Konsole selbst?** Auf der Entwicklungs-Batocera ist **Node v26 LTS** schon installiert
+> (`/userdata/system/node/current`, verlinkt nach `/usr/bin/node`), du kannst das Frontend also auch
+> direkt dort neu kompilieren:
 >
 > ```bash
 > cd /userdata/system/batocera_web/frontend
@@ -1045,233 +1095,241 @@ misma que usa la interfaz clásica, así que no hay nada nuevo que desplegar en 
 > npm run build
 > ```
 >
-> El bundle sale con los **mismos hashes** que el versionado en el repositorio. Aun así, el despliegue
-> normal sigue siendo subir `frontend/dist/` ya compilado: la app no debe necesitar Node para
-> funcionar.
+> Das Bundle hat dann **dieselben Hashes** wie das im Repository versionierte. Trotzdem bleibt der
+> normale Weg, das schon kompilierte `frontend/dist/` hochzuladen: Die App soll ohne Node funktionieren.
 
-### 🧑‍💻 Proceso de desarrollo
+### 🧑‍💻 Entwicklungsablauf
 
-El proyecto vive en **un solo repositorio** con las dos interfaces conviviendo:
+Das Projekt lebt in **einem einzigen Repository**, in dem beide Oberflächen nebeneinander existieren:
 
-| | Dónde está |
+| | Wo |
 |:--|:--|
 | GitHub | `Thundertruck4K/batocera-web-manager` |
-| Local | `D:\PROGRAMACION\PROYECTOS PROPIOS\batocera_web_react` |
-| Interfaz principal | `frontend/` — React 19 + Vite + Tailwind v4 |
-| Interfaz de respaldo | `templates/index.html` — un fichero, sin build |
-| Backend | `app.py` — Python stdlib, cero dependencias |
+| Lokal | `D:\PROGRAMACION\PROYECTOS PROPIOS\batocera_web_react` |
+| Hauptoberfläche | `frontend/` — React 19 + Vite + Tailwind v4 |
+| Ausweich-Oberfläche | `templates/index.html` — eine Datei, ohne Build |
+| Backend | `app.py` — Python stdlib, null Abhängigkeiten |
 
-#### Puertos en desarrollo
+#### Ports in der Entwicklung
 
-| Puerto | Qué es |
+| Port | Was |
 |:--|:--|
-| `5001` | backend en desarrollo |
-| `5173` | Vite — dev server del frontend; hace de proxy de `/api` hacia `:5001` |
+| `5001` | Backend in der Entwicklung |
+| `5173` | Vite — Dev-Server des Frontends; leitet `/api` an `:5001` weiter |
 
-Para levantar el frontend contra el backend local:
+Um das Frontend gegen das lokale Backend zu starten:
 
 ```bash
 cd frontend
 BATOCERA_BACKEND=http://127.0.0.1:5001 npm run dev
 ```
 
-#### Comandos habituales
+#### Häufige Befehle
 
 ```bash
-# Backend en desarrollo
+# Backend in der Entwicklung
 python app.py --port 5001
 
-# Tests del backend (991)
+# Backend-Tests (991)
 python -m pytest
 
 # Frontend
-cd frontend && npm run build      # regenera frontend/dist/ (se versiona)
-npx tsc -b --noEmit               # comprobación de tipos
+cd frontend && npm run build      # erzeugt frontend/dist/ neu (wird versioniert)
+npx tsc -b --noEmit               # Typprüfung
 ```
 
-#### Ramas y pull requests
+#### Branches und Pull Requests
 
-El ciclo es el de siempre y **no se hace `push` directo a `master`**: se crea una rama
-(`feature/...` o `fix/...`), se sube y se abre un *pull request* contra `master`.
+Der Ablauf ist der übliche, und **es wird nicht direkt auf `master` gepusht**: Man legt einen Branch an
+(`feature/...` oder `fix/...`), pusht ihn und öffnet einen *Pull Request* gegen `master`.
 
 ---
 
-## 💻 Requisitos y compatibilidad
+## 💻 Voraussetzungen und Kompatibilität
 
 | | |
 |---|---|
-| **Sistema** | Batocera **v43 o superior**, Linux (probado en 43.1) |
-| **Python** | El Python 3 que ya incluye Batocera — no hay nada que instalar |
-| **Dependencias** | Ninguna (Pillow es opcional, sólo para logos de relleno) |
-| **Cliente** | Cualquier navegador moderno (móvil, tablet o PC) |
-| **Rutas** | Escribe en `/userdata/system/`, `/userdata/roms/` y `batocera.conf` |
+| **System** | Batocera **v43 oder neuer**, Linux (getestet mit 43.1) |
+| **Python** | Das Python 3, das Batocera schon mitbringt — nichts zu installieren |
+| **Abhängigkeiten** | Keine (Pillow ist optional, nur für Platzhalter-Logos) |
+| **Client** | Jeder moderne Browser (Handy, Tablet oder PC) |
+| **Pfade** | Schreibt in `/userdata/system/`, `/userdata/roms/` und `batocera.conf` |
 
-No funciona fuera de Batocera: lee `/proc`, `/sys` y las rutas de `/userdata`, que son específicas
-del sistema.
-
----
-
-## 🔒 Seguridad
-
-Este manager está pensado para la **red de casa**: **no tiene autenticación**. Cualquiera que pueda
-abrir `http://BATOCERA:5000` puede crear y borrar configuraciones, subir ficheros y reiniciar
-servicios (en Batocera, el usuario es `root`).
-
-- No lo expongas directamente a Internet.
-- Si necesitas acceso desde fuera, usa una VPN (por ejemplo Tailscale o WireGuard) como si estuvieras
-  en casa.
-- Si tu red no es de confianza, valora mantenerlo apagado y arrancarlo sólo cuando lo uses.
-- La **Web API Key de RetroAchievements no se sirve en claro**: `/api/settings` la devuelve
-  enmascarada (`abcd••••••••wxyz`) junto con un indicador de si está configurada. Al guardar, el
-  campo se comporta como solo-escritura: si no lo tocas, la key no se pierde; si lo vacías, la borra.
-- Las **credenciales del scraper tampoco se sirven en claro**: `/api/scraper/config` y el campo
-  `cfg` de `/api/scraper/search` devuelven la contraseña de ScreenScraper, su credencial de
-  desarrollador y las API keys de TheGamesDB e IGDB **enmascaradas**, cada una con su indicador
-  de si está configurada. Al guardar se comportan como solo-escritura: si no tocas el campo, la
-  credencial no se pierde; si lo vacías, se borra.
-- Las **URLs de las carátulas tampoco viajan con credenciales**: ScreenScraper las devuelve con la
-  contraseña incrustada, así que al navegador se mandan limpias y es el servidor el que las firma
-  al descargarlas (`/api/scraper/image` sólo sirve los hosts de las fuentes de scraping).
+Außerhalb von Batocera funktioniert es nicht: Es liest `/proc`, `/sys` und die Pfade unter
+`/userdata`, die systemspezifisch sind.
 
 ---
 
-## ❔ Preguntas frecuentes
+## 🔒 Sicherheit
 
-**¿Necesito instalar Python o alguna librería?**  
-No. Usa sólo la librería estándar de Python 3, la que ya trae Batocera.
+Dieser Manager ist für das **Heimnetz** gedacht: **Er hat keine Anmeldung**. Jeder, der
+`http://BATOCERA:5000` öffnen kann, kann Konfigurationen anlegen und löschen, Dateien hochladen und
+Dienste neu starten (unter Batocera ist der Benutzer `root`).
 
-**¿Qué diferencia hay entre la interfaz React y la clásica?**  
-La SPA de React es la que se sirve por defecto; la clásica (un único fichero HTML) queda de
-respaldo y el backend la sirve automáticamente si el bundle compilado no está en la consola. Las dos
-hablan con la misma API, así que lo que hace una lo hace la otra. La verificación de BIOS ya está
-en la SPA (sección *ROMs y BIOS*); el inventario de ROMs, los temas y la edición de ROMs siguen
-sólo en la clásica.
+- Stelle ihn nicht direkt ins Internet.
+- Wenn du von außen zugreifen musst, nutze ein VPN (zum Beispiel Tailscale oder WireGuard), als wärst du
+  zu Hause.
+- Ist dein Netz nicht vertrauenswürdig, lass ihn lieber aus und starte ihn nur, wenn du ihn brauchst.
+- Der **Web-API-Key von RetroAchievements wird nicht im Klartext ausgeliefert**: `/api/settings` gibt
+  ihn maskiert zurück (`abcd••••••••wxyz`), zusammen mit einem Hinweis, ob er eingerichtet ist. Beim
+  Speichern verhält sich das Feld wie „nur schreiben“: Rührst du es nicht an, bleibt der Key erhalten;
+  leerst du es, wird er gelöscht.
+- Auch die **Zugangsdaten des Scrapers werden nicht im Klartext ausgeliefert**: `/api/scraper/config`
+  und das Feld `cfg` von `/api/scraper/search` geben das ScreenScraper-Passwort, die Entwickler-Daten
+  und die API-Keys von TheGamesDB und IGDB **maskiert** zurück, jeweils mit einem Hinweis, ob sie
+  eingerichtet sind. Beim Speichern verhalten sie sich wie „nur schreiben“: Rührst du das Feld nicht
+  an, bleibt der Wert erhalten; leerst du es, wird er gelöscht.
+- Auch die **Cover-URLs enthalten keine Zugangsdaten**: ScreenScraper liefert sie mit eingebettetem
+  Passwort, daher gehen sie bereinigt an den Browser, und der Server signiert sie beim Herunterladen
+  (`/api/scraper/image` bedient nur die Hosts der Scraping-Quellen).
 
-**¿Por qué antes había dos repositorios y ahora hay uno?**  
-Durante el desarrollo sí los hubo: este era el de la interfaz React y el otro el de la variante
-«Python puro». Al unificar, este recuperó el nombre corto `batocera-web-manager` y el otro se
-eliminó (su historial quedó aquí: su `master` es un ancestro directo de este). GitHub guarda una
-redirección desde el nombre antiguo, así que los enlaces que ya se habían compartido siguen
-funcionando.
+---
 
-**¿Puedo crear sistemas sin tocar XML a mano?**  
-Sí, es justo el objetivo: eliges un sistema de referencia, ajustas los campos y el manager escribe el
-`es_systems_<slug>.cfg` y crea las carpetas.
+## ❔ Häufige Fragen
 
-**¿Por qué el número de juegos no coincide con el del `gamelist.xml`?**  
-Porque el `gamelist.xml` sólo cataloga los juegos que EmulationStation ya tiene fichados. La tarjeta
-*Juegos* del panel cuenta **lo que hay en el disco**: los ficheros que son juego y las carpetas de
-juegos (ScummVM, DOSBox, MUGEN), de modo que puede ser mayor que el del `gamelist.xml`. La tarjeta
-*Sistemas* cuenta los sistemas que tienen juegos, y en el texto de apoyo indica cuántos de ellos son
-personalizados.
+**Muss ich Python oder eine Bibliothek installieren?**  
+Nein. Es wird nur die Standardbibliothek von Python 3 genutzt, die Batocera schon mitbringt.
 
-**¿Por qué en la lista de ROMs no salen el `_info.txt` ni los guardados de estado?**  
-Porque no son juegos. Sólo se listan los ficheros cuya extensión es una de las del sistema (más la
-lista global de extensiones de ROM); el `_info.txt` que documenta los formatos, el `gamelist.xml`, los
-`.srm`/`.sav`/`.dat`/`.keys` y compañía quedan fuera de la lista y no se pueden escrapear.
+**Was ist der Unterschied zwischen der React- und der klassischen Oberfläche?**  
+Die React-SPA wird standardmäßig ausgeliefert; die klassische (eine einzige HTML-Datei) bleibt als
+Ausweichlösung, und das Backend liefert sie automatisch aus, wenn das kompilierte Bundle nicht auf der
+Konsole liegt. Beide sprechen mit derselben API, was die eine kann, kann also auch die andere. Die
+BIOS-Prüfung ist schon in der SPA (Bereich *ROMs und BIOS*); ROM-Inventar, Themes und ROM-Bearbeitung
+gibt es weiterhin nur in der klassischen.
 
-**¿Dónde guarda la configuración?**  
-En `/userdata/system/batocera_manager_settings.json` (rutas, puerto, tema de la interfaz y usuario
-de RetroAchievements). Las credenciales del scraper se guardan aparte, en `batocera.conf`.
+**Warum gab es früher zwei Repositorys und jetzt eins?**  
+Während der Entwicklung gab es sie tatsächlich: Dieses war das für die React-Oberfläche, das andere das
+für die Variante „reines Python“. Bei der Zusammenlegung bekam dieses den kurzen Namen
+`batocera-web-manager` zurück, und das andere wurde gelöscht (seine Historie ist hier: Sein `master` ist
+ein direkter Vorfahre von diesem). GitHub behält eine Weiterleitung vom alten Namen, bereits geteilte
+Links funktionieren also weiter.
 
-**¿Puedo cambiar el color de la interfaz?**  
-Sí. En **Configuración → Tema de la interfaz** eliges claro, oscuro o "seguir al sistema", y el
-botón del sidebar alterna al instante. La preferencia se guarda en el manager, así que se aplica
-igual desde el móvil o el PC.
+**Kann ich Systeme anlegen, ohne XML von Hand anzufassen?**  
+Ja, genau darum geht es: Du wählst ein Referenzsystem, passt die Felder an, und der Manager schreibt die
+`es_systems_<slug>.cfg` und legt die Ordner an.
 
-**¿Cómo quito el arranque automático?**  
-Desde **Configuración** con un clic, o borrando el bloque marcado `# [batocera-manager]` …
-`# [/batocera-manager]` de `/userdata/system/custom.sh`.
+**Warum stimmt die Zahl der Spiele nicht mit der in der `gamelist.xml` überein?**  
+Weil die `gamelist.xml` nur die Spiele verzeichnet, die EmulationStation schon erfasst hat. Die Karte
+*Spiele* in der Übersicht zählt, **was auf der Platte liegt**: Dateien, die Spiele sind, und
+Spielordner (ScummVM, DOSBox, MUGEN), die Zahl kann also größer sein als die in der `gamelist.xml`. Die
+Karte *Systeme* zählt die Systeme mit Spielen, und im Hilfstext steht, wie viele davon eigene sind.
 
-**¿Por qué me avisa de "modo manual"?**  
-Porque el manager está arrancado a mano (`python3 app.py`) y no figura en el arranque automático de
-Batocera: si reinicias, no volverá a levantarse. El aviso incluye el botón para activarlo.
+**Warum erscheinen in der ROM-Liste weder die `_info.txt` noch Spielstände?**  
+Weil sie keine Spiele sind. Aufgelistet werden nur Dateien, deren Endung zu denen des Systems gehört
+(plus die globale Liste der ROM-Endungen); die `_info.txt`, die die Formate dokumentiert, die
+`gamelist.xml`, `.srm`/`.sav`/`.dat`/`.keys` und Co. bleiben außen vor und können nicht gescrapt werden.
 
-**¿Sirve para Batocera v41 o v42?**  
-Está desarrollado y probado en v43+; los ficheros y rutas que usa son los mismos en versiones
-recientes, pero no hay garantía en versiones antiguas.
+**Wo wird die Konfiguration gespeichert?**  
+In `/userdata/system/batocera_manager_settings.json` (Pfade, Port, Design der Oberfläche und
+RetroAchievements-Benutzer). Die Zugangsdaten des Scrapers werden separat in `batocera.conf`
+gespeichert.
 
-**¿Por qué no veo el logo de relleno de un sistema?**  
-Porque Pillow es opcional; sin él, el manager no genera logos de relleno (el resto funciona igual).
+**Kann ich die Farbe der Oberfläche ändern?**  
+Ja. Unter **Einstellungen → Design der Oberfläche** wählst du hell, dunkel oder „System folgen“, und der
+Button in der Seitenleiste schaltet sofort um. Die Einstellung wird im Manager gespeichert und gilt
+daher auf Handy und PC gleichermaßen.
 
-**¿Me puede romper la instalación de Batocera?**  
-Sólo escribe ficheros nuevos (`es_systems_<slug>.cfg`, imágenes y un bloque en `custom.sh`) y puedes
-ver antes el XML que va a escribir. Aun así, haz copia de `/userdata/system/configs` si vas a tocar
-mucho.
+**Wie entferne ich den Autostart?**  
+In den **Einstellungen** mit einem Klick oder indem du den markierten Block `# [batocera-manager]` …
+`# [/batocera-manager]` aus `/userdata/system/custom.sh` löschst.
+
+**Warum bekomme ich den Hinweis „manueller Modus“?**  
+Weil der Manager von Hand gestartet wurde (`python3 app.py`) und nicht im Autostart von Batocera steht:
+Nach einem Neustart läuft er nicht wieder an. Der Hinweis enthält den Button, um ihn zu aktivieren.
+
+**Funktioniert es mit Batocera v41 oder v42?**  
+Entwickelt und getestet ist es mit v43+; die verwendeten Dateien und Pfade sind in neueren Versionen
+dieselben, aber für alte Versionen gibt es keine Garantie.
+
+**Warum sehe ich kein Platzhalter-Logo für ein System?**  
+Weil Pillow optional ist; ohne Pillow erzeugt der Manager keine Platzhalter-Logos (alles andere
+funktioniert gleich).
+
+**Kann es meine Batocera-Installation kaputt machen?**  
+Es schreibt nur neue Dateien (`es_systems_<slug>.cfg`, Bilder und einen Block in `custom.sh`), und du
+kannst das XML vorher ansehen. Trotzdem: Sichere `/userdata/system/configs`, wenn du viel änderst.
+
+**Ist die Oberfläche auch auf Deutsch verfügbar?**  
+In dieser übersetzten Fassung ja: Die React-Oberfläche, die klassische Oberfläche, die Meldungen des
+Backends und der Installer sind auf Deutsch. Eine Sprachauswahl hat das Original (noch) nicht.
 
 ---
 
 ## 🗺️ Roadmap
 
-Lo primero, **llevar a la SPA las secciones que ya existen en la interfaz clásica** (en el menú
-están marcadas como *Pronto*):
+Als Erstes **die Bereiche, die es schon in der klassischen Oberfläche gibt, in die SPA bringen** (im Menü
+als *Bald* markiert):
 
-- **Temas y assets** — temas instalados, tema activo y subida de logos.
-- **Edición de ROMs** — renombrar, metadatos y carátulas.
-- **Monitor de ROMs** — el inventario por sistema, agrupado por tipo de equipo.
+- **Themes und Assets** — installierte Themes, aktives Theme und Logo-Upload.
+- **ROM-Bearbeitung** — Umbenennen, Metadaten und Cover.
+- **ROM-Monitor** — das Inventar pro System, gruppiert nach Gerätetyp.
 
-Y ~~**Scraper** — las tres fuentes y la descarga de imágenes~~ — **hecho**: la sección del scraper ya
-está en la SPA, con las tres fuentes, el scrape por sistema y por juego y la edición de metadatos.
+Und ~~**Scraper** — die drei Quellen und der Bild-Download~~ — **erledigt**: Der Scraper-Bereich ist
+schon in der SPA, mit den drei Quellen, Scraping pro System und pro Spiel und Bearbeitung der Metadaten.
 
-Y después, ideas anotadas, sin fechas:
+Danach notierte Ideen, ohne Termine:
 
-- Autenticación opcional (usuario y contraseña) para redes poco fiables.
-- Copia de seguridad y restauración de `es_systems_*.cfg` desde la web.
-- Más fuentes de scraping y descarga de vídeos.
-- Selección de idioma de la interfaz.
-- ~~Modo claro/oscuro y temas para la propia web~~ — **hecho**: tema claro y opción de seguir al
-  sistema.
-
----
-
-## 🤝 Contribuir
-
-¡Las contribuciones son bienvenidas! Es un proyecto abierto y sencillo de leer a propósito:
-
-1. Abre una *issue* contando el problema o la idea.
-2. Haz un *fork*, crea una rama y añade tus cambios.
-3. Ejecuta `python -m pytest` y comprueba que todo sigue en verde.
-4. Envía un *pull request* explicando el qué y el por qué.
-
-Se agradece un estilo de código acorde con el resto (comentarios en español, sin dependencias
-nuevas en el servidor) y que los cambios de interfaz conserven los identificadores de los tests.
-
-Si el cambio toca el frontend, recuerda subir también el bundle recompilado (`frontend/dist/`),
-porque el dispositivo no tiene Node.
+- Optionale Anmeldung (Benutzer und Passwort) für unsichere Netze.
+- Sicherung und Wiederherstellung der `es_systems_*.cfg` über die Weboberfläche.
+- Mehr Scraping-Quellen und Download von Videos.
+- Auswahl der Sprache der Oberfläche.
+- ~~Hell-/Dunkelmodus und Themes für die Weboberfläche selbst~~ — **erledigt**: helles Design und
+  Option „System folgen“.
 
 ---
 
-## ☕ Apoyar el proyecto
+## 🤝 Mitmachen
 
-Este manager nace de mi propia necesidad y lo comparto con quien le pueda servir. Si te ahorra
-tiempo trasteando con el XML y quieres invitar al autor a un café, ¡se agradece!
+Beiträge sind willkommen! Es ist ein offenes Projekt und absichtlich leicht zu lesen:
+
+1. Eröffne ein *Issue* und beschreibe das Problem oder die Idee.
+2. Erstelle einen *Fork*, lege einen Branch an und füge deine Änderungen hinzu.
+3. Führe `python -m pytest` aus und prüfe, dass alles grün bleibt.
+4. Schicke einen *Pull Request* und erkläre das Was und das Warum.
+
+Erwünscht ist ein Code-Stil passend zum Rest (Kommentare auf Spanisch, keine neuen Abhängigkeiten im
+Server), und Änderungen an der Oberfläche sollen die Kennungen der Tests beibehalten.
+
+Wenn die Änderung das Frontend betrifft, denk daran, auch das neu kompilierte Bundle (`frontend/dist/`)
+hochzuladen, denn das Gerät hat kein Node.
+
+---
+
+## ☕ Projekt unterstützen
+
+Dieser Manager entstand aus dem eigenen Bedarf des Autors und wird mit allen geteilt, denen er nützt.
+Wenn er dir Zeit beim Herumbasteln mit XML spart und du dem Autor einen Kaffee spendieren willst, freut
+er sich!
 
 <div align="center">
 
 **PayPal** — [folk3n30@gmail.com](https://www.paypal.com/donate/?business=folk3n30%40gmail.com&no_recurring=0&item_name=Apoyar%20Batocera%20System%20Manager&currency_code=USD)
 
-*Cualquier propina se destina a tiempo de desarrollo y a probar en más equipos.*
+*Jedes Trinkgeld fließt in Entwicklungszeit und Tests auf weiteren Geräten.*
 
 </div>
 
-También ayuda mucho, y es gratis: dejar una ⭐ en el repositorio, contar tu experiencia en las
-*issues* o compartirlo con quien tenga una Batocera.
+Sehr hilfreich und kostenlos: einen ⭐ im Repository hinterlassen, deine Erfahrungen in den *Issues*
+teilen oder es an andere mit Batocera weitergeben.
 
 ---
 
-## 📄 Licencia
+## 📄 Lizenz
 
-Distribuido bajo la licencia **MIT**. Consulta el fichero [LICENSE](LICENSE) para más detalles.
-Puedes usar, modificar y redistribuir el código, incluso comercialmente, manteniendo el aviso de
-copyright.
+Veröffentlicht unter der **MIT**-Lizenz. Details in der Datei [LICENSE](LICENSE).
+Du darfst den Code nutzen, ändern und weiterverbreiten, auch kommerziell, solange der
+Copyright-Hinweis erhalten bleibt.
 
 ---
 
 <div align="center">
 
-**Proyecto no oficial**: no está afiliado ni respaldado por el equipo de [Batocera](https://batocera.org).
+**Inoffizielles Projekt**: nicht mit dem [Batocera](https://batocera.org)-Team verbunden oder von ihm
+unterstützt.
 
-Hecho con Python puro en el servidor (sin dependencias) y React en la interfaz, para la comunidad
-de Batocera. 🕹️
+Gemacht mit reinem Python auf dem Server (ohne Abhängigkeiten) und React in der Oberfläche, für die
+Batocera-Community. 🕹️
+
+*Deutsche Übersetzung von README und Oberfläche: inoffiziell, auf Basis des spanischen Originals.*
 
 </div>

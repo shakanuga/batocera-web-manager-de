@@ -81,7 +81,7 @@ const levelStyle: Record<LogLevel, { label: string; pill: string; dot: string }>
     dot: "bg-amber-500",
   },
   error: {
-    label: "Error",
+    label: "Fehler",
     pill: "bg-destructive/12 text-rose-700 dark:text-rose-400",
     dot: "bg-destructive",
   },
@@ -379,7 +379,7 @@ export function LogStream({
                     )}
                   />
                 </span>
-                {following ? "Live" : "Paused"}
+                {following ? "Live" : "Pausiert"}
               </span>
             )}
           </div>
@@ -389,7 +389,7 @@ export function LogStream({
           <button
             type="button"
             aria-pressed={wrap}
-            title="Wrap long lines"
+            title="Lange Zeilen umbrechen"
             onClick={() => setWrap((value) => !value)}
             className={cn(
               "inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground aria-pressed:bg-muted aria-pressed:text-foreground motion-reduce:transition-none",
@@ -397,11 +397,11 @@ export function LogStream({
             )}
           >
             <TextWrap className="size-4" aria-hidden="true" />
-            <span className="sr-only">Wrap long lines</span>
+            <span className="sr-only">Lange Zeilen umbrechen</span>
           </button>
           <button
             type="button"
-            title="Clear"
+            title="Leeren"
             onClick={clear}
             className={cn(
               "inline-flex size-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground motion-reduce:transition-none",
@@ -409,13 +409,13 @@ export function LogStream({
             )}
           >
             <Trash className="size-4" aria-hidden="true" />
-            <span className="sr-only">Clear events</span>
+            <span className="sr-only">Ereignisse leeren</span>
           </button>
           {live && (
             <button
               type="button"
-              title={following ? "Pause the tail" : "Resume following"}
-              aria-label={following ? "Pause following" : "Resume following"}
+              title={following ? "Mitlaufen pausieren" : "Mitlaufen fortsetzen"}
+              aria-label={following ? "Mitlaufen pausieren" : "Mitlaufen fortsetzen"}
               onClick={() => setFollowing(!following)}
               className={cn(
                 "ml-1 inline-flex h-7 items-center gap-1.5 rounded-md border border-border bg-card px-2 text-xs font-medium shadow-xs transition-colors hover:bg-muted motion-reduce:transition-none @md/log:px-2.5",
@@ -427,14 +427,14 @@ export function LogStream({
               ) : (
                 <Play className="size-3.5" aria-hidden="true" />
               )}
-              <span className="sr-only @md/log:not-sr-only">{following ? "Pause" : "Resume"}</span>
+              <span className="sr-only @md/log:not-sr-only">{following ? "Pause" : "Fortsetzen"}</span>
             </button>
           )}
         </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-2 border-y border-border bg-muted/30 px-4 py-2">
-        <div role="group" aria-label="Levels" className="flex flex-wrap items-center gap-1">
+        <div role="group" aria-label="Stufen" className="flex flex-wrap items-center gap-1">
           {LEVELS.map((level) => {
             const active = levels.has(level);
             return (
@@ -480,8 +480,8 @@ export function LogStream({
                 setSearch("");
               }
             }}
-            placeholder="Filter…"
-            aria-label="Filter messages"
+            placeholder="Filtern…"
+            aria-label="Meldungen filtern"
             spellCheck={false}
             className="h-7 w-full rounded-md border border-input bg-card pr-7 pl-7 text-xs text-foreground shadow-xs transition-[border-color,box-shadow] outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 motion-reduce:transition-none"
           />
@@ -498,7 +498,7 @@ export function LogStream({
               )}
             >
               <X className="size-3" aria-hidden="true" />
-              <span className="sr-only">Clear filter</span>
+              <span className="sr-only">Filter leeren</span>
             </button>
           ) : (
             <kbd className="pointer-events-none absolute top-1/2 right-1.5 hidden -translate-y-1/2 rounded border border-border bg-muted px-1 font-mono text-[10px] leading-4 text-muted-foreground @md/log:block">
@@ -536,17 +536,17 @@ export function LogStream({
             <div className="flex h-full flex-col items-center justify-center gap-2 px-4 text-center font-sans">
               {total === 0 ? (
                 <p className="text-xs text-muted-foreground">
-                  {live ? "Waiting for events…" : "No events yet."}
+                  {live ? "Warte auf Ereignisse…" : "Noch keine Ereignisse."}
                 </p>
               ) : (
                 <>
-                  <p className="text-xs text-muted-foreground">No events match these filters.</p>
+                  <p className="text-xs text-muted-foreground">Keine Ereignisse passen zu diesen Filtern.</p>
                   <button
                     type="button"
                     onClick={resetFilters}
                     className={cn("rounded-md px-2 py-1 text-xs font-medium text-primary hover:bg-muted", focusRing)}
                   >
-                    Show all events
+                    Alle Ereignisse anzeigen
                   </button>
                 </>
               )}
@@ -572,7 +572,7 @@ export function LogStream({
             )}
           >
             <ArrowDown className="size-3.5" aria-hidden="true" />
-            Jump to latest
+            Zum neuesten springen
             {pending > 0 && (
               <span className="rounded-full bg-background/20 px-1.5 font-mono text-[11px] tabular-nums">
                 {pending > 999 ? "999+" : pending} new
@@ -586,9 +586,9 @@ export function LogStream({
         <span>
           {filtered ? `${matching.toLocaleString("en-US")} of ${total.toLocaleString("en-US")}` : total.toLocaleString("en-US")}{" "}
           {total === 1 ? "event" : "events"}
-          {rows.length < matching && ` · showing last ${rows.length.toLocaleString("en-US")}`}
+          {rows.length < matching && ` · zeige die letzten ${rows.length.toLocaleString("en-US")}`}
         </span>
-        <span>{timeZone === "utc" ? "UTC" : "Local time"}</span>
+        <span>{timeZone === "utc" ? "UTC" : "Ortszeit"}</span>
       </div>
     </div>
   );

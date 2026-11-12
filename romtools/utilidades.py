@@ -73,7 +73,7 @@ UTILIDADES = (
         "proyecto": "DevYukine/rom-converto",
         "version": "v0.24.0",
         "licencia": "MIT",
-        "para": "La mas completa: CSO, ZSO, CHD, RVZ, WBFS, WIA, GCZ, XISO, NSP, XCI, 3DS, PBP y ZAR.",
+        "para": "Das vollständigste: CSO, ZSO, CHD, RVZ, WBFS, WIA, GCZ, XISO, NSP, XCI, 3DS, PBP und ZAR.",
         "formato": "binario",
         "assets": {
             "x86_64": ("rom-converto-cli-linux-x64",
@@ -91,7 +91,7 @@ UTILIDADES = (
         "proyecto": "encounter/nod",
         "version": "v2.0.0-alpha.12",
         "licencia": "Apache-2.0",
-        "para": "Crea y extrae los comprimidos de Dolphin: CISO, GCZ, RVZ, WBFS, WIA y GCM.",
+        "para": "Erstellt und entpackt die komprimierten Dolphin-Formate: CISO, GCZ, RVZ, WBFS, WIA und GCM.",
         "formato": "binario",
         "assets": {
             "x86_64": ("nodtool-linux-x86_64",
@@ -109,7 +109,7 @@ UTILIDADES = (
         "proyecto": "dnasdw/3dstool",
         "version": "v1.2.6",
         "licencia": "MIT",
-        "para": "Empaqueta el contenido de un 3DS en un CIA.",
+        "para": "Packt den Inhalt eines 3DS in eine CIA.",
         "formato": "tar.gz",
         "miembro": "3dstool",
         "assets": {
@@ -126,49 +126,49 @@ NO_INSTALABLES = (
         "id": "dolphin-tool",
         "nombre": "dolphin-tool",
         "proyecto": "https://github.com/dolphin-emu/dolphin",
-        "motivo": "No hay release con binarios: hay que compilarlo. El dolphin-emu de Batocera es la interfaz grafica y no construye la herramienta de linea de comandos.",
+        "motivo": "Kein Release mit Binaries: Es muss kompiliert werden. Das dolphin-emu von Batocera ist die grafische Oberfläche und baut das Kommandozeilenwerkzeug nicht mit.",
     },
     {
         "id": "wiitool",
         "nombre": "wiitool",
         "proyecto": "https://github.com/dolphin-emu/dolphin",
-        "motivo": "No hay release con binarios: hay que compilarlo. Los enlaces que se znajaron al repositorio no dan a ningun release oficial.",
+        "motivo": "Kein Release mit Binaries: Es muss kompiliert werden. Die Links zum Repository führen zu keinem offiziellen Release.",
     },
     {
         "id": "ndstool",
         "nombre": "ndstool",
         "proyecto": "https://github.com/blocksds/ndstool",
-        "motivo": "No hay release con binarios: hay que compilarlo. El unico precompilado va dentro del paquete de BlocksDS y necesita el cargador musl de /opt/wonderful, asi que no funciona solo.",
+        "motivo": "Kein Release mit Binaries: Es muss kompiliert werden. Das einzige vorkompilierte steckt im BlocksDS-Paket und braucht den musl-Loader aus /opt/wonderful, funktioniert also nicht allein.",
     },
     {
         "id": "extract-xiso",
         "nombre": "extract-xiso",
         "proyecto": "https://github.com/XboxDev/extract-xiso",
-        "motivo": "El repositorio no declara licencia, asi que no se instala solo. Ademas el manager ya extrae el XDVDF en Python.",
+        "motivo": "Das Repository gibt keine Lizenz an, daher wird es nicht automatisch installiert. Außerdem entpackt der Manager XDVDF schon selbst in Python.",
     },
     {
         "id": "maxcso",
         "nombre": "maxcso",
         "proyecto": "https://github.com/unknownbrackets/maxcso",
-        "motivo": "La release solo trae el binario de Windows. El manager ya comprime en CSO, CSO2, ZSO y DAX en Python.",
+        "motivo": "Das Release enthält nur das Windows-Binary. Der Manager komprimiert schon selbst in Python als CSO, CSO2, ZSO und DAX.",
     },
     {
         "id": "xorriso",
         "nombre": "xorriso",
         "proyecto": "https://www.gnu.org/software/xorriso/",
-        "motivo": "Esta en el buildroot de Batocera pero no esta habilitado en su build: hay que compilarlo.",
+        "motivo": "Ist im Buildroot von Batocera, aber in dessen Build nicht aktiviert: Es muss kompiliert werden.",
     },
     {
         "id": "cdrdao",
         "nombre": "cdrdao",
         "proyecto": "https://cdrdao.sourceforge.net/",
-        "motivo": "No hay binario precompilado para descargar. El manager ya convierte NRG, MDS, CCD e IMG en Python.",
+        "motivo": "Kein vorkompiliertes Binary zum Herunterladen. Der Manager konvertiert NRG, MDS, CCD und IMG schon selbst in Python.",
     },
     {
         "id": "makecue",
         "nombre": "makecue",
         "proyecto": "https://www.makecue.org/",
-        "motivo": "No hay binario precompilado para descargar. El manager escribe el CUE el mismo.",
+        "motivo": "Kein vorkompiliertes Binary zum Herunterladen. Der Manager schreibt das CUE selbst.",
     },
 )
 
@@ -247,12 +247,12 @@ def _extrae_miembro(tarball: str, miembro: str, destino: str) -> None:
                 encontrado = item
                 break
         if encontrado is None:
-            raise RuntimeError("el archivo no contiene %s" % miembro)
+            raise RuntimeError("das Archiv enthält %s nicht" % miembro)
         if not encontrado.isfile():
-            raise RuntimeError("%s no es un fichero" % miembro)
+            raise RuntimeError("%s ist keine Datei" % miembro)
         origen = tar.extractfile(encontrado)
         if origen is None:
-            raise RuntimeError("no se puede leer %s" % miembro)
+            raise RuntimeError("%s kann nicht gelesen werden" % miembro)
         with open(destino, "wb") as fh:
             shutil.copyfileobj(origen, fh)
 
@@ -307,7 +307,7 @@ def instalar(entrada: dict, destino: str, timeout: int = TIMEOUT_DESCARGA,
 
     if instalada(entrada, destino) and not forzar:
         resumen["estado"] = "ya-estaba"
-        resumen["detalle"] = "ya estaba en %s" % final
+        resumen["detalle"] = "war bereits in %s" % final
         resumen["ruta"] = final
         if asset:
             resumen["sha256"] = asset[1]
@@ -315,7 +315,7 @@ def instalar(entrada: dict, destino: str, timeout: int = TIMEOUT_DESCARGA,
 
     if not asset:
         resumen["estado"] = "sin-binario"
-        resumen["detalle"] = "no hay binario para %s" % (arq or "esta arquitectura")
+        resumen["detalle"] = "kein Binary für %s" % (arq or "diese Architektur")
         return resumen
     nombre_asset, esperado = asset
 
@@ -327,7 +327,7 @@ def instalar(entrada: dict, destino: str, timeout: int = TIMEOUT_DESCARGA,
         descarga(url, descargado, timeout=timeout, progreso=progreso)
         suma = _sha256(descargado)
         if suma != esperado:
-            raise RuntimeError("la suma sha256 no coincide (esperaba %s, es %s)"
+            raise RuntimeError("die SHA256-Summe stimmt nicht (erwartet %s, ist %s)"
                                % (esperado, suma))
         if entrada.get("formato") == "tar.gz":
             _extrae_miembro(descargado, entrada["miembro"], desempaquetado)
@@ -347,7 +347,7 @@ def instalar(entrada: dict, destino: str, timeout: int = TIMEOUT_DESCARGA,
         return resumen
 
     resumen["estado"] = "instalada"
-    resumen["detalle"] = "%s %s en %s" % (entrada["nombre"], entrada["version"], final)
+    resumen["detalle"] = "%s %s in %s" % (entrada["nombre"], entrada["version"], final)
     resumen["ruta"] = final
     resumen["sha256"] = esperado
     return resumen

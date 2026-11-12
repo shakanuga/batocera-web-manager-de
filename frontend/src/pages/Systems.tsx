@@ -53,11 +53,11 @@ export function Systems() {
     triggerHaptic('medium')
     try {
       await api.deleteSystem(pendingDelete.name)
-      showToast(`Sistema «${pendingDelete.name}» eliminado.`, 'success')
+      showToast(`System „${pendingDelete.name}“ gelöscht.`, 'success')
       setPendingDelete(null)
       systems.refresh()
     } catch (err) {
-      showToast(err instanceof Error ? err.message : 'No se pudo eliminar.', 'error')
+      showToast(err instanceof Error ? err.message : 'Löschen fehlgeschlagen.', 'error')
     } finally {
       setDeleting(false)
     }
@@ -70,23 +70,23 @@ export function Systems() {
       if (res.ok) {
         setXmlOf({ name: system.name, xml: res.xml })
       } else {
-        showToast('No se pudo leer el XML.', 'error')
+        showToast('XML konnte nicht gelesen werden.', 'error')
       }
     } catch {
-      showToast('No se pudo leer el XML.', 'error')
+      showToast('XML konnte nicht gelesen werden.', 'error')
     }
   }
 
   return (
     <>
       <Topbar
-        title="Sistemas Personalizados"
-        subtitle={`${filtered.length} sistema(s) añadido(s) manualmente a EmulationStation`}
+        title="Eigene Systeme"
+        subtitle={`${filtered.length} System(e) manuell zu EmulationStation hinzugefügt`}
         onMenu={openMenu}
         actions={
           <Button size="sm" variant="primary" onClick={() => navigate('/sistemas/nuevo')}>
             <Plus className="size-3.5" />
-            Añadir
+            Hinzufügen
           </Button>
         }
       />
@@ -98,13 +98,13 @@ export function Systems() {
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar por nombre, slug o ruta…"
+              placeholder="Nach Name, Slug oder Pfad suchen…"
               className="pl-9"
-              aria-label="Buscar sistemas"
+              aria-label="Systeme suchen"
             />
           </div>
           <p className="text-xs text-muted-foreground">
-            Los sistemas se guardan como <code className="font-mono">es_systems_&lt;slug&gt;.cfg</code>
+            Die Systeme werden gespeichert als <code className="font-mono">es_systems_&lt;slug&gt;.cfg</code>
           </p>
         </div>
 
@@ -121,17 +121,17 @@ export function Systems() {
         ) : filtered.length === 0 ? (
           <EmptyState
             icon={<Gamepad2 className="size-5" />}
-            title={query ? 'Ningún sistema coincide' : 'Todavía no hay sistemas definidos'}
+            title={query ? 'Kein System passt' : 'Noch keine Systeme angelegt'}
             description={
               query
-                ? 'Prueba con otro texto de búsqueda.'
-                : 'Crea el primer sistema a partir del catálogo de referencia de Batocera.'
+                ? 'Versuch es mit einem anderen Suchbegriff.'
+                : 'Lege das erste System aus dem Batocera-Referenzkatalog an.'
             }
             action={
               !query && (
                 <Button variant="primary" onClick={() => navigate('/sistemas/nuevo')}>
                   <Plus className="size-4" />
-                  Añadir sistema
+                  System hinzufügen
                 </Button>
               )
             }
@@ -163,17 +163,17 @@ export function Systems() {
                       </p>
                     </div>
                     <div className="flex shrink-0 items-center gap-1.5 opacity-0 transition-opacity duration-200 group-hover:opacity-100 focus-within:opacity-100">
-                      <IconButton label="Ver XML" onClick={() => showXml(system)}>
+                      <IconButton label="XML ansehen" onClick={() => showXml(system)}>
                         <FileCode className="size-3.5" />
                       </IconButton>
                       <IconButton
-                        label="Editar"
+                        label="Bearbeiten"
                         onClick={() => navigate(`/sistemas/${encodeURIComponent(system.name)}/editar`)}
                       >
                         <Pencil className="size-3.5" />
                       </IconButton>
                       <IconButton
-                        label="Eliminar"
+                        label="Löschen"
                         onClick={() => {
                           triggerHaptic('warning')
                           setPendingDelete(system)
@@ -187,13 +187,13 @@ export function Systems() {
                   <div className="flex-1 px-5 py-3">
                     <dl className="space-y-1.5">
                       <div className="flex items-baseline justify-between gap-3">
-                        <dt className="text-xs text-muted-foreground">Ruta</dt>
+                        <dt className="text-xs text-muted-foreground">Pfad</dt>
                         <dd className="min-w-0 truncate font-mono text-[11px] text-foreground">
                           {system.path}
                         </dd>
                       </div>
                       <div className="flex items-baseline justify-between gap-3">
-                        <dt className="text-xs text-muted-foreground">Tema</dt>
+                        <dt className="text-xs text-muted-foreground">Theme</dt>
                         <dd className="min-w-0 truncate text-[11px] text-foreground">
                           {system.theme || '—'}
                         </dd>
@@ -216,7 +216,7 @@ export function Systems() {
                       variant="ghost"
                       onClick={() => navigate(`/sistemas/${encodeURIComponent(system.name)}/editar`)}
                     >
-                      Editar
+                      Bearbeiten
                     </Button>
                   </footer>
                 </motion.article>
@@ -229,19 +229,19 @@ export function Systems() {
       <Modal
         open={pendingDelete !== null}
         onClose={() => setPendingDelete(null)}
-        title="Eliminar sistema"
+        title="System löschen"
         description={
           pendingDelete
-            ? `Se eliminará «${pendingDelete.fullname || pendingDelete.name}» de ${pendingDelete.filename}. Si el fichero contiene otros sistemas, sólo se quitará este.`
+            ? `Gelöscht wird „${pendingDelete.fullname || pendingDelete.name}“ aus ${pendingDelete.filename}. Wenn die Datei weitere Systeme enthält, wird nur dieses entfernt.`
             : undefined
         }
         footer={
           <>
             <Button variant="ghost" onClick={() => setPendingDelete(null)}>
-              Cancelar
+              Abbrechen
             </Button>
             <Button variant="destructive" onClick={confirmDelete} disabled={deleting}>
-              {deleting ? 'Eliminando…' : 'Eliminar'}
+              {deleting ? 'Wird gelöscht…' : 'Löschen'}
             </Button>
           </>
         }
@@ -251,7 +251,7 @@ export function Systems() {
         open={xmlOf !== null}
         onClose={() => setXmlOf(null)}
         title={xmlOf ? `${xmlOf.name}.cfg` : ''}
-        description="Contenido del fichero de configuración que genera el manager."
+        description="Inhalt der Konfigurationsdatei, die der Manager erzeugt."
         className="max-w-3xl"
       >
         <pre className="max-h-[60vh] overflow-auto rounded-2xl border border-border bg-stage p-4 font-mono text-[11px] leading-relaxed text-foreground">

@@ -23,23 +23,23 @@ import { cn } from '@/lib/utils'
 
 /** Como se explica cada tipo de coincidencia. */
 const METODOS: Record<string, string> = {
-  hash: 'hash exacto del DAT',
-  nombre: 'nombre idéntico al del DAT',
-  serial: 'serial del disco',
-  titulo: 'título parecido',
-  gamecode: 'código de juego del disco',
+  hash: 'exakter Hash aus dem DAT',
+  nombre: 'identischer Name wie im DAT',
+  serial: 'Seriennummer der Disc',
+  titulo: 'ähnlicher Titel',
+  gamecode: 'Spielcode der Disc',
 }
 
 function etiquetaAccion(item: ToolsRenameItem): { texto: string; clase: string } {
   switch (item.action) {
     case 'renombrar':
-      return { texto: 'Renombrar', clase: 'text-emerald-600 dark:text-emerald-400' }
+      return { texto: 'Umbenennen', clase: 'text-emerald-600 dark:text-emerald-400' }
     case 'revisar':
-      return { texto: 'Revisar', clase: 'text-amber-600 dark:text-amber-400' }
+      return { texto: 'Prüfen', clase: 'text-amber-600 dark:text-amber-400' }
     case 'igual':
-      return { texto: 'Ya está bien', clase: 'text-muted-foreground' }
+      return { texto: 'Schon korrekt', clase: 'text-muted-foreground' }
     default:
-      return { texto: 'Sin DAT', clase: 'text-muted-foreground' }
+      return { texto: 'Kein DAT', clase: 'text-muted-foreground' }
   }
 }
 
@@ -90,7 +90,7 @@ export function ToolsRenamePage() {
       setTrabajo(estado)
       if (estado.estado === 'listo') return estado.resultado ?? null
       if (estado.estado === 'error') {
-        throw new Error(estado.error || 'El trabajo ha fallado')
+        throw new Error(estado.error || 'Der Auftrag ist fehlgeschlagen')
       }
     }
   }
@@ -107,8 +107,8 @@ export function ToolsRenamePage() {
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No se pudo calcular el plan',
-        message: error instanceof Error ? error.message : 'Error inesperado.',
+        title: 'Plan konnte nicht berechnet werden',
+        message: error instanceof Error ? error.message : 'Unerwarteter Fehler.',
       })
     } finally {
       if (montado.current) {
@@ -126,10 +126,10 @@ export function ToolsRenamePage() {
       const item = result.results[0]
       showNotify({
         variant: item?.ok ? 'success' : 'error',
-        title: item?.ok ? 'DAT descargado' : 'No se pudo descargar el DAT',
+        title: item?.ok ? 'DAT heruntergeladen' : 'DAT konnte nicht heruntergeladen werden',
         message: item?.ok
-          ? `${item.system}: listo para renombrar.`
-          : item?.error ?? 'Error desconocido.',
+          ? `${item.system}: bereit zum Umbenennen.`
+          : item?.error ?? 'Unbekannter Fehler.',
       })
       dats.refresh()
     } finally {
@@ -153,18 +153,18 @@ export function ToolsRenamePage() {
       const imagenes = result.gamelist?.media ?? 0
       showNotify({
         variant: result.ok ? 'success' : 'error',
-        title: result.ok ? `${result.renamed ?? 0} ficheros renombrados` : 'Renombrado con problemas',
+        title: result.ok ? `${result.renamed ?? 0} Dateien umbenannt` : 'Umbenennen mit Problemen',
         message: result.ok
-          ? `${fichas} fichas y ${imagenes} ficheros de media actualizados en el gamelist.xml. Se puede deshacer desde el botón de deshacer.`
-          : (result.errores?.[0]?.error ?? 'Error desconocido.'),
+          ? `${fichas} Einträge und ${imagenes} Mediendateien in der gamelist.xml aktualisiert. Über den Rückgängig-Button umkehrbar.`
+          : (result.errores?.[0]?.error ?? 'Unbekannter Fehler.'),
       })
       setConfirmar(false)
       setPlan(null)
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No se pudo renombrar',
-        message: error instanceof Error ? error.message : 'Error inesperado.',
+        title: 'Umbenennen fehlgeschlagen',
+        message: error instanceof Error ? error.message : 'Unerwarteter Fehler.',
       })
     } finally {
       if (montado.current) {
@@ -180,8 +180,8 @@ export function ToolsRenamePage() {
       const result = await api.toolsRenameUndo()
       showNotify({
         variant: result.ok ? 'success' : 'error',
-        title: result.ok ? 'Renombrado deshecho' : 'No se pudo deshacer',
-        message: result.ok ? 'Los nombres anteriores han vuelto.' : result.error ?? '',
+        title: result.ok ? 'Umbenennen rückgängig gemacht' : 'Rückgängig machen fehlgeschlagen',
+        message: result.ok ? 'Die alten Namen sind zurück.' : result.error ?? '',
       })
       setPlan(null)
     } finally {
@@ -197,11 +197,11 @@ export function ToolsRenamePage() {
   return (
     <>
       <Topbar
-        title="Renombrado"
-        subtitle="Poner las ROMs con el nombre que les da el DAT"
+        title="Umbenennen"
+        subtitle="ROMs nach den Namen aus dem DAT benennen"
         onMenu={openMenu}
         actions={
-          <IconButton label="Volver a calcular el plan" onClick={calcular} disabled={!system || sinDat}>
+          <IconButton label="Plan neu berechnen" onClick={calcular} disabled={!system || sinDat}>
             <RefreshCw className={cn('size-4', busy && 'animate-spin')} />
           </IconButton>
         }
@@ -213,14 +213,14 @@ export function ToolsRenamePage() {
             <CircleAlert className="size-4 shrink-0" />
             <span className="min-w-0 flex-1">{systems.error ?? dats.error}</span>
             <Button size="sm" variant="outline" onClick={() => { systems.refresh(); dats.refresh() }}>
-              Reintentar
+              Erneut versuchen
             </Button>
           </div>
         )}
 
         <PanelCard
-          title="Elige un sistema"
-          subtitle="El DAT es la lista de juegos con sus nombres y sus hashes"
+          title="Wähle ein System"
+          subtitle="Das DAT ist die Liste der Spiele mit ihren Namen und Hashes"
           icon={<Database className="size-4" />}
         >
           <div className="flex flex-wrap items-center gap-3">
@@ -232,10 +232,10 @@ export function ToolsRenamePage() {
               }}
               className="h-10 w-full max-w-sm cursor-pointer rounded-xl border border-border bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
             >
-              <option value="">— elige un sistema —</option>
+              <option value="">— System wählen —</option>
               {conRom.map((item) => (
                 <option key={item.name} value={item.name}>
-                  {item.name} · {item.rom_count} ficheros
+                  {item.name} · {item.rom_count} Dateien
                 </option>
               ))}
             </select>
@@ -243,7 +243,7 @@ export function ToolsRenamePage() {
             {system && dats.data ? (
               sinDat ? (
                 <span className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs font-medium text-amber-700 dark:text-amber-400">
-                  Este sistema no tiene DAT disponible
+                  Für dieses System ist kein DAT verfügbar
                 </span>
               ) : datDelSistema?.instalado ? (
                 <span
@@ -251,8 +251,8 @@ export function ToolsRenamePage() {
                   className="rounded-xl border border-border bg-muted/60 px-3 py-2 text-xs font-medium text-muted-foreground"
                 >
                   {datDelSistema?.resuelto === 'nombre'
-                    ? `DAT por nombre · ${datDelSistema?.dat} (confianza ${Math.round((datDelSistema?.confianza ?? 0) * 100)} %)`
-                    : `DAT listo · ${(datDelSistema?.juegos ?? 0).toLocaleString('es-ES')} juegos`}
+                    ? `DAT über Namen · ${datDelSistema?.dat} (confianza ${Math.round((datDelSistema?.confianza ?? 0) * 100)} %)`
+                    : `DAT bereit · ${(datDelSistema?.juegos ?? 0).toLocaleString('de-DE')} Spiele`}
                 </span>
               ) : (
                 <Button
@@ -262,7 +262,7 @@ export function ToolsRenamePage() {
                   onClick={instalarDat}
                 >
                   <Database className="size-4" />
-                  Descargar el DAT
+                  DAT herunterladen
                 </Button>
               )
             ) : null}
@@ -271,13 +271,13 @@ export function ToolsRenamePage() {
 
         <div className="mt-4">
           <PanelCard
-            title="Plan de renombrado"
+            title="Umbenennungsplan"
             subtitle={
               plan
-                ? `${plan.stats.total} ficheros · ${plan.stats.renombrar} para renombrar · ${plan.stats.revisar} para revisar`
+                ? `${plan.stats.total} Dateien · ${plan.stats.renombrar} zum Umbenennen · ${plan.stats.revisar} zum Prüfen`
                 : sinDat
-                  ? 'Este sistema no tiene DAT disponible: no se puede calcular el plan'
-                  : 'Primero elige el sistema y calcula el plan: no se toca nada hasta que lo apliques'
+                  ? 'Für dieses System ist kein DAT verfügbar: Der Plan kann nicht berechnet werden'
+                  : 'Wähle zuerst das System und berechne den Plan: Nichts wird verändert, bis du ihn anwendest'
             }
             icon={<FileSignature className="size-4" />}
             actions={
@@ -285,7 +285,7 @@ export function ToolsRenamePage() {
                 {plan && (
                   <Button size="sm" variant="ghost" onClick={deshacer} disabled={busy}>
                     <Undo2 className="size-4" />
-                    Deshacer
+                    Rückgängig
                   </Button>
                 )}
                 {cambios.length > 0 && (
@@ -296,7 +296,7 @@ export function ToolsRenamePage() {
                     disabled={busy}
                   >
                     <ListChecks className="size-4" />
-                    Aplicar {cambios.length}
+                    Anwenden {cambios.length}
                   </Button>
                 )}
                 <Button
@@ -306,7 +306,7 @@ export function ToolsRenamePage() {
                   disabled={!system || busy || sinDat}
                 >
                   <History className="size-4" />
-                  Calcular el plan
+                  Plan berechnen
                 </Button>
               </>
             }
@@ -314,8 +314,8 @@ export function ToolsRenamePage() {
             {sinDat ? (
               <EmptyState
                 icon={<FileSignature className="size-5" />}
-                title="Este sistema no tiene DAT disponible"
-                description="El manager no ha encontrado ningún DAT para este sistema, así que no hay plan de renombrado que calcular."
+                title="Für dieses System ist kein DAT verfügbar"
+                description="Der Manager hat für dieses System kein DAT gefunden, daher gibt es keinen Umbenennungsplan zu berechnen."
               />
             ) : trabajando && trabajo ? (
               <div className="rounded-2xl border border-border bg-muted/40 px-4 py-4">
@@ -323,30 +323,29 @@ export function ToolsRenamePage() {
                   value={trabajo.porcentaje}
                   label={
                     trabajo.total
-                      ? `${trabajo.mensaje || 'Trabajando'} · ${trabajo.hechos} de ${trabajo.total} ficheros`
-                      : (trabajo.mensaje || 'Trabajando')
+                      ? `${trabajo.mensaje || 'Trabajando'} · ${trabajo.hechos} von ${trabajo.total} Dateien`
+                      : (trabajo.mensaje || 'Arbeite')
                   }
                 />
                 {trabajo.actual && (
                   <p className="mt-2 truncate text-[11px] text-muted-foreground">
-                    Ahora: {trabajo.actual}
+                    Gerade: {trabajo.actual}
                   </p>
                 )}
                 <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground/80">
-                  En bibliotecas grandes esto tarda: el trabajo sigue en el servidor, asi que
-                  no hace falta cerrar la ventana. Puedes esperar aqui hasta que termine.
+                  Bei großen Bibliotheken dauert das: Die Arbeit läuft auf dem Server weiter, du musst das Fenster also nicht offen lassen. Du kannst hier warten, bis sie fertig ist.
                 </p>
               </div>
             ) : !plan ? (
               <EmptyState
                 icon={<FileSignature className="size-5" />}
-                title="Todavía no hay plan"
-                description="El plan se calcula en memoria: son los nombres que tendría cada ROM según su DAT."
+                title="Noch kein Plan"
+                description="Der Plan wird im Speicher berechnet: Es sind die Namen, die jedes ROM laut seinem DAT hätte."
               />
             ) : plan.items.length === 0 ? (
               <EmptyState
-                title="No hay ficheros que renombrar"
-                description={`La carpeta de ${plan.system} está vacía.`}
+                title="Keine Dateien zum Umbenennen"
+                description={`Der Ordner von ${plan.system} ist leer.`}
               />
             ) : (
               <ul className="divide-y divide-border">
@@ -376,10 +375,10 @@ export function ToolsRenamePage() {
                       )}
                       {item.hashes?.archivo?.game_code && (
                         <p className="mt-0.5 text-[11px] text-muted-foreground/80">
-                          Código {item.hashes.archivo.game_code}
+                          Code {item.hashes.archivo.game_code}
                           {item.hashes.archivo.region ? ` (${item.hashes.archivo.region})` : ''}
                           {item.hashes.archivo.md5
-                            ? ` · MD5 del juego ${item.hashes.archivo.md5.slice(0, 12)}…`
+                            ? ` · MD5 des Spiels ${item.hashes.archivo.md5.slice(0, 12)}…`
                             : ''}
                           {item.hashes.dat?.crc ? ` · DAT crc ${item.hashes.dat.crc}` : ''}
                           {item.hashes.dat?.md5 ? ` · md5 ${item.hashes.dat.md5.slice(0, 12)}…` : ''}
@@ -387,7 +386,7 @@ export function ToolsRenamePage() {
                       )}
                       {item.companions.length > 0 && (
                         <p className="mt-0.5 text-[11px] text-muted-foreground/80">
-                          Se renombran tambien: {item.companions.join(', ')}
+                          Ebenfalls umbenannt werden: {item.companions.join(', ')}
                         </p>
                       )}
                     </li>
@@ -400,7 +399,7 @@ export function ToolsRenamePage() {
               <p className="mt-3 flex items-start gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs leading-relaxed text-amber-700 dark:text-amber-400">
                 <CircleAlert className="size-4 shrink-0" />
                 <span>
-                  {plan.stats.sin_dat} ficheros se quedan sin renombrar: no aparecen en el DAT.
+                  {plan.stats.sin_dat} Dateien bleiben unverändert: Sie stehen nicht im DAT.
                 </span>
               </p>
             )}
@@ -411,20 +410,20 @@ export function ToolsRenamePage() {
       <Modal
         open={confirmar}
         onClose={() => setConfirmar(false)}
-        title="Aplicar el renombrado"
-        description="Se renombran los ficheros, sus acompañantes (CUE, M3U…) y la media (las imágenes), y se actualiza el gamelist.xml para que las fichas y las carátulas sigan cuadrando. Nada se borra."
+        title="Umbenennen anwenden"
+        description="Umbenannt werden die Dateien, ihre Begleitdateien (CUE, M3U…) und die Medien (die Bilder), und die gamelist.xml wird aktualisiert, damit Einträge und Cover weiter passen. Es wird nichts gelöscht."
         footer={
           <>
             <Button variant="ghost" onClick={() => setConfirmar(false)}>
-              Cancelar
+              Abbrechen
             </Button>
             {revisables.length > 0 && (
               <Button variant="outline" disabled={busy} onClick={() => aplicar(true)}>
-                Renombrar {cambios.length + revisables.length}
+                Umbenennen {cambios.length + revisables.length}
               </Button>
             )}
             <Button variant="primary" disabled={busy || cambios.length === 0} onClick={() => aplicar(false)}>
-              Renombrar {cambios.length}
+              Umbenennen {cambios.length}
             </Button>
           </>
         }

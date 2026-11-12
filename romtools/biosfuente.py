@@ -197,9 +197,9 @@ class Fuente:
         try:
             datos = self._leer(self._url(ruta_fuente))
         except Exception as exc:
-            return {"ok": False, "error": f"no se pudo descargar: {exc}"}
+            return {"ok": False, "error": f"Download fehlgeschlagen: {exc}"}
         if len(datos) > MAX_BIOS:
-            return {"ok": False, "error": "el fichero es demasiado grande"}
+            return {"ok": False, "error": "die Datei ist zu groß"}
         try:
             carpeta = os.path.dirname(destino)
             if carpeta:
@@ -207,7 +207,7 @@ class Fuente:
             with open(destino, "wb") as fh:
                 fh.write(datos)
         except Exception as exc:
-            return {"ok": False, "error": f"no se pudo guardar: {exc}"}
+            return {"ok": False, "error": f"Speichern fehlgeschlagen: {exc}"}
         return {"ok": True, "md5": hashlib.md5(datos).hexdigest(),
                 "size": len(datos)}
 
@@ -225,7 +225,7 @@ def bajar_faltantes(bios_dir: str, faltantes, url: str = FUENTE_BIOS,
 
     Devuelve ``{ok, fuente, total, descargadas, no_encontradas, fallidas}``.
     """
-    prog = Progress(max(len(faltantes or []), 1), "preparando la descarga",
+    prog = Progress(max(len(faltantes or []), 1), "Download wird vorbereitet",
                     notificar=progreso)
     prog.avisar()
 
@@ -239,14 +239,14 @@ def bajar_faltantes(bios_dir: str, faltantes, url: str = FUENTE_BIOS,
             wanted.append(rel)
 
     # 1) Indexar la fuente (dirigido: solo las carpetas que hacen falta).
-    prog.reiniciar(max(len(wanted), 1), "buscando en la fuente")
-    prog.empezar("indexando la fuente", 0, 0)
+    prog.reiniciar(max(len(wanted), 1), "Suche in der Quelle")
+    prog.empezar("Quelle wird indiziert", 0, 0)
     try:
         fuente.indexar(wanted)
     except Exception as exc:
         prog.completar()
         return {"ok": False, "fuente": url, "total": len(wanted),
-                "error": f"no se pudo hablar con la fuente: {exc}",
+                "error": f"keine Verbindung zur Quelle: {exc}",
                 "descargadas": [], "no_encontradas": wanted, "fallidas": []}
     prog.terminar_unidad()
 
@@ -255,7 +255,7 @@ def bajar_faltantes(bios_dir: str, faltantes, url: str = FUENTE_BIOS,
     no_encontradas = [r for r in wanted if r not in emparejadas]
 
     # 3) Descargar una a una.
-    prog.reiniciar(max(len(emparejadas), 1), "descargando las BIOS")
+    prog.reiniciar(max(len(emparejadas), 1), "BIOS werden heruntergeladen")
     descargadas = []
     fallidas = []
     for indice, rel in enumerate(sorted(emparejadas)):

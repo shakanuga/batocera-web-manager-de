@@ -61,8 +61,8 @@ function tieneHerramienta(accion: ToolsFormatAction): boolean {
  * escribe sin acentos y en minúscula: se empiezan en mayúscula).
  */
 function motivo(accion: ToolsFormatAction): string {
-  const texto = accion.motivo || (accion.falta ? `falta la utilidad ${accion.falta}` : '')
-  if (!texto) return 'La utilidad que hace falta no está en la consola.'
+  const texto = accion.motivo || (accion.falta ? `Werkzeug fehlt ${accion.falta}` : '')
+  if (!texto) return 'Das benötigte Werkzeug ist nicht auf der Konsole.'
   return texto.charAt(0).toUpperCase() + texto.slice(1)
 }
 
@@ -192,7 +192,7 @@ export function ToolsFormatsPage() {
       else
         mapa.set(file.kind, {
           kind: file.kind,
-          label: sinReconocer(file) ? 'Formato no reconocido' : file.label,
+          label: sinReconocer(file) ? 'Format nicht erkannt' : file.label,
           count: 1,
         })
     }
@@ -225,18 +225,18 @@ export function ToolsFormatsPage() {
       const result = await api.toolsConvert({ system, file: selected.name, target: accion.id })
       showNotify({
         variant: 'success',
-        title: `Convertido a ${accion.label}`,
+        title: `Konvertiert nach ${accion.label}`,
         message: result.out
           ? `${result.out}${result.size ? ` · ${humanSize(result.size)}` : ''}`
-          : 'Hecho.',
+          : 'Erledigt.',
       })
       setSelected(null)
       files.refresh()
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No se pudo convertir',
-        message: error instanceof Error ? error.message : 'Error inesperado.',
+        title: 'Konvertierung fehlgeschlagen',
+        message: error instanceof Error ? error.message : 'Unerwarteter Fehler.',
       })
     } finally {
       setBusy(false)
@@ -251,16 +251,16 @@ export function ToolsFormatsPage() {
       const result = await api.toolsPatch({ system, file: selected.name, patch: patch.name })
       showNotify({
         variant: 'success',
-        title: 'Parche aplicado',
-        message: result.out ?? 'Hecho.',
+        title: 'Patch angewendet',
+        message: result.out ?? 'Erledigt.',
       })
       setSelected(null)
       files.refresh()
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No se pudo aplicar el parche',
-        message: error instanceof Error ? error.message : 'Error inesperado.',
+        title: 'Patch konnte nicht angewendet werden',
+        message: error instanceof Error ? error.message : 'Unerwarteter Fehler.',
       })
     } finally {
       setBusy(false)
@@ -286,14 +286,14 @@ export function ToolsFormatsPage() {
       files.refresh()
       showNotify({
         variant: fallidos > 0 ? 'error' : 'success',
-        title: 'Conversión en lote terminada',
-        message: `${convertidos} convertidos · ${fallidos} fallidos de ${total}.`,
+        title: 'Stapelkonvertierung abgeschlossen',
+        message: `${convertidos} konvertiert · ${fallidos} fehlgeschlagen von ${total}.`,
       })
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No se pudo convertir en lote',
-        message: error instanceof Error ? error.message : 'Error inesperado.',
+        title: 'Stapelkonvertierung fehlgeschlagen',
+        message: error instanceof Error ? error.message : 'Unerwarteter Fehler.',
       })
     } finally {
       setBusy(false)
@@ -305,11 +305,11 @@ export function ToolsFormatsPage() {
   return (
     <>
       <Topbar
-        title="Formatos"
-        subtitle="Convertir, parchear y comprimir las ROMs de la consola"
+        title="Formate"
+        subtitle="ROMs der Konsole konvertieren, patchen und komprimieren"
         onMenu={openMenu}
         actions={
-          <IconButton label="Volver a listar" onClick={() => files.refresh()}>
+          <IconButton label="Neu auflisten" onClick={() => files.refresh()}>
             <RefreshCw className={cn('size-4', files.loading && 'animate-spin')} />
           </IconButton>
         }
@@ -321,14 +321,14 @@ export function ToolsFormatsPage() {
             <CircleAlert className="size-4 shrink-0" />
             <span className="min-w-0 flex-1">{systems.error}</span>
             <Button size="sm" variant="outline" onClick={systems.refresh}>
-              Reintentar
+              Erneut versuchen
             </Button>
           </div>
         )}
 
         <PanelCard
-          title="Elige un sistema"
-          subtitle="Los formatos se detectan leyendo la cabecera de cada imagen"
+          title="Wähle ein System"
+          subtitle="Die Formate werden anhand des Headers jedes Images erkannt"
           icon={<HardDrive className="size-4" />}
         >
           <select
@@ -341,10 +341,10 @@ export function ToolsFormatsPage() {
             }}
             className="h-10 w-full max-w-sm cursor-pointer rounded-xl border border-border bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            <option value="">— elige un sistema —</option>
+            <option value="">— System wählen —</option>
             {conRom.map((item) => (
               <option key={item.name} value={item.name}>
-                {item.name} · {item.rom_count} ficheros
+                {item.name} · {item.rom_count} Dateien
               </option>
             ))}
           </select>
@@ -352,29 +352,29 @@ export function ToolsFormatsPage() {
 
         <div className="mt-4">
           <PanelCard
-            title={system ? `Formatos de ${system}` : 'Formatos del sistema'}
-            subtitle="Los formatos que admite este sistema y los que admite comprimidos"
+            title={system ? `Formate von ${system}` : 'Formate des Systems'}
+            subtitle="Die Formate, die dieses System unterstützt, auch komprimiert"
             icon={<FileCode2 className="size-4" />}
           >
             {!system ? (
               <EmptyState
-                title="Ningún sistema elegido"
-                description="Elige un sistema arriba para ver los formatos que admite."
+                title="Kein System gewählt"
+                description="Wähle oben ein System, um seine unterstützten Formate zu sehen."
               />
             ) : catalogo.error ? (
               <div className="flex items-center gap-2 rounded-2xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
                 <CircleAlert className="size-4 shrink-0" />
                 <span className="min-w-0 flex-1">{catalogo.error}</span>
                 <Button size="sm" variant="outline" onClick={catalogo.refresh}>
-                  Reintentar
+                  Erneut versuchen
                 </Button>
               </div>
             ) : catalogo.loading && !catalogo.data ? (
-              <EmptyState title="Leyendo los formatos…" description="Un momento." />
+              <EmptyState title="Formate werden gelesen…" description="Einen Moment." />
             ) : !sistemaInfo ? (
               <EmptyState
-                title="Sin datos de este sistema"
-                description={`No hay formatos registrados para ${system}.`}
+                title="Keine Daten zu diesem System"
+                description={`Keine Formate hinterlegt für ${system}.`}
               />
             ) : (
               <div className="space-y-4">
@@ -386,7 +386,7 @@ export function ToolsFormatsPage() {
 
                 <div>
                   <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                    Formatos admitidos
+                    Unterstützte Formate
                   </p>
                   <PillBar>
                     {(sistemaInfo.formatos ?? []).map((extension) => (
@@ -400,14 +400,14 @@ export function ToolsFormatsPage() {
                     ))}
                   </PillBar>
                   <p className="mt-1.5 text-[11px] text-muted-foreground">
-                    El formato con * es el preferido del sistema.
+                    Das Format mit * ist das bevorzugte des Systems.
                   </p>
                 </div>
 
                 {(sistemaInfo.compresiones ?? []).length > 0 && (
                   <div>
                     <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                      Compresiones
+                      Komprimierungen
                     </p>
                     <div className="flex flex-wrap gap-1.5">
                       {(sistemaInfo.compresiones ?? []).map((compresion) => (
@@ -428,25 +428,25 @@ export function ToolsFormatsPage() {
 
         <div className="mt-4">
           <PanelCard
-            title={system ? `Ficheros de ${system}` : 'Ficheros'}
+            title={system ? `Dateien von ${system}` : 'Dateien'}
             subtitle={
               system
-                ? `${lista.length} ficheros · ${reconocidos} con formato reconocido`
-                : 'Elige un sistema para ver sus ficheros'
+                ? `${lista.length} Dateien · ${reconocidos} mit erkanntem Format`
+                : 'Wähle ein System, um seine Dateien zu sehen'
             }
             icon={<FileCog className="size-4" />}
           >
             {!system ? (
               <EmptyState
-                title="Ningún sistema elegido"
-                description="Arriba puedes elegir de qué sistema quieres mirar las ROMs."
+                title="Kein System gewählt"
+                description="Oben kannst du wählen, von welchem System du die ROMs ansehen willst."
               />
             ) : files.loading && !files.data ? (
-              <EmptyState title="Leyendo los ficheros…" description="Un momento." />
+              <EmptyState title="Dateien werden gelesen…" description="Einen Moment." />
             ) : !lista.length ? (
               <EmptyState
-                title="No hay ficheros"
-                description={`La carpeta de ${system} está vacía.`}
+                title="Keine Dateien"
+                description={`Der Ordner von ${system} ist leer.`}
               />
             ) : (
               <ul className="divide-y divide-border">
@@ -477,7 +477,7 @@ export function ToolsFormatsPage() {
                                   : 'border-border',
                               )}
                             >
-                              {sinReconocer(file) ? 'Formato no reconocido' : file.label}
+                              {sinReconocer(file) ? 'Format nicht erkannt' : file.label}
                             </span>
                             <span>{humanSize(file.size)}</span>
                             {conversiones.length > 0 && (
@@ -488,7 +488,7 @@ export function ToolsFormatsPage() {
                                 className="truncate text-amber-700 dark:text-amber-400"
                                 title={bloqueadas.map((a) => motivo(a)).join(' · ')}
                               >
-                                · {bloqueadas.map((a) => a.label).join(' · ')} (sin herramientas)
+                                · {bloqueadas.map((a) => a.label).join(' · ')} (keine Werkzeuge)
                               </span>
                             )}
                           </span>
@@ -504,34 +504,32 @@ export function ToolsFormatsPage() {
 
         <div className="mt-4">
           <PanelCard
-            title="Convertir en lote"
-            subtitle="Convierte de una vez todos los ficheros del sistema que admitan el mismo destino"
+            title="Stapelkonvertierung"
+            subtitle="Konvertiert alle Dateien des Systems, die dasselbe Ziel unterstützen, auf einmal"
             icon={<Layers className="size-4" />}
           >
             {!system ? (
               <EmptyState
-                title="Ningún sistema elegido"
-                description="Elige un sistema arriba para convertir sus ROMs de una sola vez."
+                title="Kein System gewählt"
+                description="Wähle oben ein System, um seine ROMs auf einmal zu konvertieren."
               />
             ) : files.loading && !files.data ? (
-              <EmptyState title="Leyendo los ficheros…" description="Un momento." />
+              <EmptyState title="Dateien werden gelesen…" description="Einen Moment." />
             ) : !destinos.length ? (
               <EmptyState
-                title="Nada que convertir"
-                description="Ningún fichero de este sistema admite una conversión."
+                title="Nichts zu konvertieren"
+                description="Keine Datei dieses Systems kann konvertiert werden."
               />
             ) : !destinosDisponibles.length ? (
               <div className="flex items-start gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-3 py-2.5 text-sm text-amber-700 dark:text-amber-400">
                 <CircleAlert className="mt-0.5 size-4 shrink-0" />
                 <div className="min-w-0 flex-1">
                   <p className="font-medium">
-                    Sin las utilidades necesarias no se puede convertir en lote.
+                    Ohne die nötigen Werkzeuge ist keine Stapelkonvertierung möglich.
                   </p>
                   <p className="mt-1 text-[11px] leading-relaxed">
-                    Este sistema admite{' '}
-                    {destinos.map((item) => item.label).join(', ')}, pero en la consola falta la
-                    herramienta que las hace. Mira abajo, en «Utilidades de conversión», cuál
-                    instalar.
+                    Dieses System unterstützt{' '}
+                    {destinos.map((item) => item.label).join(', ')}, aber auf der Konsole fehlt das Werkzeug dafür. Sieh unten unter „Konvertierungswerkzeuge“ nach, welches du installieren musst.
                   </p>
                 </div>
               </div>
@@ -541,12 +539,12 @@ export function ToolsFormatsPage() {
                   <select
                     value={destinoActual?.id ?? ''}
                     onChange={(event) => setDestino(event.target.value)}
-                    aria-label="Destino de la conversión"
+                    aria-label="Zielformat"
                     className="h-10 w-full max-w-xs cursor-pointer rounded-xl border border-border bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
                     {destinosDisponibles.map((item) => (
                       <option key={item.id} value={item.id}>
-                        {item.label} · {item.count} ficheros
+                        {item.label} · {item.count} Dateien
                       </option>
                     ))}
                   </select>
@@ -554,21 +552,21 @@ export function ToolsFormatsPage() {
                   <select
                     value={origen}
                     onChange={(event) => setOrigen(event.target.value)}
-                    aria-label="Formato de origen"
+                    aria-label="Quellformat"
                     className="h-10 w-full max-w-xs cursor-pointer rounded-xl border border-border bg-card px-3 text-sm text-foreground focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
                   >
-                    <option value="">Todos los formatos</option>
+                    <option value="">Alle Formate</option>
                     {formatos.map((item) => (
                       <option key={item.kind} value={item.kind}>
-                        {item.label} · {item.count} ficheros
+                        {item.label} · {item.count} Dateien
                       </option>
                     ))}
                   </select>
                 </div>
 
                 <p className="text-xs text-muted-foreground">
-                  Se convertirán {candidatos.length} ficheros a {destinoActual?.label}
-                  {origen ? ' (un solo formato de origen)' : ''}. El original no se borra.
+                  Konvertiert werden {candidatos.length} Dateien nach {destinoActual?.label}
+                  {origen ? ' (nur ein Quellformat)' : ''}. Das Original wird nicht gelöscht.
                 </p>
 
                 <Button
@@ -578,14 +576,13 @@ export function ToolsFormatsPage() {
                   onClick={() => setConfirmarLote(true)}
                 >
                   <Wand2 className="size-4" />
-                  Convertir todo
+                  Alles konvertieren
                 </Button>
 
                 {lote && (
                   <div className="rounded-xl border border-border bg-muted/40 px-3 py-2.5">
                     <p className="text-sm font-medium text-foreground">
-                      {lote.resumen?.hechos ?? 0} convertidos · {lote.resumen?.fallos ?? 0} fallidos
-                      · {lote.resumen?.total ?? 0} intentados
+                      {lote.resumen?.hechos ?? 0} konvertiert · {lote.resumen?.fallos ?? 0} fehlgeschlagen · {lote.resumen?.total ?? 0} versucht
                     </p>
                     {fallos.length > 0 && (
                       <ul className="mt-2 space-y-1">
@@ -594,7 +591,7 @@ export function ToolsFormatsPage() {
                             key={`${item.file}-${index}`}
                             className="text-[11px] leading-relaxed text-destructive"
                           >
-                            {item.file}: {item.error ?? 'Error desconocido.'}
+                            {item.file}: {item.error ?? 'Unbekannter Fehler.'}
                           </li>
                         ))}
                       </ul>
@@ -608,8 +605,8 @@ export function ToolsFormatsPage() {
 
         <div className="mt-4">
           <PanelCard
-            title="Utilidades de conversión"
-            subtitle="Los programas que hacen las conversiones, de dónde salen y si están en la consola"
+            title="Konvertierungswerkzeuge"
+            subtitle="Die Programme, die die Konvertierungen erledigen, woher sie stammen und ob sie auf der Konsole sind"
             icon={<Wrench className="size-4" />}
           >
             {catalogo.error ? (
@@ -617,15 +614,15 @@ export function ToolsFormatsPage() {
                 <CircleAlert className="size-4 shrink-0" />
                 <span className="min-w-0 flex-1">{catalogo.error}</span>
                 <Button size="sm" variant="outline" onClick={catalogo.refresh}>
-                  Reintentar
+                  Erneut versuchen
                 </Button>
               </div>
             ) : catalogo.loading && !catalogo.data ? (
-              <EmptyState title="Leyendo el catálogo…" description="Un momento." />
+              <EmptyState title="Katalog wird gelesen…" description="Einen Moment." />
             ) : !herramientas.length ? (
               <EmptyState
-                title="Sin catálogo"
-                description="No hay utilidades de conversión registradas."
+                title="Kein Katalog"
+                description="Keine Konvertierungswerkzeuge hinterlegt."
               />
             ) : (
               <ul className="divide-y divide-border">
@@ -643,12 +640,12 @@ export function ToolsFormatsPage() {
                       {herramienta.disponible !== false ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-2 py-0.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
                           <CircleCheck className="size-3" />
-                          Disponible
+                          Verfügbar
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:text-amber-400">
                           <CircleAlert className="size-3" />
-                          Falta
+                          Fehlt
                         </span>
                       )}
                     </div>
@@ -668,7 +665,7 @@ export function ToolsFormatsPage() {
                             : 'text-amber-700 dark:text-amber-400',
                         )}
                       >
-                        <span className="font-medium">Cómo instalarla: </span>
+                        <span className="font-medium">So installierst du es: </span>
                         {herramienta.instalar}
                       </p>
                     )}
@@ -698,12 +695,12 @@ export function ToolsFormatsPage() {
         title={selected?.name ?? ''}
         description={
           selected
-            ? `Formato detectado: ${sinReconocer(selected) ? 'no reconocido' : selected.label}`
+            ? `Erkanntes Format: ${sinReconocer(selected) ? 'nicht erkannt' : selected.label}`
             : undefined
         }
         footer={
           <Button variant="ghost" onClick={() => setSelected(null)}>
-            Cerrar
+            Schließen
           </Button>
         }
       >
@@ -711,7 +708,7 @@ export function ToolsFormatsPage() {
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
               <span className="rounded-md border border-border px-1.5 py-0.5 font-medium text-foreground">
-                {sinReconocer(selected) ? 'Formato no reconocido' : selected.label}
+                {sinReconocer(selected) ? 'Format nicht erkannt' : selected.label}
               </span>
               <span>{humanSize(selected.size)}</span>
               {selected.plataforma && <span>{selected.plataforma}</span>}
@@ -719,13 +716,13 @@ export function ToolsFormatsPage() {
 
             <div>
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Conversiones disponibles
+                Verfügbare Konvertierungen
               </p>
               {accionesSeleccionadas.length === 0 ? (
                 <p className="text-xs leading-relaxed text-muted-foreground">
                   {accionesOcultas.length > 0
-                    ? 'Este fichero no se puede convertir: el sistema no admite ninguno de los formatos de destino.'
-                    : `Este fichero no se puede convertir: el formato detectado (${selected.kind}) no admite ninguna conversión.`}
+                    ? 'Diese Datei kann nicht konvertiert werden: Das System unterstützt keines der Zielformate.'
+                    : `Diese Datei kann nicht konvertiert werden: Das erkannte Format (${selected.kind}) erlaubt keine Konvertierung.`}
                 </p>
               ) : (
                 <div className="space-y-2">
@@ -748,7 +745,7 @@ export function ToolsFormatsPage() {
                           onClick={() => convertir(accion)}
                         >
                           <Wand2 className="size-4" />
-                          Convertir a {accion.label}
+                          Konvertieren nach {accion.label}
                         </Button>
                         {falta ? (
                           <span className="text-[11px] leading-relaxed text-amber-700 dark:text-amber-400">
@@ -769,7 +766,7 @@ export function ToolsFormatsPage() {
             {parches.length > 0 && (
               <div>
                 <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                  Parches IPS en la carpeta
+                  IPS-Patches im Ordner
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {parches.map((patch) => (
@@ -786,13 +783,13 @@ export function ToolsFormatsPage() {
                   ))}
                 </div>
                 <p className="mt-2 text-[11px] text-muted-foreground">
-                  Al aplicar un parche se guarda una copia del original (.bak) para poder deshacerlo.
+                  Beim Anwenden eines Patches wird eine Kopie des Originals (.bak) angelegt, damit er rückgängig gemacht werden kann.
                 </p>
               </div>
             )}
 
             <p className="text-[11px] text-muted-foreground">
-              Convertir no borra el original: el resultado se deja al lado con otro nombre.
+              Konvertieren löscht das Original nicht: Das Ergebnis wird mit anderem Namen daneben abgelegt.
             </p>
           </div>
         )}
@@ -801,19 +798,19 @@ export function ToolsFormatsPage() {
       <Modal
         open={confirmarLote}
         onClose={() => setConfirmarLote(false)}
-        title={`Convertir todo a ${destinoActual?.label ?? ''}`}
-        description={`Se escribirán ${candidatos.length} ficheros nuevos en la SD. El original no se borra.`}
+        title={`Alles konvertieren nach ${destinoActual?.label ?? ''}`}
+        description={`Geschrieben werden ${candidatos.length} neue Dateien auf die SD. Das Original wird nicht gelöscht.`}
         footer={
           <>
             <Button variant="ghost" onClick={() => setConfirmarLote(false)}>
-              Cancelar
+              Abbrechen
             </Button>
             <Button
               variant="primary"
               disabled={busy || !candidatos.length}
               onClick={convertirLote}
             >
-              {busy ? 'Convirtiendo…' : `Sí, convertir ${candidatos.length}`}
+              {busy ? 'Wird konvertiert…' : `Ja, konvertieren ${candidatos.length}`}
             </Button>
           </>
         }
@@ -827,7 +824,7 @@ export function ToolsFormatsPage() {
         </ul>
         {candidatos.length > 50 && (
           <p className="mt-2 text-[11px] text-muted-foreground">
-            … y {candidatos.length - 50} ficheros más.
+            … und {candidatos.length - 50} weitere Dateien.
           </p>
         )}
       </Modal>

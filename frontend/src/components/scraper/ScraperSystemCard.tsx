@@ -70,8 +70,8 @@ export function ScraperSystemCard({ system, onOpen, onScrape }: ScraperSystemCar
 
         <button
           type="button"
-          aria-label={`Escrapear ${title}`}
-          title="Escrapear sistema"
+          aria-label={`Scrapen ${title}`}
+          title="System scrapen"
           onClick={(event) => {
             event.stopPropagation()
             onScrape()
@@ -92,7 +92,7 @@ export function ScraperSystemCard({ system, onOpen, onScrape }: ScraperSystemCar
         <div className="min-w-0">
           <h3 className="truncate text-sm font-semibold tracking-[-0.015em] text-foreground">{title}</h3>
           <p className="truncate text-[11px] font-medium text-muted-foreground">
-            {subtitle || system.platform || 'Sin descripción'}
+            {subtitle || system.platform || 'Keine Beschreibung'}
           </p>
         </div>
 
@@ -100,7 +100,7 @@ export function ScraperSystemCard({ system, onOpen, onScrape }: ScraperSystemCar
         <div className="flex items-end justify-between gap-3">
           <div className="flex items-baseline gap-1.5">
             <span className="text-xl font-semibold tabular-nums tracking-[-0.02em] text-foreground">
-              {system.rom_count.toLocaleString('es-ES')}
+              {system.rom_count.toLocaleString('de-DE')}
             </span>
             <span className="text-[11px] font-medium text-muted-foreground">
               {system.rom_count === 1 ? 'ROM' : 'ROMs'}
@@ -108,7 +108,7 @@ export function ScraperSystemCard({ system, onOpen, onScrape }: ScraperSystemCar
           </div>
           <span className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
             <ImageIcon className="size-3" />
-            {system.image_count} con media
+            {system.image_count} mit Medien
           </span>
         </div>
 

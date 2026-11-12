@@ -91,8 +91,8 @@ export function BiosSystemCard({
         {reparables > 0 && (
           <button
             type="button"
-            aria-label={`Reparar las BIOS de ${name}`}
-            title="Reparar lo reparable"
+            aria-label={`BIOS reparieren für ${name}`}
+            title="Reparierbares reparieren"
             onClick={(event) => {
               event.stopPropagation()
               onRepair()
@@ -113,7 +113,7 @@ export function BiosSystemCard({
         <div className="min-w-0">
           <h3 className="truncate text-sm font-semibold tracking-[-0.015em] text-foreground">{name}</h3>
           <p className="truncate text-[11px] font-medium text-muted-foreground">
-            {total} {total === 1 ? 'BIOS' : 'BIOS'} en el catálogo de Batocera
+            {total} {total === 1 ? 'BIOS' : 'BIOS'} im Batocera-Katalog
           </p>
         </div>
 
@@ -123,11 +123,11 @@ export function BiosSystemCard({
               {ok}
               <span className="text-muted-foreground">/{total}</span>
             </span>
-            <span className="text-[11px] font-medium text-muted-foreground">correctas</span>
+            <span className="text-[11px] font-medium text-muted-foreground">korrekt</span>
           </div>
           {problemas > 0 && (
             <span className="inline-flex items-center gap-1 text-[11px] font-medium text-destructive">
-              {problemas} con problemas
+              {problemas} mit Problemen
             </span>
           )}
         </div>
@@ -142,7 +142,7 @@ export function BiosSystemCard({
         </div>
 
         <div className="flex items-center justify-between text-[11px] font-medium text-muted-foreground">
-          <span>{reparables > 0 ? `${reparables} reparables sin red` : 'Sin nada que reparar'}</span>
+          <span>{reparables > 0 ? `${reparables} ohne Internet reparierbar` : 'Nichts zu reparieren'}</span>
         </div>
       </div>
     </article>

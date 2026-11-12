@@ -11,15 +11,15 @@ export function NotFound() {
 
   return (
     <>
-      <Topbar title="Página no encontrada" subtitle="404" onMenu={openMenu} />
+      <Topbar title="Seite nicht gefunden" subtitle="404" onMenu={openMenu} />
       <PageContainer>
         <EmptyState
           icon={<Compass className="size-5" />}
-          title="Esta sección no existe"
-          description="El enlace que has seguido no apunta a ninguna pantalla del manager."
+          title="Diesen Bereich gibt es nicht"
+          description="Der Link, dem du gefolgt bist, führt zu keiner Seite des Managers."
           action={
             <Button variant="primary" onClick={() => navigate('/')}>
-              Volver al panel
+              Zurück zur Übersicht
             </Button>
           }
         />

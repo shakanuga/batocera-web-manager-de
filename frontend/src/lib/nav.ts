@@ -31,25 +31,25 @@ export interface NavGroup {
 export const NAV_GROUPS: NavGroup[] = [
   {
     items: [
-      { to: '/', label: 'Panel de control', icon: Gauge, end: true },
-      { to: '/sistemas', label: 'Sistemas Personalizados', icon: Gamepad2 },
-      { to: '/sistemas/nuevo', label: 'Añadir sistema', icon: Plus },
-      { to: '/roms', label: 'ROMs y BIOS', icon: Sparkles },
+      { to: '/', label: 'Übersicht', icon: Gauge, end: true },
+      { to: '/sistemas', label: 'Eigene Systeme', icon: Gamepad2 },
+      { to: '/sistemas/nuevo', label: 'System hinzufügen', icon: Plus },
+      { to: '/roms', label: 'ROMs und BIOS', icon: Sparkles },
       { to: '/scraper', label: 'Scraper', icon: Palette },
-      { to: '/retroachievements', label: 'Logros', icon: Trophy },
+      { to: '/retroachievements', label: 'Erfolge', icon: Trophy },
     ],
   },
   {
-    label: 'Herramientas',
+    label: 'Werkzeuge',
     items: [
-      { to: '/herramientas/formatos', label: 'Formatos', icon: Wrench },
-      { to: '/herramientas/renombrado', label: 'Renombrado', icon: FileSignature },
+      { to: '/herramientas/formatos', label: 'Formate', icon: Wrench },
+      { to: '/herramientas/renombrado', label: 'Umbenennen', icon: FileSignature },
     ],
   },
   {
     items: [
-      { to: '/depuracion', label: 'Depuración', icon: Bug },
-      { to: '/configuracion', label: 'Configuración', icon: Settings },
+      { to: '/depuracion', label: 'Fehlersuche', icon: Bug },
+      { to: '/configuracion', label: 'Einstellungen', icon: Settings },
     ],
   },
 ]

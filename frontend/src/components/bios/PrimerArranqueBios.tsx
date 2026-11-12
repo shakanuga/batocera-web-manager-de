@@ -52,17 +52,17 @@ export function PrimerArranqueBios() {
     <Modal
       open={abierto}
       onClose={() => setAbierto(false)}
-      title="Comprobando las BIOS"
-      description="Se revisa qué BIOS pide Batocera y se bajan las que falten de la fuente."
+      title="BIOS werden geprüft"
+      description="Es wird geprüft, welche BIOS Batocera braucht, und fehlende werden aus der Quelle geladen."
       footer={
         <Button variant="secondary" onClick={() => setAbierto(false)}>
-          Cerrar
+          Schließen
         </Button>
       }
     >
       {corriendo && <Cuerpo trabajo={trabajo} />}
       {!corriendo && error && (
-        <Aviso icon={CircleAlert} tone="bad" titulo="No se pudo comprobar">
+        <Aviso icon={CircleAlert} tone="bad" titulo="Prüfung fehlgeschlagen">
           {error}
         </Aviso>
       )}
@@ -87,21 +87,21 @@ function Cuerpo({ trabajo }: { trabajo: { porcentaje: number; actual: string; me
         </motion.span>
         <div className="min-w-0 flex-1">
           <p className="text-xs font-semibold text-foreground">
-            {trabajo?.mensaje || 'comprobando las BIOS'}
+            {trabajo?.mensaje || 'BIOS werden geprüft'}
           </p>
           <p className="truncate text-[11px] text-muted-foreground">
-            {trabajo?.actual || 'preparando…'}
+            {trabajo?.actual || 'wird vorbereitet…'}
           </p>
         </div>
       </div>
 
       <Progress
         value={trabajo?.porcentaje ?? 0}
-        label={`${trabajo?.hechos ?? 0} de ${trabajo?.total ?? 0}`}
+        label={`${trabajo?.hechos ?? 0} von ${trabajo?.total ?? 0}`}
       />
 
       <p className="text-[11px] leading-relaxed text-muted-foreground">
-        Puedes seguir usando la aplicación mientras tanto: no hace falta cerrar la ventana.
+        Du kannst die App in der Zwischenzeit weiter benutzen: Das Fenster muss nicht offen bleiben.
       </p>
     </div>
   )
@@ -123,20 +123,20 @@ function Resumen({
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-2.5">
-        <Cifra valor={r.esperadas} etiqueta="BIOS revisadas" />
-        <Cifra valor={r.descargadas} etiqueta="descargadas" tono="good" />
-        <Cifra valor={sinEncontrar} etiqueta="no están en la fuente" tono={sinEncontrar ? 'warn' : 'plain'} />
-        <Cifra valor={fallo} etiqueta="con problemas" tono={fallo ? 'bad' : 'plain'} />
+        <Cifra valor={r.esperadas} etiqueta="BIOS geprüft" />
+        <Cifra valor={r.descargadas} etiqueta="heruntergeladen" tono="good" />
+        <Cifra valor={sinEncontrar} etiqueta="sind nicht in der Quelle" tono={sinEncontrar ? 'warn' : 'plain'} />
+        <Cifra valor={fallo} etiqueta="mit Problemen" tono={fallo ? 'bad' : 'plain'} />
       </div>
 
       {bajadas > 0 && (
-        <Aviso icon={Download} tone="good" titulo={`${bajadas} BIOS descargadas`}>
-          Se han dejado donde Batocera las espera.
+        <Aviso icon={Download} tone="good" titulo={`${bajadas} BIOS heruntergeladen`}>
+          Sie wurden dort abgelegt, wo Batocera sie erwartet.
         </Aviso>
       )}
 
       {sinEncontrar > 0 && (
-        <Aviso icon={PackageSearch} tone="warn" titulo={`${sinEncontrar} no están en la fuente`}>
+        <Aviso icon={PackageSearch} tone="warn" titulo={`${sinEncontrar} sind nicht in der Quelle`}>
           <ul className="mt-1 space-y-0.5">
             {resultado.no_encontradas.slice(0, 8).map((fichero) => (
               <li key={fichero} className="truncate font-mono text-[10px]">
@@ -145,26 +145,26 @@ function Resumen({
             ))}
           </ul>
           {sinEncontrar > 8 && (
-            <p className="mt-1 text-[11px]">y {sinEncontrar - 8} más…</p>
+            <p className="mt-1 text-[11px]">und {sinEncontrar - 8} weitere…</p>
           )}
         </Aviso>
       )}
 
       {fallo > 0 && (
-        <Aviso icon={CircleAlert} tone="bad" titulo={`${fallo} con problemas`}>
-          Se pueden volver a intentar desde la sección de BIOS.
+        <Aviso icon={CircleAlert} tone="bad" titulo={`${fallo} mit Problemen`}>
+          Du kannst es im BIOS-Bereich erneut versuchen.
         </Aviso>
       )}
 
       {sinEncontrar === 0 && fallo === 0 && (
-        <Aviso icon={CircleCheck} tone="good" titulo="Todo en su sitio">
-          No falta ninguna BIOS de tus sistemas.
+        <Aviso icon={CircleCheck} tone="good" titulo="Alles an seinem Platz">
+          Für deine Systeme fehlt kein BIOS.
         </Aviso>
       )}
 
       <Button variant="secondary" onClick={onRepetir} className="w-full">
         <RefreshCw className="size-4" />
-        Escanear el sistema
+        System scannen
       </Button>
     </div>
   )

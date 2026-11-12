@@ -37,20 +37,20 @@ def _log(message: str) -> None:
 
 
 def cmd_list(args) -> int:
-    print("DAT disponibles para los sistemas de Batocera:")
+    print("Verfügbare DATs für die Batocera-Systeme:")
     for item in dats.systems_with_dat():
         print(f"  {item['system']:<16} {item['source_name']:<9} {item['dat']}")
     print()
     cache = dats.dat_dir(args.root)
     installed = dats.dat_files(cache)
     if installed:
-        print(f"Ya descargados en {cache}:")
+        print(f"Bereits heruntergeladen in {cache}:")
         for info in installed:
             games = info.get("games")
             games = f", {games} juegos" if games else ""
             print(f"  {info['system']:<16} {info.get('dat') or '?'}{games}")
     else:
-        print(f"No hay ningun DAT descargado todavia ({cache}).")
+        print(f"Noch kein DAT heruntergeladen ({cache}).")
     return 0
 
 
@@ -64,7 +64,7 @@ def cmd_install(args) -> int:
     for system in systems:
         resolucion = dats.resolve_dat(system, None, catalogo)
         if not resolucion:
-            print(f"  [X] {system}: no tiene DAT configurado")
+            print(f"  [X] {system}: kein DAT konfiguriert")
             fallos.append(system)
             continue
         dat_name = resolucion["dat"]
@@ -86,7 +86,7 @@ def cmd_dats(args) -> int:
     """El grupo `dats`: los DAT se listan, se bajan o se borran."""
     if getattr(args, "remove", False):
         if not args.systems:
-            print("  hay que decir que sistemas borrar")
+            print("  du musst angeben, welche Systeme gelöscht werden sollen")
             return 1
         return cmd_remove(args)
     if getattr(args, "install", False):
@@ -107,12 +107,12 @@ def cmd_utilidades(args) -> int:
     destino = args.destino or utilidades.utilidades_dir(args.root)
     if getattr(args, "remove", False):
         if not args.ids:
-            print("  hay que decir que utilidades borrar")
+            print("  du musst angeben, welche Werkzeuge gelöscht werden sollen")
             return 1
         for identificador in args.ids:
             entrada = utilidades.por_id(identificador)
             if not entrada:
-                print(f"  [X] {identificador}: no es una utilidad")
+                print(f"  [X] {identificador}: ist kein Werkzeug")
                 return 1
             borrado = utilidades.quitar(entrada, destino)
             print(f"  {identificador}: {'borrado' if borrado else 'no estaba'}")
@@ -125,20 +125,20 @@ def cmd_utilidades(args) -> int:
 def _lista_utilidades(args, destino) -> int:
     """Ensena que utilidades se pueden instalar y cuales no."""
     arq = args.arq or utilidades.arquitectura()
-    print(f"Utilidades de conversion (arquitectura: {arq or 'sin reconocer'}):")
+    print(f"Utilidades de conversion (arquitectura: {arq or 'nicht erkannt'}):")
     for entrada in utilidades.UTILIDADES:
         if arq in entrada["assets"]:
-            estado = "se instala sola"
+            estado = "installiert sich selbst"
         else:
-            estado = f"sin binario para {arq or 'esta maquina'}"
+            estado = f"kein Binary für {arq or 'dieses Gerät'}"
         print(f"  {entrada['id']:<14} {entrada['version']:<18} "
               f"{entrada['licencia']:<12} {estado}")
     print()
-    print("No se pueden instalar solas:")
+    print("Können sich nicht selbst installieren:")
     for entrada in utilidades.no_instalables():
         print(f"  {entrada['nombre']:<14} {entrada['motivo']}")
     print()
-    print(f"Carpeta de los binarios: {destino}")
+    print(f"Ordner der Binaries: {destino}")
     return 0
 
 
@@ -168,7 +168,7 @@ def _instala_utilidades(args, destino) -> int:
         if resumen["estado"] == "instalada":
             print(f"  [OK] {resumen['detalle']}", flush=True)
         elif resumen["estado"] == "ya-estaba":
-            print(f"  [OK] {resumen['nombre']}: ya estaba en {resumen['ruta']}",
+            print(f"  [OK] {resumen['nombre']}: war bereits in {resumen['ruta']}",
                   flush=True)
         elif resumen["estado"] == "sin-binario":
             print(f"  [--] {resumen['nombre']}: {resumen['detalle']}", flush=True)
@@ -180,56 +180,56 @@ def _instala_utilidades(args, destino) -> int:
         progreso=progreso, aviso=aviso, forzar=args.forzar)
     fallos = [resumen for resumen in resultados if resumen["estado"] == "error"]
     if fallos:
-        print(f"  {len(fallos)} utilidad(es) no se pudieron instalar")
+        print(f"  {len(fallos)} Werkzeug(e) konnten nicht installiert werden")
     return 1 if fallos else 0
 
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="romtools",
-                                     description="Herramientas de ROMs")
+                                     description="ROM-Werkzeuge")
     parser.add_argument("--root", default="/userdata/system",
-                        help="donde vive la carpeta de los DAT")
+                        help="wo der DAT-Ordner liegt")
     sub = parser.add_subparsers(dest="command")
 
-    p_list = sub.add_parser("list", help="lista los DAT disponibles")
+    p_list = sub.add_parser("list", help="listet die verfügbaren DATs")
     p_list.set_defaults(func=cmd_list)
 
-    p_install = sub.add_parser("install", help="descarga los DAT")
-    p_install.add_argument("systems", nargs="*", help="sistemas (por defecto, todos)")
+    p_install = sub.add_parser("install", help="lädt die DATs herunter")
+    p_install.add_argument("systems", nargs="*", help="Systeme (Standard: alle)")
     p_install.add_argument("--timeout", type=int, default=900)
     p_install.set_defaults(func=cmd_install)
 
-    p_remove = sub.add_parser("remove", help="borra los DAT de un sistema")
+    p_remove = sub.add_parser("remove", help="löscht die DATs eines Systems")
     p_remove.add_argument("systems", nargs="+")
     p_remove.set_defaults(func=cmd_remove)
 
     # El grupo `dats` es la forma que usa el instalador:
     # `python3 -m romtools dats --install`.
-    p_dats = sub.add_parser("dats", help="gestiona los DAT (lista, instala o borra)")
+    p_dats = sub.add_parser("dats", help="verwaltet die DATs (auflisten, installieren oder löschen)")
     grupo = p_dats.add_mutually_exclusive_group()
-    grupo.add_argument("--list", action="store_true", help="lista los DAT")
-    grupo.add_argument("--install", action="store_true", help="descarga los DAT")
-    grupo.add_argument("--remove", action="store_true", help="borra los DAT")
-    p_dats.add_argument("systems", nargs="*", help="sistemas (por defecto, todos)")
+    grupo.add_argument("--list", action="store_true", help="listet die DATs")
+    grupo.add_argument("--install", action="store_true", help="lädt die DATs herunter")
+    grupo.add_argument("--remove", action="store_true", help="löscht die DATs")
+    p_dats.add_argument("systems", nargs="*", help="Systeme (Standard: alle)")
     p_dats.add_argument("--timeout", type=int, default=900)
     p_dats.set_defaults(func=cmd_dats)
 
     # El grupo `utilidades` deja las utilidades de conversion listas: es la
     # forma que usa el instalador (`python3 -m romtools utilidades --install`).
     p_util = sub.add_parser("utilidades",
-                             help="gestiona las utilidades de conversion")
+                             help="verwaltet die Konvertierungswerkzeuge")
     grupo = p_util.add_mutually_exclusive_group()
-    grupo.add_argument("--list", action="store_true", help="lista las utilidades")
-    grupo.add_argument("--install", action="store_true", help="instala las utilidades")
-    grupo.add_argument("--remove", action="store_true", help="borra las utilidades")
-    p_util.add_argument("ids", nargs="*", help="utilidades (por defecto, todas)")
+    grupo.add_argument("--list", action="store_true", help="listet die Werkzeuge")
+    grupo.add_argument("--install", action="store_true", help="installiert die Werkzeuge")
+    grupo.add_argument("--remove", action="store_true", help="löscht die Werkzeuge")
+    p_util.add_argument("ids", nargs="*", help="Werkzeuge (Standard: alle)")
     p_util.add_argument("--destino", default="",
-                        help="carpeta de los binarios (por defecto, <root>/bin)")
+                        help="Ordner der Binaries (Standard: <root>/bin)")
     p_util.add_argument("--arq", default="",
-                        help="arquitectura (por defecto, la de esta maquina)")
+                        help="Architektur (Standard: die dieses Geräts)")
     p_util.add_argument("--timeout", type=int, default=utilidades.TIMEOUT_DESCARGA)
     p_util.add_argument("--forzar", action="store_true",
-                        help="vuelve a instalar aunque ya este")
+                        help="installiert erneut, auch wenn es schon da ist")
     p_util.set_defaults(func=cmd_utilidades)
 
     args = parser.parse_args(argv)

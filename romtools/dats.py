@@ -86,7 +86,7 @@ SOURCES = {
         "files": True,
     },
     "libretro-dat": {
-        "name": "Libretro (DAT por sistema)",
+        "name": "Libretro (DAT pro System)",
         "author": "libretro",
         "kind": "sistemas",
         "base": _LIBRETRO_DAT,
@@ -343,7 +343,7 @@ def _fetch_zip_member_by_range(url: str, member: str, total: int,
     tail = fetch_range(url, total - tail_len, total - 1, timeout)
     eocd = tail.rfind(b"PK\x05\x06")
     if eocd < 0:
-        raise ValueError("no se encuentra el final del directorio central")
+        raise ValueError("das Ende des zentralen Verzeichnisses wurde nicht gefunden")
     cd_size, cd_offset = struct.unpack("<II", tail[eocd + 12:eocd + 20])
     directory = fetch_range(url, cd_offset, cd_offset + cd_size - 1, timeout)
 
@@ -369,9 +369,9 @@ def _fetch_zip_member_by_range(url: str, member: str, total: int,
             return raw
         if method == 8:
             return zlib.decompress(raw, -zlib.MAX_WBITS)
-        raise ValueError(f"metodo de compresion no soportado: {method}")
+        raise ValueError(f"nicht unterstützte Komprimierungsmethode: {method}")
 
-    raise ValueError(f"el ZIP no contiene {member}")
+    raise ValueError(f"das ZIP enthält nicht {member}")
 
 
 def _fetch_zip_member_full(url: str, member: str, timeout: int) -> bytes:
@@ -382,7 +382,7 @@ def _fetch_zip_member_full(url: str, member: str, timeout: int) -> bytes:
         for name in zf.namelist():
             if name.rsplit("/", 1)[-1] == member.rsplit("/", 1)[-1]:
                 return zf.read(name)
-    raise ValueError(f"el ZIP no contiene {member}")
+    raise ValueError(f"das ZIP enthält nicht {member}")
 
 
 # ── Indice de DAT ───────────────────────────────────────────────────────
@@ -395,7 +395,7 @@ def fetch_index(source: str, cache_dir: str | None = None,
     de libretro son ficheros sueltos y se descargan directamente.
     """
     if source not in SOURCES:
-        raise ValueError(f"fuente de DAT desconocida: {source}")
+        raise ValueError(f"unbekannte DAT-Quelle: {source}")
     if not SOURCES[source].get("index"):
         return []
     cache_path = None
@@ -442,7 +442,7 @@ def download_dat(source: str, dat_name: str, cache_dir: str,
     cuanto ocupa.
     """
     if source not in SOURCES:
-        raise ValueError(f"fuente de DAT desconocida: {source}")
+        raise ValueError(f"unbekannte DAT-Quelle: {source}")
     info = SOURCES[source]
     os.makedirs(cache_dir, exist_ok=True)
 
@@ -463,9 +463,9 @@ def download_dat(source: str, dat_name: str, cache_dir: str,
             entry = candidate
             break
     if entry is None:
-        raise ValueError(f"la fuente {source} no tiene el DAT «{dat_name}»")
+        raise ValueError(f"die Quelle {source} hat das DAT «{dat_name}»")
     if not entry.get("file"):
-        raise ValueError(f"el DAT «{dat_name}» no tiene fichero asociado")
+        raise ValueError(f"das DAT «{dat_name}» hat keine zugehörige Datei")
 
     target = os.path.join(cache_dir, os.path.basename(entry["file"]))
     if progress:
@@ -786,7 +786,7 @@ def install_dat(system: str, cache_dir: str, timeout: int = 600,
     """Descarga e indexa el DAT de un sistema de Batocera."""
     resolucion = resolve_dat(system, None, catalogo)
     if not resolucion:
-        raise ValueError(f"el sistema «{system}» no tiene DAT configurado")
+        raise ValueError(f"das System «{system}» hat kein DAT konfiguriert")
     source, dat_name = resolucion["source"], resolucion["dat"]
 
     info = download_dat(source, dat_name, cache_dir, timeout=timeout, progress=progress)

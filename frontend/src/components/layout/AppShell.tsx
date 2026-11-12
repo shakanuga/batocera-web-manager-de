@@ -13,7 +13,7 @@ const ShellContext = createContext<ShellContextValue | null>(null)
 
 export function useShell(): ShellContextValue {
   const ctx = useContext(ShellContext)
-  if (!ctx) throw new Error('useShell debe usarse dentro de <AppShell>')
+  if (!ctx) throw new Error('useShell muss innerhalb von <AppShell> verwendet werden')
   return ctx
 }
 

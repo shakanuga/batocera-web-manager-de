@@ -94,12 +94,12 @@ export function BiosSystemModal({
     setBusy(target)
     try {
       await api.biosUpload({ system: slug, file: target, blob })
-      showNotify({ variant: 'success', title: `${target} subida` })
+      showNotify({ variant: 'success', title: `${target} hochgeladen` })
       onRepaired()
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: `No se pudo subir ${target}`,
+        title: `Hochladen fehlgeschlagen ${target}`,
         message: error instanceof Error ? error.message : undefined,
       })
     } finally {
@@ -119,18 +119,18 @@ export function BiosSystemModal({
       await api.biosRepair({ system: slug, file: file.file })
       showNotify({
         variant: 'success',
-        title: `${file.file} colocada`,
-        message: 'Colocada donde Batocera la espera.',
+        title: `${file.file} abgelegt`,
+        message: 'Dort abgelegt, wo Batocera sie erwartet.',
       })
       onRepaired()
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No hay nada que reparar en la consola',
+        title: 'Auf der Konsole gibt es nichts zu reparieren',
         message:
           error instanceof Error
             ? error.message
-            : 'El contenido no está en la tarjeta: búscalo en Google o súbelo.',
+            : 'Der Inhalt ist nicht auf der Karte: Suche ihn bei Google oder lade ihn hoch.',
       })
     } finally {
       setBusy(null)
@@ -155,10 +155,10 @@ export function BiosSystemModal({
     setBatch(false)
     showNotify({
       variant: fail ? 'error' : 'success',
-      title: fail ? `${ok} reparadas y ${fail} con problemas` : `${ok} BIOS reparadas`,
+      title: fail ? `${ok} repariert und ${fail} mit Problemen` : `${ok} BIOS repariert`,
       message: fail
-        ? 'Las que fallaron hay que buscarlas por fuera o subirlas a mano.'
-        : 'Todo colocado donde Batocera lo espera.',
+        ? 'Die fehlgeschlagenen musst du woanders besorgen oder von Hand hochladen.'
+        : 'Alles dort abgelegt, wo Batocera es erwartet.',
     })
     onRepaired()
   }
@@ -174,7 +174,7 @@ export function BiosSystemModal({
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No se pudo cambiar el estado',
+        title: 'Status konnte nicht geändert werden',
         message: error instanceof Error ? error.message : undefined,
       })
     }
@@ -184,14 +184,14 @@ export function BiosSystemModal({
   const copyHash = async (file: BiosFile) => {
     const hash = file.md5s[0] ?? file.md5
     if (!hash) {
-      showNotify({ variant: 'error', title: 'Esta BIOS no tiene hash publicado' })
+      showNotify({ variant: 'error', title: 'Für dieses BIOS ist kein Hash veröffentlicht' })
       return
     }
     try {
       await navigator.clipboard.writeText(hash)
-      showNotify({ variant: 'success', title: 'Hash copiado', message: hash })
+      showNotify({ variant: 'success', title: 'Hash kopiert', message: hash })
     } catch {
-      showNotify({ variant: 'error', title: 'No se pudo copiar el hash' })
+      showNotify({ variant: 'error', title: 'Hash konnte nicht kopiert werden' })
     }
   }
 
@@ -200,19 +200,19 @@ export function BiosSystemModal({
       open={open}
       onClose={onClose}
       title={name}
-      description={`${slug} · ${correctas.length} correctas de ${files.length} · ${problemas.length} con problemas`}
+      description={`${slug} · ${correctas.length} korrekt von ${files.length} · ${problemas.length} mit Problemen`}
       className="max-w-3xl"
       footer={
         <>
           <Button variant="ghost" size="sm" onClick={onClose}>
-            Cerrar
+            Schließen
           </Button>
           {/* El botón sólo aparece si hay algo que reparar: si no, es un botón
               inerte que no hace nada. */}
           {reparables.length > 0 && (
             <Button variant="primary" size="sm" disabled={batch} onClick={repairAll}>
               <Wrench className="size-4" />
-              {batch ? 'Reparando…' : `Reparar ${reparables.length}`}
+              {batch ? 'Wird repariert…' : `Reparieren ${reparables.length}`}
             </Button>
           )}
         </>
@@ -226,7 +226,7 @@ export function BiosSystemModal({
         type="file"
         className="h-px w-px border-0 p-0 opacity-0"
         onChange={upload}
-        aria-label="Subir una BIOS"
+        aria-label="BIOS hochladen"
       />
 
       <ul className="max-h-[52vh] space-y-2 overflow-y-auto pr-1">
@@ -264,12 +264,12 @@ export function BiosSystemModal({
                   </div>
                   <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
                     {file.members.length > 0
-                      ? `ZIP con ${file.members.length} ${
-                          file.members.length === 1 ? 'fichero exigido' : 'ficheros exigidos'
-                        } dentro`
+                      ? `ZIP mit ${file.members.length} ${
+                          file.members.length === 1 ? 'geforderten Datei' : 'geforderten Dateien'
+                        } darin`
                       : info.ayuda}
-                    {file.fuente ? ` · disponible en ${file.fuente}` : ''}
-                    {file.faltan.length ? ` · falta: ${file.faltan.join(', ')}` : ''}
+                    {file.fuente ? ` · verfügbar in ${file.fuente}` : ''}
+                    {file.faltan.length ? ` · fehlt: ${file.faltan.join(', ')}` : ''}
                   </p>
                 </div>
 
@@ -282,20 +282,20 @@ export function BiosSystemModal({
                       onClick={() => repair(file)}
                     >
                       <Wrench className="size-3.5" />
-                      {working ? 'Reparando…' : 'Reparar'}
+                      {working ? 'Wird repariert…' : 'Reparieren'}
                     </Button>
                   )}
-                  <IconButton label={`Subir ${file.file}`} onClick={() => pickFile(file.file)}>
+                  <IconButton label={`Hochladen ${file.file}`} onClick={() => pickFile(file.file)}>
                     <Upload className="size-3.5" />
                   </IconButton>
                   <IconButton
-                    label="Copiar el hash"
+                    label="Hash kopieren"
                     onClick={() => copyHash(file)}
                   >
                     <Copy className="size-3.5" />
                   </IconButton>
                   <IconButton
-                    label={file.estado === 'omitida' ? 'No omitir esta BIOS' : 'Omitir esta BIOS'}
+                    label={file.estado === 'omitida' ? 'Dieses BIOS nicht mehr überspringen' : 'Dieses BIOS überspringen'}
                     onClick={() => toggleSkip(file)}
                   >
                     <SkipForward className="size-3.5" />
@@ -306,20 +306,20 @@ export function BiosSystemModal({
               {/* Detalle: hash, tamaño y ruta */}
               <div className="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-muted-foreground sm:grid-cols-4">
                 <span className="truncate" title={file.md5s.join(', ')}>
-                  md5 publicado:{' '}
+                  veröffentlichter MD5:{' '}
                   <span className="font-mono text-foreground">
-                    {file.md5s[0] ? `${file.md5s[0].slice(0, 12)}…` : 'no publicado'}
+                    {file.md5s[0] ? `${file.md5s[0].slice(0, 12)}…` : 'nicht veröffentlicht'}
                   </span>
                 </span>
                 <span className="truncate" title={file.md5 ?? ''}>
-                  md5 en disco:{' '}
+                  MD5 auf der Platte:{' '}
                   <span className="font-mono text-foreground">
                     {file.md5 ? `${file.md5.slice(0, 12)}…` : '—'}
                   </span>
                 </span>
-                <span>tamaño: {humanSize(file.size)}</span>
+                <span>Größe: {humanSize(file.size)}</span>
                 <span className="truncate" title={`/userdata/bios/${file.file}`}>
-                  destino: <span className="font-mono text-foreground">/userdata/bios/{file.file}</span>
+                  Ziel: <span className="font-mono text-foreground">/userdata/bios/{file.file}</span>
                 </span>
               </div>
 
@@ -327,12 +327,12 @@ export function BiosSystemModal({
               {buscar && (
                 <div className="mt-2 rounded-xl border border-border bg-background/60 p-3">
                   <p className="text-[11px] font-medium text-foreground">
-                    {file.file} no está en la consola
+                    {file.file} ist nicht auf der Konsole
                   </p>
                   <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
-                    No hay nada que reparar por dentro: el contenido no está en la tarjeta.
-                    Búscalo por tu cuenta en Google y súbelo aquí; la app lo deja en su sitio.
-                    {file.members.length > 0 && ' Si es un ZIP, sube el ZIP completo.'}
+                    Hier gibt es nichts zu reparieren: Der Inhalt ist nicht auf der Karte.
+                    Suche ihn selbst bei Google und lade ihn hier hoch; die App legt ihn an die richtige Stelle.
+                    {file.members.length > 0 && ' Wenn es ein ZIP ist, lade das vollständige ZIP hoch.'}
                   </p>
                   <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
                     <a
@@ -342,7 +342,7 @@ export function BiosSystemModal({
                       className="inline-flex items-center gap-1 text-[11px] font-medium text-primary underline-offset-2 hover:underline"
                     >
                       <ExternalLink className="size-3" />
-                      Buscar {nombreFichero} en Google
+                      Suchen {nombreFichero} bei Google
                     </a>
                     {busqueda && (
                       <a
@@ -352,7 +352,7 @@ export function BiosSystemModal({
                         className="inline-flex items-center gap-1 text-[11px] font-medium text-primary underline-offset-2 hover:underline"
                       >
                         <ExternalLink className="size-3" />
-                        Buscar las BIOS de {name} en Google
+                        BIOS suchen für {name} bei Google
                       </a>
                     )}
                     <Button
@@ -362,13 +362,12 @@ export function BiosSystemModal({
                       onClick={() => pickFile(file.file)}
                     >
                       <Upload className="size-3.5" />
-                      Subir el archivo
+                      Datei hochladen
                     </Button>
                   </div>
                   <p className="mt-2 flex items-start gap-1 text-[10px] leading-relaxed text-muted-foreground">
                     <CircleAlert className="mt-0.5 size-3 shrink-0" />
-                    Las BIOS tienen copyright: la app no descarga nada por su cuenta. Sólo tú
-                    decides qué fichero subes.
+                    BIOS-Dateien sind urheberrechtlich geschützt: Die App lädt nichts von selbst herunter. Nur du entscheidest, welche Datei du hochlädst.
                   </p>
                 </div>
               )}

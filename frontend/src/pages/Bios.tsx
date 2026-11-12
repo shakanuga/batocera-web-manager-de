@@ -36,16 +36,16 @@ type StatusFilter = 'problemas' | 'all' | 'reparables' | 'completos'
 type SortKey = 'criticidad' | 'nombre' | 'cobertura'
 
 const STATUS_FILTERS: { key: StatusFilter; label: string }[] = [
-  { key: 'problemas', label: 'Con problemas' },
-  { key: 'all', label: 'Todos' },
-  { key: 'reparables', label: 'Reparables' },
-  { key: 'completos', label: 'Completos' },
+  { key: 'problemas', label: 'Mit Problemen' },
+  { key: 'all', label: 'Alle' },
+  { key: 'reparables', label: 'Reparierbar' },
+  { key: 'completos', label: 'Vollständig' },
 ]
 
 const SORTS: { key: SortKey; label: string }[] = [
-  { key: 'criticidad', label: 'Criticidad' },
-  { key: 'nombre', label: 'Nombre' },
-  { key: 'cobertura', label: 'Cobertura' },
+  { key: 'criticidad', label: 'Dringlichkeit' },
+  { key: 'nombre', label: 'Name' },
+  { key: 'cobertura', label: 'Abdeckung' },
 ]
 
 /** Vista de un sistema con BIOS, ya calculada. */
@@ -187,10 +187,10 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
     }
     showNotify({
       variant: fail ? 'error' : 'success',
-      title: fail ? `${ok} reparadas y ${fail} con problemas` : `${ok} BIOS reparadas`,
+      title: fail ? `${ok} repariert und ${fail} mit Problemen` : `${ok} BIOS repariert`,
       message: fail
-        ? 'Las que fallaron se pueden subir a mano.'
-        : 'Colocadas donde Batocera las espera.',
+        ? 'Die fehlgeschlagenen kannst du von Hand hochladen.'
+        : 'Dort abgelegt, wo Batocera sie erwartet.',
     })
     await refresh()
   }
@@ -198,13 +198,13 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
   return (
     <>
       <Topbar
-        title="ROMs y BIOS"
-        subtitle={`${totals.sistemas} sistemas · ${totals.ok} de ${totals.total} BIOS en su sitio`}
+        title="ROMs und BIOS"
+        subtitle={`${totals.sistemas} Systeme · ${totals.ok} von ${totals.total} BIOS an ihrem Platz`}
         onMenu={openMenu}
         actions={
           <Button size="sm" variant="secondary" onClick={() => void arrancar()} disabled={corriendo}>
             <RefreshCw className={cn('size-4', (loading || corriendo) && 'animate-spin')} />
-            Escanear el sistema
+            System scannen
           </Button>
         }
       />
@@ -221,7 +221,7 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
                 <div className="flex items-center gap-2 text-xs">
                   <RefreshCw className="size-4 shrink-0 animate-spin text-brand" />
                   <span className="font-semibold text-foreground">
-                    {trabajo?.mensaje || 'comprobando las BIOS'}
+                    {trabajo?.mensaje || 'BIOS werden geprüft'}
                   </span>
                   <span className="ml-auto min-w-0 truncate text-[11px] text-muted-foreground">
                     {trabajo?.actual || 'preparando…'}
@@ -229,10 +229,10 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
                 </div>
                 <Progress
                   value={trabajo?.porcentaje ?? 0}
-                  label={`${trabajo?.hechos ?? 0} de ${trabajo?.total ?? 0}`}
+                  label={`${trabajo?.hechos ?? 0} von ${trabajo?.total ?? 0}`}
                 />
                 <p className="text-[11px] text-muted-foreground">
-                  No hace falta cerrar la ventana: puedes seguir usando la aplicacion.
+                  Das Fenster muss nicht offen bleiben: Du kannst die App weiter benutzen.
                 </p>
               </div>
             )}
@@ -244,9 +244,9 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
             )}
             {!corriendo && resultado && (
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
-                <span className="font-semibold text-foreground">Revision terminada</span>
+                <span className="font-semibold text-foreground">Prüfung abgeschlossen</span>
                 <span className="text-muted-foreground">
-                  {resultado.resumen.esperadas} BIOS revisadas
+                  {resultado.resumen.esperadas} BIOS geprüft
                 </span>
                 {resultado.resumen.descargadas > 0 && (
                   <span className="inline-flex items-center gap-1 text-brand">
@@ -256,12 +256,12 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
                 )}
                 {resultado.resumen.no_encontradas > 0 && (
                   <span className="text-amber-600 dark:text-amber-400">
-                    {resultado.resumen.no_encontradas} no estan en la fuente
+                    {resultado.resumen.no_encontradas} sind nicht in der Quelle
                   </span>
                 )}
                 {resultado.resumen.fallidas > 0 && (
                   <span className="text-destructive">
-                    {resultado.resumen.fallidas} con problemas
+                    {resultado.resumen.fallidas} mit Problemen
                   </span>
                 )}
               </div>
@@ -274,33 +274,33 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
             <CircleAlert className="size-4 shrink-0" />
             <span className="min-w-0 flex-1">{error}</span>
             <Button size="sm" variant="outline" onClick={refresh}>
-              Reintentar
+              Erneut versuchen
             </Button>
           </div>
         )}
 
         {/* Resumen */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <MetricCard label="Sistemas" value={totals.sistemas} icon={Gamepad2} />
+          <MetricCard label="Systeme" value={totals.sistemas} icon={Gamepad2} />
           <MetricCard
-            label="En su sitio"
-            value={totals.ok.toLocaleString('es-ES')}
+            label="An ihrem Platz"
+            value={totals.ok.toLocaleString('de-DE')}
             icon={CircleCheck}
             accent="good"
-            hint="donde las espera Batocera"
+            hint="dort, wo Batocera sie erwartet"
           />
           <MetricCard
-            label="Ausentes"
-            value={totals.ausentes.toLocaleString('es-ES')}
+            label="Fehlend"
+            value={totals.ausentes.toLocaleString('de-DE')}
             icon={PackageSearch}
             accent="bad"
-            hint="no están en la consola"
+            hint="sind nicht auf der Konsole"
           />
           <MetricCard
-            label="Reparables"
-            value={totals.reparables.toLocaleString('es-ES')}
+            label="Reparierbar"
+            value={totals.reparables.toLocaleString('de-DE')}
             icon={Wrench}
-            hint="están en la consola"
+            hint="sind auf der Konsole"
           />
         </div>
 
@@ -316,8 +316,8 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Buscar sistema…"
-                aria-label="Buscar sistema"
+                placeholder="System suchen…"
+                aria-label="System suchen"
                 className={cn(
                   'h-10 w-full rounded-xl border border-input bg-transparent pl-9 pr-3 text-sm text-foreground',
                   'placeholder:text-muted-foreground/70 transition-colors duration-150',
@@ -327,7 +327,7 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
               {query && (
                 <button
                   type="button"
-                  aria-label="Limpiar búsqueda"
+                  aria-label="Suche leeren"
                   onClick={() => setQuery('')}
                   className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer rounded-lg p-1.5 text-muted-foreground transition-colors duration-150 hover:bg-muted hover:text-foreground"
                 >
@@ -336,7 +336,7 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
               )}
             </div>
             <p className="text-[11px] font-medium tabular-nums text-muted-foreground">
-              {filtered.length} de {totals.sistemas} sistemas
+              {filtered.length} von {totals.sistemas} Systeme
             </p>
           </div>
 
@@ -384,17 +384,17 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
           <div className="mt-4">
             <EmptyState
               icon={<CircleCheck className="size-5" />}
-              title={statusFilter === 'problemas' ? 'Ninguna BIOS con problemas' : 'Ningún sistema coincide'}
+              title={statusFilter === 'problemas' ? 'Kein BIOS mit Problemen' : 'Kein System passt'}
               description={
                 statusFilter === 'problemas'
-                  ? 'Todas las BIOS que pide Batocera están donde deben. Puedes volver a comprobarlo cuando quieras.'
-                  : 'Prueba con otro texto o cambia los filtros.'
+                  ? 'Alle BIOS, die Batocera braucht, liegen an ihrem Platz. Du kannst jederzeit erneut prüfen.'
+                  : 'Versuch es mit einem anderen Text oder ändere die Filter.'
               }
               action={
                 statusFilter === 'problemas' ? (
                   <Button variant="secondary" onClick={() => void arrancar()}>
                     <RefreshCw className="size-4" />
-                    Escanear el sistema
+                    System scannen
                   </Button>
                 ) : (
                   <Button
@@ -404,7 +404,7 @@ export function BiosPage({ tab = 'bios', onTab }: BiosPageProps) {
                       setStatusFilter('all')
                     }}
                   >
-                    Quitar filtros
+                    Filter entfernen
                   </Button>
                 )
               }

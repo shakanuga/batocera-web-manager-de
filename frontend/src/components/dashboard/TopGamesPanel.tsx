@@ -8,17 +8,17 @@ export function TopGamesPanel({ stats }: { stats: GameStats | null }) {
 
   return (
     <PanelCard
-      title="Más jugados"
+      title="Meistgespielt"
       subtitle={
         stats?.has_playtime
-          ? `${stats.totals.playcount} partidas · ${humanDuration(stats.totals.playtime_s)}`
-          : 'Sin datos de juego'
+          ? `${stats.totals.playcount} Partien · ${humanDuration(stats.totals.playtime_s)}`
+          : 'Keine Spieldaten'
       }
       icon={<Trophy className="size-4" />}
     >
       {top.length === 0 ? (
         <p className="text-xs text-muted-foreground">
-          Ningún gamelist.xml registra partidas jugadas todavía.
+          Noch keine gamelist.xml verzeichnet gespielte Partien.
         </p>
       ) : (
         <ol className="space-y-1">

@@ -341,12 +341,12 @@ def duplicados(base: str, juegos, confirmar=True, max_confirmar=60,
     fichero más grande es el motor, que es el mismo para todos los juegos, así
     que hashearlo daría duplicados falsos.
     """
-    prog = Progress(len(juegos), "buscando duplicados", notificar=progreso)
+    prog = Progress(len(juegos), "Duplikate werden gesucht", notificar=progreso)
     por_tam = _grupo_por_tamano(juegos)
     candidatos = [v for v in por_tam.values() if len(v) > 1]
 
     total_candidatos = sum(len(grupo) for grupo in candidatos)
-    prog.reiniciar(total_candidatos, "comparando los candidatos")
+    prog.reiniciar(total_candidatos, "Kandidaten werden verglichen")
     por_huella: dict = {}
     hechos = 0
     for grupo in candidatos:
@@ -376,7 +376,7 @@ def duplicados(base: str, juegos, confirmar=True, max_confirmar=60,
         else:
             sin_confirmar.append(grupo)
 
-    prog.reiniciar(sum(len(g) for g in a_confirmar), "confirmando los duplicados")
+    prog.reiniciar(sum(len(g) for g in a_confirmar), "Duplikate werden bestätigt")
     salida: list = []
     hechos = 0
     for grupo in a_confirmar:
@@ -530,7 +530,7 @@ def auditoria(base: str, sistemas, exts_por_sistema, progreso=None,
     cerraría con el resultado a medias (y el `job` se quedaría sin resultado).
     """
     sistemas = list(sistemas)
-    prog = Progress(len(sistemas), "recorriendo la biblioteca", notificar=progreso)
+    prog = Progress(len(sistemas), "Bibliothek wird durchsucht", notificar=progreso)
     datos = recolectar(base, sistemas, exts_por_sistema)
     juegos = datos["juegos"]
 
@@ -545,7 +545,7 @@ def auditoria(base: str, sistemas, exts_por_sistema, progreso=None,
     espacio.sort(key=lambda x: -x["bytes"])
 
     # Las fichas del gamelist y las que ya no tienen fichero.
-    prog.reiniciar(len(sistemas), "leyendo los gamelists")
+    prog.reiniciar(len(sistemas), "gamelists werden gelesen")
     fichas_sin_fichero = []
     entradas_por_sistema = {}
     con_partidas = sin_partidas = 0
@@ -669,11 +669,11 @@ def cuarentena(base: str, ficheros, root: str = "/userdata/system") -> dict:
     for clave in ficheros or []:
         sistema, _, ruta = str(clave).partition("/")
         if not sistema or not ruta:
-            errores.append({"fichero": clave, "error": "ruta no valida"})
+            errores.append({"fichero": clave, "error": "ungültiger Pfad"})
             continue
         origen = base_path / sistema / ruta
         if not _dentro_de(base_path, origen):
-            errores.append({"fichero": clave, "error": "ruta fuera de la biblioteca"})
+            errores.append({"fichero": clave, "error": "Pfad außerhalb der Bibliothek"})
             continue
         if not origen.exists():
             errores.append({"fichero": clave, "error": "no existe"})
@@ -703,16 +703,16 @@ def limpiar_gamelist(base: str, sistema: str, root: str = "/userdata/system") ->
     """
     gl = Path(base) / sistema / "gamelist.xml"
     if not _dentro_de(Path(base), gl):
-        return {"ok": False, "error": "el sistema no esta en la biblioteca",
+        return {"ok": False, "error": "das System ist nicht in der Bibliothek",
                 "quitadas": 0}
     if not gl.is_file():
-        return {"ok": False, "error": "el sistema no tiene gamelist.xml",
+        return {"ok": False, "error": "das System hat keine gamelist.xml",
                 "quitadas": 0}
     try:
         antes = gl.read_text(encoding="utf-8")
         root_xml = ET.fromstring(antes)
     except (OSError, ValueError) as exc:
-        return {"ok": False, "error": f"el gamelist.xml no se puede leer: {exc}",
+        return {"ok": False, "error": f"die gamelist.xml kann nicht gelesen werden: {exc}",
                 "quitadas": 0}
 
     carpeta = gl.parent
@@ -757,7 +757,7 @@ def undo_last(root: str = "/userdata/system") -> dict:
     """Deshace la ultima tanda de la biblioteca."""
     journal = _read_journal(root)
     if not journal:
-        return {"ok": False, "error": "no hay nada que deshacer"}
+        return {"ok": False, "error": "nichts rückgängig zu machen"}
     batch = journal[-1]
     restaurados = []
     errores = []
