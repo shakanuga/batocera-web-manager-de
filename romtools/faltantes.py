@@ -296,14 +296,14 @@ def faltantes(base: str, sistema: str, exts, cache_dir: str,
     """
     indice = dats.load_index(sistema, cache_dir)
     if indice is None:
-        return {"ok": False, "error": "no hay DAT instalado para este sistema"}
+        return {"ok": False, "error": "für dieses System ist kein DAT installiert"}
     juegos_dat = indice.get("juegos")
     if not isinstance(juegos_dat, list):
         juegos_dat = []
     if not juegos_dat:
-        return {"ok": False, "error": "el DAT de este sistema esta vacio"}
+        return {"ok": False, "error": "das DAT dieses Systems ist leer"}
 
-    prog = Progress(1, "leyendo el DAT", notificar=progreso)
+    prog = Progress(1, "DAT wird gelesen", notificar=progreso)
     prog.avisar()
 
     datos = recolectar(base, [sistema], {sistema: exts})
@@ -316,7 +316,7 @@ def faltantes(base: str, sistema: str, exts, cache_dir: str,
         grupos_por_clave.setdefault(_clave_sin_disco(_nombre(entrada)), []).append(entrada)
 
     # 2 · Que entrada del DAT corresponde a cada juego de la biblioteca.
-    prog.reiniciar(len(juegos), "emparejando con el DAT")
+    prog.reiniciar(len(juegos), "Abgleich mit dem DAT")
     emparejados = []
     probables = []
     restante = hash_budget

@@ -199,7 +199,7 @@ def score_entry(entry: dict, region_priority: Sequence[str] = DEFAULT_REGION_PRI
     if region and region in priority:
         score.add(20 - priority.index(region) * 5, f"region {region}")
     elif region:
-        score.add(-10, f"region poco comun ({region})")
+        score.add(-10, f"seltene Region ({region})")
 
     # 3 · Revision
     for tag in tags:
@@ -215,7 +215,7 @@ def score_entry(entry: dict, region_priority: Sequence[str] = DEFAULT_REGION_PRI
     # 4 · Marca del volcado
     for mark in _BAD_MARKS:
         if mark in name:
-            score.add(-20, f"volcado con datos malos ({mark})")
+            score.add(-20, f"Dump mit fehlerhaften Daten ({mark})")
     for mark in _HACK_MARKS:
         if mark in name:
             score.add(-10, f"dump trucado o pirata ({mark})")

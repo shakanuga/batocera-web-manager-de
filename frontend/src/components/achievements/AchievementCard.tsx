@@ -22,18 +22,18 @@ export interface AchievementStatus {
  * - sin logros         → candado
  */
 export function achievementStatus(game: RaGame): AchievementStatus {
-  if (!game.num_awarded) return { icon: Lock, label: 'Sin logros', accent: false }
+  if (!game.num_awarded) return { icon: Lock, label: 'Keine Erfolge', accent: false }
   if (game.award_kind === 'mastered' || game.percent >= 100) {
-    return { icon: Trophy, label: 'Dominado', accent: true }
+    return { icon: Trophy, label: 'Gemeistert', accent: true }
   }
   if (game.award_kind === 'completed') {
-    return { icon: Medal, label: 'Completado', accent: true }
+    return { icon: Medal, label: 'Abgeschlossen', accent: true }
   }
   if (game.award_kind.startsWith('beaten')) {
-    return { icon: Award, label: 'Batido', accent: true }
+    return { icon: Award, label: 'Durchgespielt', accent: true }
   }
-  if (game.percent >= 50) return { icon: Star, label: 'A medio camino', accent: true }
-  return { icon: Sparkles, label: 'En progreso', accent: false }
+  if (game.percent >= 50) return { icon: Star, label: 'Halb geschafft', accent: true }
+  return { icon: Sparkles, label: 'In Arbeit', accent: false }
 }
 
 /** Anillo de progreso con el icono del estado en el centro. */
@@ -123,7 +123,7 @@ export function AchievementCard({ game }: { game: RaGame }) {
 
         <div
           className="absolute right-3 top-3 flex size-11 items-center justify-center rounded-full bg-background/70 backdrop-blur"
-          title={`${game.num_awarded} de ${game.max_possible} logros (${percent} %)`}
+          title={`${game.num_awarded} von ${game.max_possible} Erfolge (${percent} %)`}
         >
           <ProgressRing percent={percent} accent={status.accent}>
             <StatusIcon
@@ -142,7 +142,7 @@ export function AchievementCard({ game }: { game: RaGame }) {
             {game.title}
           </h3>
           <p className="truncate text-[11px] font-medium text-muted-foreground">
-            {game.system_name || game.console || 'Sin ROM local'}
+            {game.system_name || game.console || 'Kein lokales ROM'}
           </p>
         </div>
 
@@ -150,7 +150,7 @@ export function AchievementCard({ game }: { game: RaGame }) {
           <div className="mb-1 flex items-baseline justify-between gap-2">
             <span className="text-[11px] font-semibold tabular-nums text-foreground">
               {game.num_awarded} / {game.max_possible}
-              <span className="ml-1 font-medium text-muted-foreground">logros</span>
+              <span className="ml-1 font-medium text-muted-foreground">Erfolge</span>
             </span>
             <span className="text-[11px] font-semibold tabular-nums text-muted-foreground">
               {percent} %
@@ -174,7 +174,7 @@ export function AchievementCard({ game }: { game: RaGame }) {
           {game.num_awarded_hardcore > 0 && (
             <>
               <span className="h-3 w-px bg-border" />
-              <span className="tabular-nums">{game.num_awarded_hardcore} en hardcore</span>
+              <span className="tabular-nums">{game.num_awarded_hardcore} im Hardcore-Modus</span>
             </>
           )}
           {date && (

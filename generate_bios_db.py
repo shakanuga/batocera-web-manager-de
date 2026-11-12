@@ -46,7 +46,7 @@ def parse_systems(source_code):
             for target in node.targets:
                 if isinstance(target, ast.Name) and target.id == "systems":
                     return _ast_node_to_dict(node.value)
-    raise ValueError("No se encontró la variable `systems` en el archivo")
+    raise ValueError("Die Variable `systems` wurde in der Datei nicht gefunden")
 
 
 def _ast_node_to_dict(node):
@@ -162,12 +162,12 @@ def main():
         path = sys.argv[idx + 1]
         source = Path(path).read_text(encoding="utf-8")
     else:
-        print("  Descargando batocera-systems desde GitHub...", file=sys.stderr)
+        print("  Lade batocera-systems von GitHub herunter...", file=sys.stderr)
         source = fetch_upstream()
 
     print("  Parseando systems dict...", file=sys.stderr)
     systems = parse_systems(source)
-    print(f"  Encontrados {len(systems)} sistemas en el script upstream", file=sys.stderr)
+    print(f"  Encontrados {len(systems)} Systeme im Upstream-Skript", file=sys.stderr)
 
     bios_db = generate_bios_db(systems)
     nobios = generate_nobios(systems)
@@ -181,7 +181,7 @@ def main():
     # Output Python code
     print("# Auto-generated from official batocera-systems script")
     print("# https://github.com/batocera-linux/batocera.linux/blob/master/package/batocera/core/batocera-scripts/scripts/batocera-systems")
-    print(f"# Generado: {len(bios_db)} sistemas con BIOS, {total_entries} entradas, {len(nobios)} sistemas sin BIOS")
+    print(f"# Generado: {len(bios_db)} Systeme mit BIOS, {total_entries} entradas, {len(nobios)} Systeme ohne BIOS")
     print()
     print()
     print(format_bios_db(bios_db))

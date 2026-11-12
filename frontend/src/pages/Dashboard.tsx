@@ -32,9 +32,9 @@ import { humanDuration } from '@/lib/utils'
 const EASE = [0.16, 1, 0.3, 1] as const
 
 const REFRESH_OPTIONS = [
-  { label: 'Automático', value: 10000 },
-  { label: 'Cada 30 s', value: 30000 },
-  { label: 'Manual', value: 0 },
+  { label: 'Automatisch', value: 10000 },
+  { label: 'Alle 30 s', value: 30000 },
+  { label: 'Manuell', value: 0 },
 ]
 
 export function Dashboard() {
@@ -60,9 +60,9 @@ export function Dashboard() {
     try {
       const res = unwrap(await api.randomGame())
       setRandomGame(res.game)
-      if (!res.game) showToast('No hay ROMs en la biblioteca todavía.')
+      if (!res.game) showToast('Noch keine ROMs in der Bibliothek.')
     } catch {
-      showToast('No se pudo elegir un juego al azar.', 'error')
+      showToast('Es konnte kein Zufallsspiel gewählt werden.', 'error')
     } finally {
       setRolling(false)
     }
@@ -92,13 +92,13 @@ export function Dashboard() {
     try {
       const res = await api.esRestart()
       if (res.ok) {
-        showToast('EmulationStation se está reiniciando.', 'success')
+        showToast('EmulationStation wird neu gestartet.', 'success')
         dash.refresh()
       } else {
-        showToast('No se pudo reiniciar EmulationStation.', 'error')
+        showToast('EmulationStation konnte nicht neu gestartet werden.', 'error')
       }
     } catch {
-      showToast('No se pudo reiniciar EmulationStation.', 'error')
+      showToast('EmulationStation konnte nicht neu gestartet werden.', 'error')
     } finally {
       setRestarting(false)
     }
@@ -122,10 +122,10 @@ export function Dashboard() {
     [stats.data?.activity],
   )
 
-  const title = 'Panel de control'
+  const title = 'Übersicht'
   const subtitle = data
-    ? `Batocera ${data.batocera_version} · encendido desde hace ${data.uptime}`
-    : 'Cargando el estado de la máquina…'
+    ? `Batocera ${data.batocera_version} · eingeschaltet seit ${data.uptime}`
+    : 'Gerätestatus wird geladen…'
 
   return (
     <>
@@ -149,7 +149,7 @@ export function Dashboard() {
                 </Pill>
               ))}
             </PillBar>
-            <IconButton label="Refrescar ahora" onClick={() => dash.refresh()}>
+            <IconButton label="Jetzt aktualisieren" onClick={() => dash.refresh()}>
               <RefreshCw className={cnRefresh(dash.loading)} />
             </IconButton>
           </>
@@ -193,44 +193,44 @@ export function Dashboard() {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <ChartCard
                 label="CPU"
-                tag="Carga"
+                tag="Last"
                 tone="amber"
-                value={`${data.cpu.cores} núcleos`}
+                value={`${data.cpu.cores} Kerne`}
                 footer={
                   <>
-                    <span>{data.cpu.model || 'Modelo desconocido'}</span>
+                    <span>{data.cpu.model || 'Unbekanntes Modell'}</span>
                     <span className="font-medium text-foreground">{data.cpu.usage}%</span>
                   </>
                 }
               >
-                <GaugeArc value={data.cpu.usage} caption="en uso" tone="amber" />
+                <GaugeArc value={data.cpu.usage} caption="belegt" tone="amber" />
               </ChartCard>
 
               <ChartCard
-                label="Memoria RAM"
-                tag="Usada"
+                label="Arbeitsspeicher"
+                tag="Belegt"
                 tone="cyan"
-                value={`${data.memory.used_mb.toLocaleString('es-ES')} MB`}
+                value={`${data.memory.used_mb.toLocaleString('de-DE')} MB`}
                 footer={
                   <>
-                    <span>de {data.memory.total_mb.toLocaleString('es-ES')} MB</span>
+                    <span>von {data.memory.total_mb.toLocaleString('de-DE')} MB</span>
                     <span className="font-medium text-foreground">{data.memory.used_pct}%</span>
                   </>
                 }
               >
-                <GaugeArc value={data.memory.used_pct} caption="ocupada" tone="cyan" />
+                <GaugeArc value={data.memory.used_pct} caption="belegt" tone="cyan" />
               </ChartCard>
 
               <ChartCard
-                label="Temperatura"
+                label="Temperatur"
                 tag={data.cpu.temp_src || 'CPU'}
                 tone="rose"
-                value={data.cpu.temp != null ? `${data.cpu.temp} °C` : 'Sin sensor'}
+                value={data.cpu.temp != null ? `${data.cpu.temp} °C` : 'Kein Sensor'}
                 footer={
                   <>
-                    <span>Fuente: {data.cpu.temp_src}</span>
+                    <span>Quelle: {data.cpu.temp_src}</span>
                     <span className="font-medium text-foreground">
-                      {data.cpu.temp != null && data.cpu.temp > 80 ? 'Alta' : 'Normal'}
+                      {data.cpu.temp != null && data.cpu.temp > 80 ? 'Hoch' : 'Normal'}
                     </span>
                   </>
                 }
@@ -238,19 +238,19 @@ export function Dashboard() {
                 <GaugeArc
                   value={data.cpu.temp != null ? Math.min((data.cpu.temp / 100) * 100, 100) : 0}
                   suffix="°C"
-                  caption="de 100 °C"
+                  caption="von 100 °C"
                   tone="rose"
                 />
               </ChartCard>
 
               <ChartCard
-                label="Disco principal"
+                label="Hauptlaufwerk"
                 tag={primaryDisk ? primaryDisk.mount : '—'}
                 tone="violet"
-                value={primaryDisk ? `${primaryDisk.used_gb} GB usados` : 'Sin datos'}
+                value={primaryDisk ? `${primaryDisk.used_gb} GB belegt` : 'Keine Daten'}
                 footer={
                   <>
-                    <span>{primaryDisk ? `${primaryDisk.free_gb} GB libres` : ''}</span>
+                    <span>{primaryDisk ? `${primaryDisk.free_gb} GB frei` : ''}</span>
                     <span className="font-medium text-foreground">
                       {primaryDisk ? `${primaryDisk.pct}%` : ''}
                     </span>
@@ -262,12 +262,12 @@ export function Dashboard() {
                   data={
                     primaryDisk
                       ? [
-                          { name: 'Usado', value: primaryDisk.pct },
-                          { name: 'Libre', value: Math.max(0, 100 - primaryDisk.pct) },
+                          { name: 'Belegt', value: primaryDisk.pct },
+                          { name: 'Frei', value: Math.max(0, 100 - primaryDisk.pct) },
                         ]
                       : []
                   }
-                  centerLabel="ocupado"
+                  centerLabel="belegt"
                   centerValue={primaryDisk ? primaryDisk.pct : 0}
                   formatValue={(v) => `${v.toFixed(0)}%`}
                 />
@@ -277,39 +277,39 @@ export function Dashboard() {
             {/* Resumen rápido */}
             <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
               <MetricCard
-                label="Sistemas"
+                label="Systeme"
                 tone="sky"
                 value={info.data?.rom_systems_count ?? 0}
                 icon={Gamepad2}
                 hint={
                   info.data?.systems_count
-                    ? `${info.data.systems_count} personalizados`
-                    : 'de Batocera'
+                    ? `${info.data.systems_count} eigene`
+                    : 'von Batocera'
                 }
               />
               <MetricCard
-                label="Procesos"
+                label="Prozesse"
                 tone="amber"
                 value={data.processes.length}
                 icon={Cpu}
-                hint={`${topProcesses[0]?.label ?? 'sin datos'} en cabeza`}
+                hint={`${topProcesses[0]?.label ?? 'keine Daten'} vorne`}
               />
               <MetricCard
-                label="Particiones"
+                label="Partitionen"
                 tone="cyan"
                 value={data.disk.length}
                 icon={HardDrive}
-                hint={data.disk_updated ? `Actualizado ${data.disk_updated}` : 'Sin fecha'}
+                hint={data.disk_updated ? `Aktualisiert ${data.disk_updated}` : 'Kein Datum'}
               />
               <MetricCard
-                label="Juegos"
+                label="Spiele"
                 tone="emerald"
                 value={info.data?.disk_games_count ?? 0}
                 icon={Trophy}
                 hint={
                   stats.data?.has_playtime
                     ? humanDuration(stats.data.totals.playtime_s)
-                    : 'Sin horas registradas'
+                    : 'Keine Stunden erfasst'
                 }
               />
             </div>
@@ -317,11 +317,11 @@ export function Dashboard() {
             {/* Gráficos */}
             <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               <ChartCard
-                label="Procesos principales"
+                label="Top-Prozesse"
                 tag="CPU %"
                 tone="sky"
                 value={`${data.processes.length}`}
-                footer={<span>Los 6 procesos con más carga</span>}
+                footer={<span>Die 6 Prozesse mit der höchsten Last</span>}
               >
                 <RoundedBarChart
                   tone="sky"
@@ -331,13 +331,13 @@ export function Dashboard() {
               </ChartCard>
 
               <ChartCard
-                label="Actividad de juego"
-                tag="Últimos 14 días"
+                label="Spielaktivität"
+                tag="Letzte 14 Tage"
                 tone="emerald"
                 value={stats.data ? `${stats.data.totals.playcount}` : '—'}
-                footer={<span>Partidas registradas por día</span>}
+                footer={<span>Erfasste Partien pro Tag</span>}
               >
-                <AreaTrend tone="emerald" data={activity} formatValue={(v) => `${v} partidas`} />
+                <AreaTrend tone="emerald" data={activity} formatValue={(v) => `${v} Partien`} />
               </ChartCard>
             </div>
 
@@ -350,13 +350,13 @@ export function Dashboard() {
               <BatteryPanel battery={data.battery} />
 
               <PanelCard
-                title="Almacenamiento"
-                subtitle={`${data.disk.length} partición(es)`}
+                title="Speicher"
+                subtitle={`${data.disk.length} Partition(en)`}
                 icon={<HardDrive className="size-4" />}
                 tone="amber"
               >
                 {data.disk.length === 0 ? (
-                  <p className="text-xs text-muted-foreground">No se han detectado particiones.</p>
+                  <p className="text-xs text-muted-foreground">Es wurden keine Partitionen erkannt.</p>
                 ) : (
                   <div className="divide-y divide-border">
                     {data.disk.map((part) => (

@@ -595,7 +595,7 @@ def identify(path: str, index: dict | None, title_hint: str | None = None,
     """
     match = Match(path=path)
     if not index:
-        match.note = "no hay DAT cargado para este sistema"
+        match.note = "für dieses System ist kein DAT geladen"
         return match
 
     try:
@@ -611,7 +611,7 @@ def identify(path: str, index: dict | None, title_hint: str | None = None,
         match.confidence = 0.95
         match.entry = found
         match.title = found.get("description") or found.get("name")
-        match.note = "el nombre y el tamano coinciden con los del DAT"
+        match.note = "Name und Größe stimmen mit dem DAT überein"
         return match
 
     # 2 · Los discos de Wii llevan el codigo de juego dentro: es la via
@@ -632,13 +632,13 @@ def identify(path: str, index: dict | None, title_hint: str | None = None,
             region_dat = _region_de_entrada(elegido)
             if region_disco and region_dat and not region_dat.upper().startswith(region_disco[:3]):
                 match.confidence = 0.9
-                match.note = (f"el codigo {disco.game_code} es del DAT, pero la region "
-                              f"no cuadra ({region_dat} frente a {region_disco})")
+                match.note = (f"der Code {disco.game_code} steht im DAT, aber die Region "
+                              f"passt nicht ({region_dat} statt {region_disco})")
             else:
                 match.confidence = 0.99
-                match.note = f"codigo de juego {disco.game_code} leido del disco"
+                match.note = f"Spielcode {disco.game_code} von der Disc gelesen"
             if variantes > 1:
-                match.note += f" ({variantes} variantes del mismo disco)"
+                match.note += f" ({variantes} Varianten derselben Disc)"
             return match
 
     # 3 · Por hash: es la prueba definitiva, pero hay que leer el fichero
@@ -678,7 +678,7 @@ def identify(path: str, index: dict | None, title_hint: str | None = None,
         match.entry = best["entry"]
         match.title = best["entry"].get("description") or best["entry"].get("name")
         if match.confidence < 0.7:
-            match.note = "coincidencia por titulo: conviene revisarla"
+            match.note = "Übereinstimmung über den Titel: besser prüfen"
     else:
-        match.note = "no se ha encontrado en el DAT"
+        match.note = "nicht im DAT gefunden"
     return match

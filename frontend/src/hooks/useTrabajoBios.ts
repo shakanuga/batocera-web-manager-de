@@ -45,7 +45,7 @@ export function useTrabajoBios(): UseTrabajoBios {
     setResultado(null)
     try {
       const arranque = await api.biosDownloadStart()
-      if (!arranque?.job) throw new Error('no se pudo arrancar la comprobación')
+      if (!arranque?.job) throw new Error('Prüfung konnte nicht gestartet werden')
       setTrabajo({
         ok: true,
         id: arranque.job,
@@ -54,7 +54,7 @@ export function useTrabajoBios(): UseTrabajoBios {
         total: 0,
         actual: '',
         porcentaje: 0,
-        mensaje: 'comprobando las BIOS',
+        mensaje: 'BIOS werden geprüft',
       })
 
       const preguntar = async () => {
@@ -67,19 +67,19 @@ export function useTrabajoBios(): UseTrabajoBios {
             return
           }
           if (estado.estado === 'error') {
-            setError(estado.error || 'la comprobación falló')
+            setError(estado.error || 'Prüfung fehlgeschlagen')
             setCorriendo(false)
             return
           }
           timer.current = window.setTimeout(preguntar, SONDEO)
         } catch (err) {
-          setError(err instanceof Error ? err.message : 'Error inesperado')
+          setError(err instanceof Error ? err.message : 'Unerwarteter Fehler')
           setCorriendo(false)
         }
       }
       void preguntar()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error inesperado')
+      setError(err instanceof Error ? err.message : 'Unerwarteter Fehler')
       setCorriendo(false)
     }
   }, [])

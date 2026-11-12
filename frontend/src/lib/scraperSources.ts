@@ -27,10 +27,10 @@ export function sourceReady(config: ScraperConfig | null, source: ScraperSource)
 
 /** Qué le falta a la fuente para poder usarse. */
 export function sourceMissing(config: ScraperConfig | null, source: ScraperSource): string {
-  if (!config) return 'Configuración desconocida'
-  if (source === 'thegamesdb') return 'Falta la API Key'
-  if (source === 'igdb') return 'Faltan Client ID y Secret'
-  if (!config.ss_user_set || !config.ss_password_set) return 'Faltan usuario y contraseña'
+  if (!config) return 'Unbekannte Konfiguration'
+  if (source === 'thegamesdb') return 'API-Key fehlt'
+  if (source === 'igdb') return 'Client-ID und Secret fehlen'
+  if (!config.ss_user_set || !config.ss_password_set) return 'Benutzer und Passwort fehlen'
   return ''
 }
 

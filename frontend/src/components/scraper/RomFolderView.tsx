@@ -78,7 +78,7 @@ function RomRow({
           {rom.is_game_folder && (
             <span className="inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-px text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
               <Folder className="size-3" aria-hidden />
-              carpeta
+              Ordner
             </span>
           )}
           <span className="tabular-nums">{rom.size_human}</span>
@@ -161,7 +161,7 @@ export function RomFolderView({
       {folders.length > 0 && (
         <section>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-            Carpetas
+            Ordner
           </h3>
           <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
             {folders.map((dir) => (
@@ -181,7 +181,7 @@ export function RomFolderView({
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-xs font-semibold text-foreground">{dir.name}</span>
                   <span className="text-[11px] font-medium text-muted-foreground">
-                    {dir.child_count ?? 0} ficheros
+                    {dir.child_count ?? 0} Dateien
                   </span>
                 </span>
                 <ChevronRight className="size-4 shrink-0 text-muted-foreground/50" aria-hidden />
@@ -196,7 +196,7 @@ export function RomFolderView({
         <div className="mb-2 flex items-center gap-2">
           <ImageIcon className="size-3.5 text-emerald-600 dark:text-emerald-400" aria-hidden />
           <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-            Media presente
+            Medien vorhanden
           </h3>
           <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold tabular-nums text-muted-foreground">
             {withMedia.length}
@@ -204,7 +204,7 @@ export function RomFolderView({
         </div>
         {withMedia.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border px-4 py-6 text-center text-xs font-medium text-muted-foreground">
-            Ningún ROM de esta carpeta tiene todavía su imagen.
+            Noch kein ROM in diesem Ordner hat ein Bild.
           </p>
         ) : (
           <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
@@ -228,7 +228,7 @@ export function RomFolderView({
         <div className="mb-2 flex items-center gap-2">
           <ImageOff className="size-3.5 text-muted-foreground" aria-hidden />
           <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-            Media ausente
+            Medien fehlen
           </h3>
           <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-semibold tabular-nums text-muted-foreground">
             {withoutMedia.length}
@@ -236,7 +236,7 @@ export function RomFolderView({
         </div>
         {withoutMedia.length === 0 ? (
           <p className="rounded-2xl border border-dashed border-border px-4 py-6 text-center text-xs font-medium text-muted-foreground">
-            Todos los ROMs de esta carpeta tienen su imagen. ¡Bien hecho!
+            Alle ROMs in diesem Ordner haben ihr Bild. Gut gemacht!
           </p>
         ) : (
           <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-3">
@@ -258,7 +258,7 @@ export function RomFolderView({
       {folder.is_empty && (
         <p className="flex items-center justify-center gap-2 rounded-2xl border border-dashed border-border px-4 py-8 text-xs font-medium text-muted-foreground">
           <RefreshCw className="size-4" aria-hidden />
-          Esta carpeta está vacía.
+          Dieser Ordner ist leer.
         </p>
       )}
     </div>

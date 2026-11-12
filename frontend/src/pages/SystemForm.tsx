@@ -89,12 +89,12 @@ export function SystemForm() {
               old_name: s.name,
             })
           } else {
-            showToast('No se encontró el sistema a editar.', 'error')
+            showToast('Das zu bearbeitende System wurde nicht gefunden.', 'error')
             navigate('/sistemas')
           }
         }
       } catch {
-        if (!cancelled) showToast('No se pudo cargar la configuración del sistema.', 'error')
+        if (!cancelled) showToast('Systemkonfiguration konnte nicht geladen werden.', 'error')
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -139,16 +139,16 @@ export function SystemForm() {
       core: entry.l[0] ?? '',
       rompath: prev.rompath || `/userdata/roms/${slug}`,
     }))
-    showToast(`Datos de «${entry.n}» aplicados.`, 'success')
+    showToast(`Daten von „${entry.n}“ übernommen.`, 'success')
   }
 
   const validate = (): string[] => {
     const found: string[] = []
-    if (!form.fullname.trim()) found.push('El nombre completo es obligatorio.')
-    if (!form.name.trim()) found.push('El slug es obligatorio.')
-    else if (/\s/.test(form.name.trim())) found.push('El slug no puede llevar espacios.')
-    if (!form.rompath.trim()) found.push('La ruta de ROMs es obligatoria.')
-    if (!form.extensions.trim()) found.push('Las extensiones son obligatorias.')
+    if (!form.fullname.trim()) found.push('Der vollständige Name ist Pflicht.')
+    if (!form.name.trim()) found.push('Der Slug ist Pflicht.')
+    else if (/\s/.test(form.name.trim())) found.push('Der Slug darf keine Leerzeichen enthalten.')
+    if (!form.rompath.trim()) found.push('Der ROM-Pfad ist Pflicht.')
+    if (!form.extensions.trim()) found.push('Die Dateiendungen sind Pflicht.')
     return found
   }
 
@@ -157,7 +157,7 @@ export function SystemForm() {
     setErrors(found)
     if (found.length > 0) {
       triggerHaptic('error')
-      showToast('Revisa los campos marcados.', 'error')
+      showToast('Prüfe die markierten Felder.', 'error')
       return
     }
 
@@ -169,7 +169,7 @@ export function SystemForm() {
         : await api.createSystem(payload)
 
       if (!res.ok) {
-        const list = res.errors ?? ['No se pudo guardar el sistema.']
+        const list = res.errors ?? ['System konnte nicht gespeichert werden.']
         setErrors(list)
         triggerHaptic('error')
         showToast(list[0], 'error')
@@ -179,7 +179,7 @@ export function SystemForm() {
       setLog(res.log)
       triggerHaptic('success')
       showToast(
-        dryRun ? 'Simulación completada: no se escribió nada.' : 'Sistema guardado.',
+        dryRun ? 'Simulation abgeschlossen: Es wurde nichts geschrieben.' : 'System gespeichert.',
         'success',
       )
       if (!dryRun) {
@@ -187,7 +187,7 @@ export function SystemForm() {
       }
     } catch (err) {
       triggerHaptic('error')
-      showToast(err instanceof Error ? err.message : 'No se pudo guardar el sistema.', 'error')
+      showToast(err instanceof Error ? err.message : 'System konnte nicht gespeichert werden.', 'error')
     } finally {
       setSaving(false)
     }
@@ -205,17 +205,17 @@ export function SystemForm() {
   return (
     <>
       <Topbar
-        title={isEdit ? `Editar ${form.fullname || editingName}` : 'Añadir sistema'}
+        title={isEdit ? `Bearbeiten ${form.fullname || editingName}` : 'System hinzufügen'}
         subtitle={
           isEdit
-            ? 'Los cambios se escriben al reiniciar EmulationStation.'
-            : 'Genera un es_systems_<slug>.cfg a partir del catálogo de Batocera.'
+            ? 'Die Änderungen werden beim Neustart von EmulationStation geschrieben.'
+            : 'Erzeugt eine es_systems_<slug>.cfg aus dem Batocera-Katalog.'
         }
         onMenu={openMenu}
         actions={
           <Button size="sm" variant="ghost" onClick={() => navigate('/sistemas')}>
             <ArrowLeft className="size-3.5" />
-            Volver
+            Zurück
           </Button>
         }
       />
@@ -226,19 +226,19 @@ export function SystemForm() {
             {/* Referencia */}
             {!isEdit && catalogueEntries.length > 0 && (
               <PanelCard
-                title="Sistema de referencia"
-                subtitle="Rellena el formulario con los datos de Batocera"
+                title="Referenzsystem"
+                subtitle="Füllt das Formular mit den Batocera-Daten aus"
                 icon={<Wand2 className="size-4" />}
               >
                 <Input
                   value={refQuery}
                   onChange={(e) => setRefQuery(e.target.value)}
-                  placeholder="Buscar en el catálogo (NES, Mega Drive, arcade…)"
-                  aria-label="Buscar sistema de referencia"
+                  placeholder="Im Katalog suchen (NES, Mega Drive, Arcade…)"
+                  aria-label="Referenzsystem suchen"
                 />
                 {filteredCatalogue.length === 0 ? (
                   <p className="mt-3 text-xs text-muted-foreground">
-                    Ningún sistema del catálogo coincide con «{refQuery}».
+                    Kein System im Katalog passt zu „{refQuery}».
                   </p>
                 ) : (
                   <div className="mt-3 max-h-64 overflow-y-auto pr-1">
@@ -258,16 +258,16 @@ export function SystemForm() {
                 )}
                 {refQuery.trim() && (
                   <p className="mt-2 text-[11px] text-muted-foreground">
-                    {filteredCatalogue.length} de {catalogueEntries.length} sistemas
+                    {filteredCatalogue.length} von {catalogueEntries.length} Systeme
                   </p>
                 )}
               </PanelCard>
             )}
 
             {/* Identidad */}
-            <PanelCard title="Identidad del sistema">
+            <PanelCard title="System-Identität">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Field label="Nombre completo" htmlFor="fullname" error={errors[0]}>
+                <Field label="Vollständiger Name" htmlFor="fullname" error={errors[0]}>
                   <Input
                     id="fullname"
                     value={form.fullname}
@@ -277,9 +277,9 @@ export function SystemForm() {
                   />
                 </Field>
                 <Field
-                  label="Slug (nombre del fichero)"
+                  label="Slug (Dateiname)"
                   htmlFor="name"
-                  hint="Sin espacios ni separadores."
+                  hint="Ohne Leerzeichen oder Trennzeichen."
                   error={errors[1]}
                 >
                   <Input
@@ -290,7 +290,7 @@ export function SystemForm() {
                     disabled={loading}
                   />
                 </Field>
-                <Field label="Fabricante" htmlFor="manufacturer">
+                <Field label="Hersteller" htmlFor="manufacturer">
                   <Input
                     id="manufacturer"
                     value={form.manufacturer}
@@ -299,7 +299,7 @@ export function SystemForm() {
                     disabled={loading}
                   />
                 </Field>
-                <Field label="Año de lanzamiento" htmlFor="release">
+                <Field label="Erscheinungsjahr" htmlFor="release">
                   <Input
                     id="release"
                     value={form.release}
@@ -308,7 +308,7 @@ export function SystemForm() {
                     disabled={loading}
                   />
                 </Field>
-                <Field label="Tipo de equipo" htmlFor="hardware">
+                <Field label="Gerätetyp" htmlFor="hardware">
                   <Select
                     id="hardware"
                     value={form.hardware}
@@ -322,7 +322,7 @@ export function SystemForm() {
                     ))}
                   </Select>
                 </Field>
-                <Field label="Plataforma" htmlFor="platform">
+                <Field label="Plattform" htmlFor="platform">
                   <Input
                     id="platform"
                     value={form.platform}
@@ -335,12 +335,12 @@ export function SystemForm() {
             </PanelCard>
 
             {/* Rutas y extensiones */}
-            <PanelCard title="ROMs y extensiones">
+            <PanelCard title="ROMs und Dateiendungen">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <Field
-                  label="Ruta de ROMs"
+                  label="ROM-Pfad"
                   htmlFor="rompath"
-                  hint="Dentro de /userdata/roms."
+                  hint="Innerhalb von /userdata/roms."
                   error={errors[2]}
                 >
                   <Input
@@ -352,9 +352,9 @@ export function SystemForm() {
                   />
                 </Field>
                 <Field
-                  label="Extensiones"
+                  label="Dateiendungen"
                   htmlFor="extensions"
-                  hint="Separadas por espacios: .zip .7z .rar"
+                  hint="Durch Leerzeichen getrennt: .zip .7z .rar"
                   error={errors[3]}
                 >
                   <Input
@@ -365,14 +365,14 @@ export function SystemForm() {
                     disabled={loading}
                   />
                 </Field>
-                <Field label="Tema" htmlFor="theme">
+                <Field label="Theme" htmlFor="theme">
                   <Select
                     id="theme"
                     value={form.theme}
                     onChange={(e) => set('theme', e.target.value)}
                     disabled={loading}
                   >
-                    <option value="">(sin tema)</option>
+                    <option value="">(kein Theme)</option>
                     {themes.map((t) => (
                       <option key={t} value={t}>
                         {t}
@@ -380,12 +380,12 @@ export function SystemForm() {
                     ))}
                   </Select>
                 </Field>
-                <Field label="Descripción" htmlFor="description">
+                <Field label="Beschreibung" htmlFor="description">
                   <Input
                     id="description"
                     value={form.description}
                     onChange={(e) => set('description', e.target.value)}
-                    placeholder="Consola de 8 bits de Nintendo"
+                    placeholder="8-Bit-Konsole von Nintendo"
                     disabled={loading}
                   />
                 </Field>
@@ -395,22 +395,22 @@ export function SystemForm() {
                 <Toggle
                   checked={form.create_roms_dir ?? false}
                   onChange={(v) => set('create_roms_dir', v)}
-                  label="Crear la carpeta de ROMs"
-                  description="Ejecuta mkdir -p sobre la ruta indicada."
+                  label="ROM-Ordner anlegen"
+                  description="Führt mkdir -p für den angegebenen Pfad aus."
                 />
                 <Toggle
                   checked={form.batocera_conf_entry ?? false}
                   onChange={(v) => set('batocera_conf_entry', v)}
-                  label="Añadir entrada en batocera.conf"
-                  description="Escribe <slug>.emulator y <slug>.core."
+                  label="Eintrag in batocera.conf hinzufügen"
+                  description="Schreibt <slug>.emulator und <slug>.core."
                 />
               </div>
             </PanelCard>
 
             {/* Emulador */}
-            <PanelCard title="Emulador y núcleo">
+            <PanelCard title="Emulator und Core">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <Field label="Emulador" htmlFor="emulator">
+                <Field label="Emulator" htmlFor="emulator">
                   <Input
                     id="emulator"
                     value={form.emulator}
@@ -419,7 +419,7 @@ export function SystemForm() {
                     disabled={loading}
                   />
                 </Field>
-                <Field label="Núcleo principal" htmlFor="core">
+                <Field label="Haupt-Core" htmlFor="core">
                   <Input
                     id="core"
                     value={form.core}
@@ -428,7 +428,7 @@ export function SystemForm() {
                     disabled={loading}
                   />
                 </Field>
-                <Field label="Núcleos extra" htmlFor="extra_cores" hint="Separados por comas.">
+                <Field label="Weitere Cores" htmlFor="extra_cores" hint="Durch Kommas getrennt.">
                   <Input
                     id="extra_cores"
                     value={form.extra_cores}
@@ -444,8 +444,8 @@ export function SystemForm() {
           {/* Vista previa */}
           <div className="space-y-4 xl:sticky xl:top-24 xl:self-start">
             <PanelCard
-              title="Vista previa del XML"
-              subtitle="Lo que se escribirá en el .cfg"
+              title="XML-Vorschau"
+              subtitle="Was in die .cfg geschrieben wird"
               icon={<Eye className="size-4" />}
             >
               {preview ? (
@@ -454,7 +454,7 @@ export function SystemForm() {
                 </pre>
               ) : (
                 <p className="py-8 text-center text-xs text-muted-foreground">
-                  Completa el nombre y la ruta para ver el XML.
+                  Gib Name und Pfad ein, um das XML zu sehen.
                 </p>
               )}
 
@@ -476,10 +476,10 @@ export function SystemForm() {
                   className="w-full"
                 >
                   <Save className="size-4" />
-                  {saving ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Crear sistema'}
+                  {saving ? 'Wird gespeichert…' : isEdit ? 'Änderungen speichern' : 'System anlegen'}
                 </Button>
                 <Button variant="secondary" onClick={() => save(true)} disabled={saving || loading}>
-                  Simular (no escribir)
+                  Simulieren (nicht schreiben)
                 </Button>
               </div>
             </PanelCard>
@@ -490,7 +490,7 @@ export function SystemForm() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25, ease: EASE }}
               >
-                <PanelCard title="Registro" subtitle="Resultado de la última operación">
+                <PanelCard title="Protokoll" subtitle="Ergebnis des letzten Vorgangs">
                   <pre className="max-h-64 overflow-auto whitespace-pre-wrap font-mono text-[11px] leading-relaxed text-foreground">
                     {log.join('\n')}
                   </pre>

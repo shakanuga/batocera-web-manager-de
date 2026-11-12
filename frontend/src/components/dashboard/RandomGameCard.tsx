@@ -29,20 +29,20 @@ export function RandomGameCard({ game, loading, onRoll }: RandomGameCardProps) {
 
   return (
     <PanelCard
-      title="Juego al azar"
-      subtitle={game ? game.system_name : 'Elige una ROM de tu biblioteca'}
+      title="Zufallsspiel"
+      subtitle={game ? game.system_name : 'Wählt ein ROM aus deiner Bibliothek'}
       icon={<Dices className="size-4" />}
       actions={
         <Button size="sm" variant="secondary" onClick={roll} disabled={loading}>
-          {loading ? 'Girando…' : 'Girar'}
+          {loading ? 'Dreht…' : 'Drehen'}
         </Button>
       }
     >
       {!game ? (
         <div className="flex h-40 items-center justify-center text-center text-xs text-muted-foreground">
           {loading
-            ? 'Eligiendo un juego al azar…'
-            : 'No hay juegos en la biblioteca todavía.'}
+            ? 'Zufälliges Spiel wird gewählt…'
+            : 'Noch keine Spiele in der Bibliothek.'}
         </div>
       ) : (
         <motion.div

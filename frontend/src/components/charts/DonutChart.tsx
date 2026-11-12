@@ -33,7 +33,7 @@ interface DonutChartProps {
 export function DonutChart({
   data,
   height = 170,
-  centerLabel = 'Total',
+  centerLabel = 'Gesamt',
   centerValue,
   formatValue = (v) => `${v.toFixed(1)}%`,
   tone,

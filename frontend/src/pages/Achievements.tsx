@@ -27,9 +27,9 @@ import type { RaGame } from '@/lib/types'
 type SortKey = 'awarded' | 'percent' | 'total'
 
 const SORTS: { key: SortKey; label: string }[] = [
-  { key: 'awarded', label: 'Mis logros' },
-  { key: 'percent', label: '% completado' },
-  { key: 'total', label: 'Logros del juego' },
+  { key: 'awarded', label: 'Meine Erfolge' },
+  { key: 'percent', label: '% abgeschlossen' },
+  { key: 'total', label: 'Erfolge des Spiels' },
 ]
 
 function sortGames(games: RaGame[], sort: SortKey): RaGame[] {
@@ -87,16 +87,16 @@ export function AchievementsPage() {
   if (data && !data.configured) {
     return (
       <>
-        <Topbar title="Logros" subtitle="RetroAchievements" onMenu={openMenu} />
+        <Topbar title="Erfolge" subtitle="RetroAchievements" onMenu={openMenu} />
         <PageContainer>
           <EmptyState
             icon={<UserRound className="size-5" />}
-            title="Configura tu cuenta de RetroAchievements"
-            description="Para ver tus logros hace falta tu usuario y tu Web API Key de RetroAchievements. Se guardan en el manager y sólo se usan para leer tus datos; no se comparten con nadie más."
+            title="Richte dein RetroAchievements-Konto ein"
+            description="Um deine Erfolge zu sehen, brauchst du deinen RetroAchievements-Benutzer und deinen Web-API-Key. Sie werden im Manager gespeichert und nur zum Lesen deiner Daten verwendet; sie werden mit niemandem geteilt."
             action={
               <Button variant="primary" onClick={() => navigate('/configuracion')}>
                 <Settings className="size-4" />
-                Ir a Configuración
+                Zu den Einstellungen
               </Button>
             }
           />
@@ -109,16 +109,16 @@ export function AchievementsPage() {
   if (data && !data.enabled) {
     return (
       <>
-        <Topbar title="Logros" subtitle="RetroAchievements" onMenu={openMenu} />
+        <Topbar title="Erfolge" subtitle="RetroAchievements" onMenu={openMenu} />
         <PageContainer>
           <EmptyState
             icon={<CircleAlert className="size-5" />}
-            title="RetroAchievements está desactivado"
-            description="Hay credenciales guardadas, pero el interruptor de la integración está apagado. Actívalo en Configuración para volver a ver tus logros."
+            title="RetroAchievements ist deaktiviert"
+            description="Es sind Zugangsdaten gespeichert, aber der Schalter für die Integration ist aus. Aktiviere ihn in den Einstellungen, um deine Erfolge wieder zu sehen."
             action={
               <Button variant="primary" onClick={() => navigate('/configuracion')}>
                 <Settings className="size-4" />
-                Ir a Configuración
+                Zu den Einstellungen
               </Button>
             }
           />
@@ -130,16 +130,16 @@ export function AchievementsPage() {
   return (
     <>
       <Topbar
-        title="Logros"
+        title="Erfolge"
         subtitle={
           profile?.user
-            ? `${profile.user} · ${profile.points.toLocaleString('es-ES')} puntos`
+            ? `${profile.user} · ${profile.points.toLocaleString('de-DE')} Punkte`
             : 'RetroAchievements'
         }
         onMenu={openMenu}
         actions={
           <IconButton
-            label="Recargar logros"
+            label="Erfolge neu laden"
             onClick={() => {
               triggerHaptic('light')
               setForce(true)
@@ -157,7 +157,7 @@ export function AchievementsPage() {
             <CircleAlert className="size-4 shrink-0" />
             <span className="min-w-0 flex-1">{error}</span>
             <Button size="sm" variant="outline" onClick={refresh}>
-              Reintentar
+              Erneut versuchen
             </Button>
           </div>
         )}
@@ -165,31 +165,31 @@ export function AchievementsPage() {
         {/* Resumen */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           <MetricCard
-            label="Puntos"
-            value={(profile?.points ?? 0).toLocaleString('es-ES')}
+            label="Punkte"
+            value={(profile?.points ?? 0).toLocaleString('de-DE')}
             icon={Trophy}
-            hint={profile ? `true ${(profile.true_points ?? 0).toLocaleString('es-ES')}` : undefined}
+            hint={profile ? `true ${(profile.true_points ?? 0).toLocaleString('de-DE')}` : undefined}
             accent="good"
           />
           <MetricCard
-            label="Juegos"
+            label="Spiele"
             value={data?.total ?? 0}
             icon={Gamepad2}
-            hint={data ? `${data.matched} con ROM local` : undefined}
+            hint={data ? `${data.matched} mit lokalem ROM` : undefined}
           />
           <MetricCard
-            label="Logros"
+            label="Erfolge"
             value={totals.awarded}
             unit={`/ ${totals.possible}`}
             icon={Sparkles}
             accent="good"
           />
           <MetricCard
-            label="Dominados"
+            label="Gemeistert"
             value={awards?.mastery ?? 0}
             unit={`/ ${awards?.total ?? 0}`}
             icon={Medal}
-            hint={awards ? `${awards.beaten_hardcore} batidos en hardcore` : undefined}
+            hint={awards ? `${awards.beaten_hardcore} im Hardcore-Modus gemeistert` : undefined}
           />
         </div>
 
@@ -212,15 +212,15 @@ export function AchievementsPage() {
 
           {profile?.member_since && (
             <p className="text-[11px] font-medium text-muted-foreground">
-              Miembro desde {formatDate(profile.member_since)}
+              Mitglied seit {formatDate(profile.member_since)}
             </p>
           )}
           {data?.updated && (
             <p className="text-[11px] font-medium text-muted-foreground">
               {data.cached
-                ? `Datos guardados · actualizados hace ${formatAge(data.age)}`
-                : 'Datos descargados de RetroAchievements'}
-              {data.throttled && ' · se respeta el intervalo mínimo entre peticiones'}
+                ? `Daten gespeichert · aktualisiert vor ${formatAge(data.age)}`
+                : 'Daten von RetroAchievements geladen'}
+              {data.throttled && ' · der Mindestabstand zwischen Anfragen wird eingehalten'}
             </p>
           )}
         </div>
@@ -236,8 +236,8 @@ export function AchievementsPage() {
           <div className="mt-4">
             <EmptyState
               icon={<Zap className="size-5" />}
-              title="Sin logros todavía"
-              description="No hay juegos con progreso en RetroAchievements para esta cuenta. En cuanto desbloquees el primer logro, aparecerá aquí con su carátula."
+              title="Noch keine Erfolge"
+              description="Für dieses Konto gibt es keine Spiele mit Fortschritt auf RetroAchievements. Sobald du den ersten Erfolg freischaltest, erscheint er hier mit seinem Cover."
             />
           </div>
         ) : (

@@ -31,8 +31,8 @@ export function GaugeArc({
 }: GaugeArcProps) {
   const clamped = Math.max(0, Math.min(100, Number.isFinite(value) ? value : 0))
   const data = [
-    { name: 'Uso', value: clamped },
-    { name: 'Resto', value: Math.max(0, 100 - clamped) },
+    { name: 'Auslastung', value: clamped },
+    { name: 'Rest', value: Math.max(0, 100 - clamped) },
   ]
   const principal = tone ? TONE_COLOR[tone] : 'var(--color-chart-1)'
   const resto = tone ? TONE_COLOR[tone] : 'var(--color-chart-4)'

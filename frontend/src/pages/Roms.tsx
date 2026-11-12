@@ -96,7 +96,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
       setTrabajoFaltantes(estado)
       if (estado.estado === 'listo') return (estado.resultado as LibraryFaltantes) ?? null
       if (estado.estado === 'error') {
-        throw new Error(estado.error || 'La comparacion ha fallado')
+        throw new Error(estado.error || 'Der Vergleich ist fehlgeschlagen')
       }
     }
   }
@@ -122,14 +122,14 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
       setFaltantes(resultado)
       showNotify({
         variant: 'success',
-        title: 'Comparado con el DAT',
-        message: `${resultado.faltantes} versiones que no tienes en ${resultado.sistema}.`,
+        title: 'Mit dem DAT verglichen',
+        message: `${resultado.faltantes} Versionen, die du nicht hast, in ${resultado.sistema}.`,
       })
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No se pudo comparar con el DAT',
-        message: error instanceof Error ? error.message : 'Error inesperado.',
+        title: 'Vergleich mit dem DAT fehlgeschlagen',
+        message: error instanceof Error ? error.message : 'Unerwarteter Fehler.',
       })
     } finally {
       if (montado.current) {
@@ -154,7 +154,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
       setTrabajo(estado)
       if (estado.estado === 'listo') return (estado.resultado as LibraryAudit) ?? null
       if (estado.estado === 'error') {
-        throw new Error(estado.error || 'La auditoría ha fallado')
+        throw new Error(estado.error || 'Das Audit ist fehlgeschlagen')
       }
     }
   }
@@ -170,14 +170,14 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
       setAuditoria(resultado)
       showNotify({
         variant: 'success',
-        title: 'Biblioteca auditada',
-        message: `${resultado.resumen.juegos} juegos revisados.`,
+        title: 'Bibliothek geprüft',
+        message: `${resultado.resumen.juegos} Spiele geprüft.`,
       })
     } catch (error) {
       showNotify({
         variant: 'error',
-        title: 'No se pudo auditar la biblioteca',
-        message: error instanceof Error ? error.message : 'Error inesperado.',
+        title: 'Bibliothek konnte nicht geprüft werden',
+        message: error instanceof Error ? error.message : 'Unerwarteter Fehler.',
       })
     } finally {
       if (montado.current) {
@@ -207,11 +207,11 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
       showNotify({
         variant: result.ok ? 'success' : 'error',
         title: result.ok
-          ? `${result.movidos.length} ficheros a la cuarentena`
-          : 'Some files could not be moved',
+          ? `${result.movidos.length} Dateien in die Quarantäne`
+          : 'Einige Dateien konnten nicht verschoben werden',
         message: result.ok
-          ? 'Se pueden recuperar con «Deshacer».'
-          : (result.errores?.[0]?.error ?? 'Error desconocido.'),
+          ? 'Mit „Rückgängig“ wiederherstellbar.'
+          : (result.errores?.[0]?.error ?? 'Unbekannter Fehler.'),
       })
       setSeleccion(new Set())
       await auditar()
@@ -227,11 +227,11 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
       showNotify({
         variant: result.ok ? 'success' : 'error',
         title: result.ok
-          ? `${result.quitadas} fichas quitadas del gamelist`
-          : 'No se pudo limpiar el gamelist',
+          ? `${result.quitadas} Einträge aus der gamelist entfernt`
+          : 'gamelist konnte nicht bereinigt werden',
         message: result.ok
-          ? `Se puede deshacer con «Deshacer».`
-          : (result.error ?? 'Error desconocido.'),
+          ? `Mit „Rückgängig“ umkehrbar.`
+          : (result.error ?? 'Unbekannter Fehler.'),
       })
       if (result.ok) await auditar()
     } finally {
@@ -245,10 +245,10 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
       const result = await api.libraryUndo()
       showNotify({
         variant: result.ok ? 'success' : 'error',
-        title: result.ok ? 'Tanda deshecha' : 'No se pudo deshacer',
+        title: result.ok ? 'Durchgang rückgängig gemacht' : 'Rückgängig machen fehlgeschlagen',
         message: result.ok
-          ? `${result.restaurados.length} ficheros han vuelto a su sitio.`
-          : (result.error ?? 'Error desconocido.'),
+          ? `${result.restaurados.length} Dateien sind wieder an ihrem Platz.`
+          : (result.error ?? 'Unbekannter Fehler.'),
       })
       await auditar()
     } finally {
@@ -276,15 +276,15 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
   return (
     <>
       <Topbar
-        title="ROMs y BIOS"
+        title="ROMs und BIOS"
         subtitle={
           datos
-            ? `${datos.juegos.toLocaleString('es-ES')} juegos · ${datos.gb.toLocaleString('es-ES')} GB en ${datos.sistemas.length} sistemas`
-            : 'La biblioteca de la consola'
+            ? `${datos.juegos.toLocaleString('de-DE')} Spiele · ${datos.gb.toLocaleString('de-DE')} GB in ${datos.sistemas.length} Systeme`
+            : 'Die Bibliothek der Konsole'
         }
         onMenu={openMenu}
         actions={
-          <IconButton label="Volver a auditar la biblioteca" onClick={auditar} disabled={busy}>
+          <IconButton label="Bibliothek erneut prüfen" onClick={auditar} disabled={busy}>
             <RefreshCw className={cn('size-4', trabajando && 'animate-spin')} />
           </IconButton>
         }
@@ -298,42 +298,42 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
             <CircleAlert className="size-4 shrink-0" />
             <span className="min-w-0 flex-1">{resumen.error}</span>
             <Button size="sm" variant="outline" onClick={resumen.refresh}>
-              Reintentar
+              Erneut versuchen
             </Button>
           </div>
         )}
 
         {/* Resumen */}
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <MetricCard label="Sistemas" value={datos?.sistemas.length ?? 0} icon={HardDrive} />
+          <MetricCard label="Systeme" value={datos?.sistemas.length ?? 0} icon={HardDrive} />
           <MetricCard
-            label="Juegos"
-            value={(datos?.juegos ?? 0).toLocaleString('es-ES')}
+            label="Spiele"
+            value={(datos?.juegos ?? 0).toLocaleString('de-DE')}
             icon={ListChecks}
           />
           <MetricCard
-            label="Espacio"
-            value={`${(datos?.gb ?? 0).toLocaleString('es-ES')} GB`}
+            label="Speicherplatz"
+            value={`${(datos?.gb ?? 0).toLocaleString('de-DE')} GB`}
             icon={Copy}
-            hint="lo que ocupa la biblioteca"
+            hint="was die Bibliothek belegt"
           />
           <MetricCard
-            label="Duplicados"
+            label="Duplikate"
             value={duplicados.length}
             icon={Copy}
             accent={duplicados.length ? 'bad' : 'good'}
-            hint={duplicados.length ? `puedes liberar ${mb(ahorroTotal)}` : 'nada repetido'}
+            hint={duplicados.length ? `freigebbar: ${mb(ahorroTotal)}` : 'nichts doppelt'}
           />
         </div>
 
         {/* La auditoría */}
         <div className="mt-4">
           <PanelCard
-            title="Auditoría de la biblioteca"
+            title="Bibliotheks-Audit"
             subtitle={
               auditoria
-                ? `${auditoria.resumen.juegos.toLocaleString('es-ES')} juegos en ${auditoria.resumen.sistemas} sistemas`
-                : 'Busca duplicados, fichas rotas, ficheros vacíos y media sin juego'
+                ? `${auditoria.resumen.juegos.toLocaleString('de-DE')} Spiele in ${auditoria.resumen.sistemas} Systeme`
+                : 'Sucht Duplikate, kaputte Einträge, leere Dateien und Medien ohne Spiel'
             }
             icon={<ListChecks className="size-4" />}
             actions={
@@ -346,7 +346,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                     onClick={moverSeleccion}
                   >
                     <Trash2 className="size-4" />
-                    Mover {seleccion.size} a la cuarentena
+                    Verschieben: {seleccion.size} → Quarantäne
                   </Button>
                 )}
                 <Button
@@ -356,7 +356,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                   onClick={auditar}
                 >
                   <RefreshCw className={cn('size-4', trabajando && 'animate-spin')} />
-                  Auditar
+                  Prüfen
                 </Button>
               </>
             }
@@ -367,29 +367,28 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                   value={trabajo.porcentaje}
                   label={
                     trabajo.total
-                      ? `${trabajo.mensaje || 'Trabajando'} · ${trabajo.hechos} de ${trabajo.total}`
-                      : (trabajo.mensaje || 'Trabajando')
+                      ? `${trabajo.mensaje || 'Trabajando'} · ${trabajo.hechos} von ${trabajo.total}`
+                      : (trabajo.mensaje || 'Arbeite')
                   }
                 />
                 {trabajo.actual && (
                   <p className="mt-2 truncate text-[11px] text-muted-foreground">
-                    Ahora: {trabajo.actual}
+                    Gerade: {trabajo.actual}
                   </p>
                 )}
                 <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground/80">
-                  En bibliotecas grandes esto tarda: el trabajo sigue en el servidor, asi que
-                  no hace falta cerrar la ventana. Puedes esperar aqui hasta que termine.
+                  Bei großen Bibliotheken dauert das: Die Arbeit läuft auf dem Server weiter, du musst das Fenster also nicht offen lassen. Du kannst hier warten, bis sie fertig ist.
                 </p>
               </div>
             ) : !auditoria ? (
               <EmptyState
                 icon={<ListChecks className="size-5" />}
-                title="Todavia no hay auditoria"
-                description="La radiografia recorre la biblioteca entera: en 1,8 TB tarda menos de un minuto, y no se toca nada."
+                title="Noch kein Audit"
+                description="Die Durchleuchtung geht die ganze Bibliothek durch: Bei 1,8 TB dauert sie weniger als eine Minute, und es wird nichts verändert."
                 action={
                   <Button variant="primary" onClick={auditar} disabled={busy}>
                     <RefreshCw className="size-4" />
-                    Auditar la biblioteca
+                    Bibliothek prüfen
                   </Button>
                 }
               />
@@ -405,17 +404,17 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
 
                 {/* Fichas rotas */}
                 <PanelCard
-                  title="Fichas sin fichero"
+                  title="Einträge ohne Datei"
                   subtitle={
                     auditoria.fichas_sin_fichero.total
-                      ? `${auditoria.fichas_sin_fichero.total} entradas del gamelist.xml apuntan a un juego que no existe`
-                      : 'Todas las fichas del gamelist.xml tienen su fichero'
+                      ? `${auditoria.fichas_sin_fichero.total} Einträge der gamelist.xml verweisen auf ein Spiel, das es nicht gibt`
+                      : 'Alle Einträge der gamelist.xml haben ihre Datei'
                   }
                   icon={<FileWarning className="size-4" />}
                 >
                   {fichasPorSistema.length === 0 ? (
                     <p className="text-xs text-muted-foreground">
-                      El gamelist.xml esta al dia: no hay entradas rotas.
+                      Die gamelist.xml ist aktuell: keine kaputten Einträge.
                     </p>
                   ) : (
                     <ul className="divide-y divide-border">
@@ -425,7 +424,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                             {sistema}
                           </span>
                           <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                            {cantidad} fichas
+                            {cantidad} Einträge
                           </span>
                           <Button
                             size="sm"
@@ -433,7 +432,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                             disabled={busy}
                             onClick={() => limpiarGamelist(sistema)}
                           >
-                            Limpiar
+                            Bereinigen
                           </Button>
                         </li>
                       ))}
@@ -443,31 +442,31 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
 
                 {/* Ficheros vacíos, sobras y media huérfana */}
                 <SencillosPanel
-                  titulo="Ficheros vacios"
-                  texto="Juegos de 0 bytes: no arrancan, pero ocupan su sitio en la biblioteca."
+                  titulo="Leere Dateien"
+                  texto="Spiele mit 0 Bytes: Sie starten nicht, belegen aber ihren Platz in der Bibliothek."
                   vacios={auditoria.ficheros_vacios}
                   seleccion={seleccion}
                   marcar={marcar}
                 />
                 <SencillosPanel
-                  titulo="Ficheros que no son juegos"
-                  texto="Notas, listas y demas: no los usa ningun emulador."
+                  titulo="Dateien, die keine Spiele sind"
+                  texto="Notizen, Listen und Ähnliches: Kein Emulator nutzt sie."
                   vacios={auditoria.sobras}
                   seleccion={seleccion}
                   marcar={marcar}
                 />
                 <PanelCard
-                  title="Media sin juego"
+                  title="Medien ohne Spiel"
                   subtitle={
                     auditoria.media_huerfana.total
-                      ? `${auditoria.media_huerfana.total} imagenes o videos cuyo juego ya no esta`
-                      : 'Todas las imagenes tienen su juego'
+                      ? `${auditoria.media_huerfana.total} Bilder oder Videos, deren Spiel nicht mehr existiert`
+                      : 'Alle Bilder haben ihr Spiel'
                   }
                   icon={<Images className="size-4" />}
                 >
                   {auditoria.media_huerfana.lista.length === 0 ? (
                     <p className="text-xs text-muted-foreground">
-                      Toda la media corresponde a un juego de la biblioteca.
+                      Alle Medien gehören zu einem Spiel der Bibliothek.
                     </p>
                   ) : (
                     <ul className="divide-y divide-border">
@@ -480,7 +479,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                               checked={seleccion.has(id)}
                               onChange={() => marcar(id)}
                               className="size-4 shrink-0 cursor-pointer accent-primary"
-                              aria-label={`Marcar ${item.fichero}`}
+                              aria-label={`${item.fichero} markieren`}
                             />
                             <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
                               {item.sistema}/{item.fichero}
@@ -498,8 +497,8 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                 {/* Repetidos entre sistemas */}
                 {auditoria.repetidos_entre_sistemas.length > 0 && (
                   <PanelCard
-                    title="El mismo juego en varios sistemas"
-                    subtitle="Los arcades guardan las mismas ROMs en carpetas distintas (naomi, atomiswave...)"
+                    title="Dasselbe Spiel in mehreren Systemen"
+                    subtitle="Arcade-Systeme speichern dieselben ROMs in verschiedenen Ordnern (naomi, atomiswave...)"
                     icon={<Copy className="size-4" />}
                   >
                     <ul className="divide-y divide-border">
@@ -507,7 +506,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                         <li key={item.nombre} className="py-2.5">
                           <p className="truncate text-sm font-medium">{item.nombre}</p>
                           <p className="mt-0.5 text-[11px] text-muted-foreground">
-                            {item.sistemas.join(' · ')} · {mb(item.bytes)} en total
+                            {item.sistemas.join(' · ')} · {mb(item.bytes)} insgesamt
                           </p>
                         </li>
                       ))}
@@ -519,7 +518,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                 <div className="flex justify-end">
                   <Button variant="outline" size="sm" disabled={busy} onClick={deshacer}>
                     <Undo2 className="size-4" />
-                    Deshacer la ultima tanda
+                    Letzten Durchgang rückgängig machen
                   </Button>
                 </div>
               </div>
@@ -544,8 +543,8 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
         {auditoria && auditoria.espacio.length > 0 && (
           <div className="mt-4">
             <PanelCard
-              title="El espacio por sistema"
-              subtitle="Donde se lleva la memoria de la tarjeta"
+              title="Speicherplatz pro System"
+              subtitle="Wo der Speicher der Karte hingeht"
               icon={<HardDrive className="size-4" />}
             >
               <ul className="space-y-2">
@@ -564,7 +563,7 @@ export function RomsPage({ tab, onTab }: RomsPageProps) {
                         />
                       </span>
                       <span className="w-20 shrink-0 text-right text-[11px] tabular-nums text-muted-foreground">
-                        {item.gb.toLocaleString('es-ES')} GB
+                        {item.gb.toLocaleString('de-DE')} GB
                       </span>
                     </li>
                   )
@@ -593,17 +592,17 @@ function DuplicadosPanel({
 }) {
   return (
     <PanelCard
-      title="Juegos duplicados"
+      title="Doppelte Spiele"
       subtitle={
         duplicados.length
-          ? `${duplicados.length} grupos · ${sinConfirmar ? `${sinConfirmar} sin confirmar` : 'todos confirmados con el hash completo'}`
-          : 'Ningun juego esta repetido'
+          ? `${duplicados.length} Gruppen · ${sinConfirmar ? `${sinConfirmar} unbestätigt` : 'alle mit vollständigem Hash bestätigt'}`
+          : 'Kein Spiel ist doppelt'
       }
       icon={<Copy className="size-4" />}
     >
       {duplicados.length === 0 ? (
         <p className="text-xs text-muted-foreground">
-          No hay juegos repetidos: la huella rapida no ha encontrado ninguno.
+          Keine doppelten Spiele: Der Schnell-Fingerabdruck hat keine gefunden.
         </p>
       ) : (
         <ul className="divide-y divide-border">
@@ -615,24 +614,24 @@ function DuplicadosPanel({
                   {grupo.nombres.length > 1 && (
                     <span className="text-muted-foreground">
                       {' '}
-                      y {grupo.nombres.length - 1} mas
+                      und {grupo.nombres.length - 1} weitere
                     </span>
                   )}
                 </span>
                 <span className="rounded-md border border-border px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">
-                  {grupo.copias} copias · {mb(grupo.bytes)} cada una
+                  {grupo.copias} Kopien · {mb(grupo.bytes)} je Kopie
                 </span>
                 {grupo.confirmado ? (
                   <span className="rounded-md border border-emerald-500/40 bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-medium text-emerald-700 dark:text-emerald-400">
-                    hash confirmado
+                    Hash bestätigt
                   </span>
                 ) : (
                   <span className="rounded-md border border-amber-500/40 bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-700 dark:text-amber-400">
-                    candidato (sin confirmar)
+                    Kandidat (unbestätigt)
                   </span>
                 )}
                 <span className="ml-auto text-[11px] font-medium tabular-nums text-muted-foreground">
-                  liberas {mb(grupo.ahorro)}
+                  freigebbar: {mb(grupo.ahorro)}
                 </span>
               </div>
               <ul className="mt-2 space-y-1">
@@ -645,7 +644,7 @@ function DuplicadosPanel({
                         checked={seleccion.has(id)}
                         onChange={() => marcar(id)}
                         className="size-4 shrink-0 cursor-pointer accent-primary"
-                        aria-label={`Marcar ${fichero.nombre}`}
+                        aria-label={`${fichero.nombre} markieren`}
                       />
                       <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
                         {fichero.sistema}/{fichero.nombre}
@@ -684,7 +683,7 @@ function SencillosPanel({
       icon={<FileWarning className="size-4" />}
     >
       {vacios.lista.length === 0 ? (
-        <p className="text-xs text-muted-foreground">Nada por aqui: todo en orden.</p>
+        <p className="text-xs text-muted-foreground">Nichts hier: alles in Ordnung.</p>
       ) : (
         <ul className="divide-y divide-border">
           {vacios.lista.slice(0, 200).map((item) => {
@@ -696,7 +695,7 @@ function SencillosPanel({
                   checked={seleccion.has(id)}
                   onChange={() => marcar(id)}
                   className="size-4 shrink-0 cursor-pointer accent-primary"
-                  aria-label={`Marcar ${item.nombre}`}
+                  aria-label={`${item.nombre} markieren`}
                 />
                 <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">
                   {item.sistema}/{item.nombre}

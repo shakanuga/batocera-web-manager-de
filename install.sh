@@ -5,7 +5,7 @@
 #
 #  Uso (por SSH, dentro de la propia Batocera):
 #     ssh root@batocera
-#     git clone https://github.com/Thundertruck4K/batocera-web-manager.git \
+#     git clone https://github.com/shakanuga/batocera-web-manager-de.git \
 #         /userdata/system/batocera_web
 #     cd /userdata/system/batocera_web && bash install.sh
 #
@@ -217,12 +217,12 @@ micromamba_sha256_for() {   # micromamba_sha256_for <plataforma>
 link_git_binary() {
   if [ -w "$GIT_BIN_DIR" ] 2>/dev/null; then
     if ln -sf "$GIT_ENV/bin/git" "$GIT_BIN_DIR/git" 2>/dev/null; then
-      ok "Enlazado en $GIT_BIN_DIR/git"
+      ok "Verlinkt in $GIT_BIN_DIR/git"
       return 0
     fi
   fi
-  warn "No se pudo enlazar en $GIT_BIN_DIR (¿sin permisos?)"
-  tip "Añade $GIT_ENV/bin al PATH para usar git."
+  warn "Verlinken in $GIT_BIN_DIR fehlgeschlagen (keine Berechtigung?)"
+  tip "Füge $GIT_ENV/bin zum PATH hinzu, um git zu nutzen."
   return 1
 }
 
@@ -249,19 +249,19 @@ install_git() {
 
   platform="$(detect_conda_platform)"
   if [ -z "$platform" ]; then
-    bad "No hay Git para la arquitectura $(uname -m)."
-    tip "Actualiza el manager con el tarball de la release."
+    bad "Kein Git für die Architektur $(uname -m) verfügbar."
+    tip "Aktualisiere den Manager mit dem Tarball des Releases."
     return 1
   fi
   if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
-    bad "Necesito curl o wget para descargar Git."
+    bad "Ich brauche curl oder wget, um Git herunterzuladen."
     return 1
   fi
 
   expected="${BM_MICROMAMBA_SHA256:-$(micromamba_sha256_for "$platform")}"
   if [ -z "$expected" ]; then
-    bad "No conozco el sha256 de micromamba para $platform."
-    tip "Indícalo con BM_MICROMAMBA_SHA256=<hash> para continuar."
+    bad "Mir ist der SHA256 von micromamba für $platform nicht bekannt."
+    tip "Gib ihn mit BM_MICROMAMBA_SHA256=<hash> an, um fortzufahren."
     return 1
   fi
 
@@ -271,13 +271,13 @@ install_git() {
 
   printf '     %sDescargando micromamba %s…%s\n' "$CD" "$MICROMAMBA_VERSION" "$C0"
   if ! fetch "$url" "$tmp/mm.tar.bz2"; then
-    bad "No se pudo descargar $url"
+    bad "Download von $url fehlgeschlagen"
     rm -rf "$tmp"
     return 1
   fi
   actual="$(sha256sum "$tmp/mm.tar.bz2" 2>/dev/null | awk '{ print $1 }')"
   if [ "$actual" != "$expected" ]; then
-    bad "sha256 incorrecto: esperaba $expected y obtuve $actual"
+    bad "falscher SHA256: erwartet $expected, erhalten $actual"
     rm -rf "$tmp"
     return 1
   fi
@@ -285,17 +285,17 @@ install_git() {
 
   if ! tar -xjf "$tmp/mm.tar.bz2" -C "$tmp" bin/micromamba 2>/dev/null \
      && ! tar -xzf "$tmp/mm.tar.bz2" -C "$tmp" bin/micromamba 2>/dev/null; then
-    bad "No se pudo descomprimir micromamba"
+    bad "micromamba konnte nicht entpackt werden"
     rm -rf "$tmp"
     return 1
   fi
   chmod +x "$tmp/bin/micromamba" 2>/dev/null || true
   mm="$tmp/bin/micromamba"
 
-  printf '     %sInstalando Git desde %s…%s\n' "$CD" "$CONDA_CHANNEL" "$C0"
+  printf '     %sInstalliere Git von %s…%s\n' "$CD" "$CONDA_CHANNEL" "$C0"
   if ! MAMBA_ROOT_PREFIX="$GIT_DIR/root" "$mm" create -y -p "$GIT_ENV" \
         -c "$CONDA_CHANNEL" git >"$tmp/mm.log" 2>&1; then
-    bad "No se pudo instalar Git"
+    bad "Git konnte nicht installiert werden"
     if [ -f "$tmp/mm.log" ]; then
       tail -n 10 "$tmp/mm.log" 2>/dev/null | while IFS= read -r l; do printf '     %s\n' "$l"; done
     fi
@@ -307,7 +307,7 @@ install_git() {
   rm -rf "$tmp"
 
   if [ ! -x "$GIT_ENV/bin/git" ]; then
-    bad "Git no quedó instalado en $GIT_ENV"
+    bad "Git wurde nicht in $GIT_ENV installiert"
     return 1
   fi
   link_git_binary || true
@@ -344,10 +344,10 @@ link_node_binaries() {
     fi
   done
   if [ "$linked" = 1 ]; then
-    ok "Binarios enlazados en $NODE_BIN_DIR"
+    ok "Binaries verlinkt in $NODE_BIN_DIR"
   else
-    warn "No se pudo enlazar en $NODE_BIN_DIR (¿sin permisos?)"
-    tip "Añade $NODE_DIR/current/bin al PATH para usarlos."
+    warn "Verlinken in $NODE_BIN_DIR fehlgeschlagen (keine Berechtigung?)"
+    tip "Füge $NODE_DIR/current/bin zum PATH hinzu, um sie zu nutzen."
   fi
 }
 
@@ -380,11 +380,11 @@ install_node() {
 
   arch="$(detect_node_arch)"
   if [ -z "$arch" ]; then
-    bad "Arquitectura no soportada por Node: $(uname -m)"
+    bad "Von Node nicht unterstützte Architektur: $(uname -m)"
     return 1
   fi
   if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
-    bad "Necesito curl o wget para descargar Node"
+    bad "Ich brauche curl oder wget, um Node herunterzuladen"
     return 1
   fi
 
@@ -392,15 +392,15 @@ install_node() {
   mkdir -p "$tmp"
 
   if [ -z "$NODE_VERSION" ]; then
-    printf '     %sBuscando la última LTS…%s\n' "$CD" "$C0"
+    printf '     %sSuche die neueste LTS…%s\n' "$CD" "$C0"
     if ! fetch "$NODE_URL/index.json" "$tmp/index.json"; then
-      bad "No se pudo consultar $NODE_URL/index.json"
+      bad "$NODE_URL/index.json konnte nicht abgefragt werden"
       rm -rf "$tmp"
       return 1
     fi
     NODE_VERSION="$(latest_lts "$tmp/index.json")"
     if [ -z "$NODE_VERSION" ]; then
-      bad "No se pudo determinar la última LTS de Node"
+      bad "Die neueste LTS von Node konnte nicht ermittelt werden"
       rm -rf "$tmp"
       return 1
     fi
@@ -413,26 +413,26 @@ install_node() {
   # El sha256 se comprueba contra el SHASUMS256.txt oficial: si no cuadra,
   # el tarball no se toca.
   if ! fetch "$dist/SHASUMS256.txt" "$tmp/SHASUMS256.txt"; then
-    bad "No se pudo descargar $dist/SHASUMS256.txt"
+    bad "Download von $dist/SHASUMS256.txt fehlgeschlagen"
     rm -rf "$tmp"
     return 1
   fi
   expected="$(awk -v f="$tarball" '{ gsub(/^\*/, "", $2); if ($2 == f) { print $1; exit } }' "$tmp/SHASUMS256.txt")"
   if [ -z "$expected" ]; then
-    bad "El sha256 de $tarball no aparece en SHASUMS256.txt"
+    bad "Der SHA256 von $tarball steht nicht in SHASUMS256.txt"
     rm -rf "$tmp"
     return 1
   fi
 
   if ! fetch "$url" "$tmp/$tarball"; then
-    bad "No se pudo descargar $url"
+    bad "Download von $url fehlgeschlagen"
     rm -rf "$tmp"
     return 1
   fi
 
   actual="$(sha256sum "$tmp/$tarball" 2>/dev/null | awk '{ print $1 }')"
   if [ "$actual" != "$expected" ]; then
-    bad "sha256 incorrecto: esperaba $expected y obtuve $actual"
+    bad "falscher SHA256: erwartet $expected, erhalten $actual"
     rm -rf "$tmp"
     return 1
   fi
@@ -440,13 +440,13 @@ install_node() {
 
   mkdir -p "$NODE_DIR"
   if ! tar -xzf "$tmp/$tarball" -C "$NODE_DIR"; then
-    bad "No se pudo descomprimir $tarball"
+    bad "$tarball konnte nicht entpackt werden"
     rm -rf "$tmp"
     return 1
   fi
   dir="node-$NODE_VERSION-linux-$arch"
   if [ ! -d "$NODE_DIR/$dir" ]; then
-    bad "El tarball no contiene $dir"
+    bad "Das Tarball enthält $dir nicht"
     rm -rf "$tmp"
     return 1
   fi
@@ -454,10 +454,10 @@ install_node() {
   mkdir -p "$NODE_DIR/npm-global" "$NODE_DIR/npm-cache"
   rm -rf "$tmp"
 
-  ok "Node $NODE_VERSION instalado en $NODE_DIR/current"
+  ok "Node $NODE_VERSION installiert in $NODE_DIR/current"
   link_node_binaries
   write_node_block
-  ok "Bloque $NODE_MARKER escrito en $SERVICE_SCRIPT"
+  ok "Block $NODE_MARKER in $SERVICE_SCRIPT geschrieben"
 }
 
 # El bloque # [batocera-tools] se ejecuta en cada arranque: enlaza en
@@ -529,7 +529,7 @@ ensure_git() {
   bin="$(git_bin)"
   if [ -n "$bin" ] && [ "$GIT_MODE" != "install" ]; then
     ver="$("$bin" --version 2>/dev/null | head -n 1)"
-    kv "Git" "✔ ${ver:-instalado} · $bin"
+    kv "Git" "✔ ${ver:-installiert} · $bin"
     # Si el git es el nuestro, se deja el bloque escrito: recrea el
     # enlace en cada arranque (/usr es un overlay).
     if [ -x "$GIT_ENV/bin/git" ]; then
@@ -538,23 +538,23 @@ ensure_git() {
     return 0
   fi
   if [ -z "$bin" ]; then
-    warn "No se encontró git en el sistema: es necesario instalarlo para continuar."
-    tip "Git actualiza el manager con «git pull» (si no, descarga el tarball de la release)."
+    warn "Git wurde im System nicht gefunden: Es muss installiert werden, um fortzufahren."
+    tip "Mit Git aktualisierst du den Manager per „git pull“ (sonst lädst du das Tarball des Releases herunter)."
   fi
   if [ "$GIT_MODE" = "skip" ]; then
-    warn "Omitida la instalación de git (BM_GIT=skip)"
+    warn "Installation von git übersprungen (BM_GIT=skip)"
     return 1
   fi
   if install_git; then
     bin="$(git_bin)"
     if [ -n "$bin" ]; then
       ver="$("$bin" --version 2>/dev/null | head -n 1)"
-      kv "Git" "✔ ${ver:-instalado} · $bin"
+      kv "Git" "✔ ${ver:-installiert} · $bin"
       return 0
     fi
   fi
-  warn "Git no está disponible: el manager funciona igual, pero para actualizarlo"
-  tip "tendrás que descargar el tarball de la release."
+  warn "Git ist nicht verfügbar: Der Manager funktioniert trotzdem, aber zum Aktualisieren"
+  tip "musst du das Tarball des Releases herunterladen."
   return 1
 }
 
@@ -573,7 +573,7 @@ ensure_node() {
   bin="$(node_bin)"
   if [ -n "$bin" ] && [ "$NODE_MODE" != "install" ]; then
     ver="$("$bin" -v 2>/dev/null || true)"
-    kv "Node.js" "✔ ${ver:-instalado} · $bin"
+    kv "Node.js" "✔ ${ver:-installiert} · $bin"
     # Si el node es el nuestro, se deja el bloque escrito: recrea los
     # enlaces en cada arranque (/usr es un overlay).
     if [ -x "$NODE_DIR/current/bin/node" ]; then
@@ -582,29 +582,29 @@ ensure_node() {
     return 0
   fi
   if [ -z "$bin" ]; then
-    warn "No se encontró node en el sistema: es necesario instalarlo para continuar."
-    tip "Node sólo hace falta para recompilar el frontend en la consola."
+    warn "Node wurde im System nicht gefunden: Es muss installiert werden, um fortzufahren."
+    tip "Node wird nur gebraucht, um das Frontend auf der Konsole neu zu kompilieren."
   fi
   if [ "$NODE_MODE" = "skip" ]; then
-    warn "Omitida la instalación de node (BM_NODE=skip)"
+    warn "Installation von node übersprungen (BM_NODE=skip)"
     return 1
   fi
   if install_node; then
     bin="$(node_bin)"
     if [ -n "$bin" ]; then
       ver="$("$bin" -v 2>/dev/null || true)"
-      kv "Node.js" "✔ ${ver:-instalado} · $bin"
+      kv "Node.js" "✔ ${ver:-installiert} · $bin"
       return 0
     fi
   fi
-  warn "Node no está disponible: el manager funciona igual (el frontend va compilado),"
-  tip "pero no podrás recompilarlo aquí."
+  warn "Node ist nicht verfügbar: Der Manager funktioniert trotzdem (das Frontend ist schon kompiliert),"
+  tip "aber du kannst es hier nicht neu kompilieren."
   return 1
 }
 
 hdr
-sub "Batocera System Manager · instalador"
-sub "destino: $INSTALL_DIR"
+sub "Batocera System Manager · Installer"
+sub "Ziel: $INSTALL_DIR"
 printf '%s  ╰─%s%s\n\n' "$CP" "$(rule 56)" "$C0"
 
 # ── 1 · Python ──────────────────────────────────────────────────
@@ -612,33 +612,33 @@ if "$PYTHON" --version >/dev/null 2>&1; then
   PY_VER="$("$PYTHON" --version 2>&1)"
   kv "Python 3" "✔ $PY_VER"
 else
-  bad "No encuentro '$PYTHON' en el sistema."
-  tip "Instálalo o indica la ruta: BM_PYTHON=/ruta/python3 bash install.sh"
+  bad "Ich finde '$PYTHON' nicht im System."
+  tip "Installiere es oder gib den Pfad an: BM_PYTHON=/pfad/python3 bash install.sh"
   exit 1
 fi
 
 # ── 2 · Puerto ───────────────────────────────────────────────────
 case "$PORT" in
   ''|*[!0-9]*)
-    bad "El puerto '$PORT' no es un número."
-    tip "Indica uno válido: BM_PORT=5000 bash install.sh"
+    bad "Der Port '$PORT' ist keine Zahl."
+    tip "Gib einen gültigen an: BM_PORT=5000 bash install.sh"
     exit 1
     ;;
 esac
 if [ "$PORT" -lt 1 ] || [ "$PORT" -gt 65535 ]; then
-  bad "El puerto $PORT está fuera de rango (1-65535)."
+  bad "Der Port $PORT liegt außerhalb des Bereichs (1-65535)."
   exit 1
 fi
 if command -v ss >/dev/null 2>&1 && ss -tln 2>/dev/null | grep -q ":$PORT "; then
-  warn "El puerto $PORT ya está ocupado por otro servicio"
-  tip "Si es el propio manager, se reiniciará al final del instalador."
+  warn "Der Port $PORT ist bereits von einem anderen Dienst belegt"
+  tip "Falls es der Manager selbst ist, wird er am Ende der Installation neu gestartet."
 fi
 
 # ── 3 · Pillow (opcional) ───────────────────────────────────────
 if "$PYTHON" -c "from PIL import Image" >/dev/null 2>&1; then
-  kv "Pillow (logos)" "✔ disponible"
+  kv "Pillow (logos)" "✔ verfügbar"
 else
-  kv "Pillow (logos)" "◌ no instalado · opcional"
+  kv "Pillow (logos)" "◌ nicht installiert · optional"
 fi
 
 # ── 4 · Utilidades: git y node ───────────────────────────────────
@@ -649,12 +649,12 @@ NODE_OK=0
 ensure_git  || GIT_OK=1
 ensure_node || NODE_OK=1
 if [ "$GIT_OK" = 0 ] && [ "$NODE_OK" = 0 ]; then
-  kv "Utilidades" "✔ git y node listos"
+  kv "Werkzeuge" "✔ git und node bereit"
 else
   MISSING=""
   [ "$GIT_OK" != 0 ]  && MISSING="git"
   [ "$NODE_OK" != 0 ] && MISSING="${MISSING:+$MISSING, }node"
-  kv "Utilidades" "◌ sin $MISSING (el manager funciona igual)"
+  kv "Werkzeuge" "◌ ohne $MISSING (der Manager funktioniert trotzdem)"
 fi
 
 # ── 5 · Ficheros ────────────────────────────────────────────────
@@ -670,7 +670,7 @@ elif [ -f "$SCRIPT_DIR/app.py" ] && [ -f "$INSTALL_DIR/app.py" ] \
 fi
 
 if [ "$IN_PLACE" = 1 ]; then
-  kv "Ficheros" "✔ ya están en su sitio (git clone)"
+  kv "Dateien" "✔ liegen schon an ihrem Platz (git clone)"
 else
   mkdir -p "$INSTALL_DIR/templates"
   for f in app.py batocera_systems.json; do
@@ -690,7 +690,7 @@ else
     TOTAL=$(( TOTAL + n ))
   fi
   if [ "$TOTAL" -gt 0 ]; then
-    printf '  %s◆%s Copiando ficheros\n' "$CU" "$C0"
+    printf '  %s◆%s Dateien werden kopiert\n' "$CU" "$C0"
     for f in app.py batocera_systems.json; do
       if [ -f "$SCRIPT_DIR/$f" ]; then
         cp "$SCRIPT_DIR/$f" "$INSTALL_DIR/$f"
@@ -729,13 +729,13 @@ else
         copy_tick
       else
         rm -rf "$tmp_dist"
-        warn "No se pudo actualizar el bundle del frontend; se conserva el anterior"
+        warn "Das Frontend-Bundle konnte nicht aktualisiert werden; das vorherige bleibt erhalten"
       fi
     fi
     if [ "$IS_TTY" = 1 ]; then printf '\r\033[K'; fi
-    ok "Ficheros copiados a $INSTALL_DIR"
+    ok "Dateien nach $INSTALL_DIR kopiert"
   else
-    warn "No encuentro app.py junto a este instalador"
+    warn "Ich finde app.py nicht neben diesem Installer"
   fi
 fi
 
@@ -754,19 +754,19 @@ ANSWER=''
 if [ -n "${BM_AUTOSTART:-}" ]; then
   ANSWER="$BM_AUTOSTART"
 elif [ -t 0 ]; then
-  printf '\n  %s¿Añadir el manager al inicio de Batocera?%s\n' "$CY" "$C0"
-  tip "Así se levanta solo cada vez que enciendes la consola."
-  printf '  %s[S]í / [n]o:%s ' "$CY" "$C0"
+  printf '\n  %sDen Manager zum Autostart von Batocera hinzufügen?%s\n' "$CY" "$C0"
+  tip "Dann startet er jedes Mal von selbst, wenn du die Konsole einschaltest."
+  printf '  %s[J]a / [n]ein:%s ' "$CY" "$C0"
   read -r ANSWER || ANSWER=''
 else
-  warn "Sin terminal interactiva: no toco el arranque automático"
+  warn "Kein interaktives Terminal: Autostart wird nicht angefasst"
 fi
 
 AUTO=0
 # limpiar espacios y retornos de carro (SSH, piped input, BM_AUTOSTART)
 ANSWER="${ANSWER//[$'\r\n\t ']/}"
 case "$ANSWER" in
-  s|S|si|sí|Si|Sí|y|Y|yes|YES) AUTO=1 ;;
+  s|S|si|sí|Si|Sí|y|Y|yes|YES|j|J|ja|Ja|JA) AUTO=1 ;;
   *) AUTO=0 ;;
 esac
 
@@ -784,7 +784,7 @@ if [ "$AUTO" = 1 ]; then
   } > "$BLOCK_FILE"
   write_block "$MARKER" "$TAG_END" "$BLOCK_FILE"
   rm -f "$BLOCK_FILE"
-  kv "Arranque automático" "✔ bloque en $SERVICE_SCRIPT"
+  kv "Autostart" "✔ Block in $SERVICE_SCRIPT"
 
   # Las utilidades de conversion que el usuario haya instalado a mano
   # (el rom-converto, por ejemplo) se enlazan al PATH en cada arranque.
@@ -796,16 +796,16 @@ if [ "$AUTO" = 1 ]; then
     if pgrep -f "$KILL_PATTERN" >/dev/null 2>&1; then
       pkill -f "$KILL_PATTERN" 2>/dev/null || true
       sleep 1
-      ok "Instancia anterior detenida"
+      ok "Vorherige Instanz gestoppt"
     fi
   fi
   nohup $CMD >/dev/null 2>&1 &
-  ok "Arrancado ahora mismo en el puerto $PORT"
+  ok "Jetzt gestartet auf Port $PORT"
 else
-  warn "Arranque automático NO configurado"
-  tip "Arranca el manager a mano cuando lo necesites:"
+  warn "Autostart NICHT eingerichtet"
+  tip "Starte den Manager von Hand, wenn du ihn brauchst:"
   printf '     %s%s%s\n' "$CU" "$CMD" "$C0"
-  tip "Al entrar en la web te avisaré en Configuración y podrás activarlo con un clic."
+  tip "In der Weboberfläche weise ich dich in den Einstellungen darauf hin, dort kannst du ihn mit einem Klick aktivieren."
 fi
 
 # ── 7 · DAT de los sistemas (para renombrar las ROMs) ───────────────
@@ -822,19 +822,19 @@ elif [ "$DATS_MODE" = "all" ]; then
 elif [ -n "${BM_AUTOSTART:-}" ]; then
   DATS_ANSWER=n
 elif [ -t 0 ]; then
-  printf '\n  %s¿Descargar los DAT de los sistemas?%s\n' "$CY" "$C0"
-  tip "Son las listas de juegos: sin ellas no se puede renombrar por nombre."
-  tip "Sólo se bajan las de los sistemas que tienes con juegos. Puedes hacerlo luego en Herramientas > Renombrado."
-  printf '  %s[S]í / [n]o:%s ' "$CY" "$C0"
+  printf '\n  %sDATs der Systeme herunterladen?%s\n' "$CY" "$C0"
+  tip "Das sind die Spielelisten: Ohne sie kann nicht nach Namen umbenannt werden."
+  tip "Es werden nur die für Systeme geladen, in denen du Spiele hast. Du kannst das auch später unter Werkzeuge > Umbenennen erledigen."
+  printf '  %s[J]a / [n]ein:%s ' "$CY" "$C0"
   read -r DATS_ANSWER || DATS_ANSWER=''
 else
   DATS_ANSWER=n
 fi
 DATS_ANSWER="${DATS_ANSWER//[$'\r\n\t ']/}"
 case "$DATS_ANSWER" in
-  s|S|si|sí|Si|Sí|y|Y|yes|YES)
+  s|S|si|sí|Si|Sí|y|Y|yes|YES|j|J|ja|Ja|JA)
     hdr
-    sub "Descargando los DAT de los sistemas de Batocera"
+    sub "Lade die DATs der Batocera-Systeme herunter"
     # Sólo se bajan los DAT de los sistemas que tienen juegos dentro: una
     # consola con cinco sistemas no necesita los DAT de los otros ciento
     # veinte (y algunos DAT de Redump ocupan decenas de megabytes).
@@ -853,14 +853,14 @@ case "$DATS_ANSWER" in
       DAT_CMD="dats --install"
     fi
     if ( cd "$INSTALL_DIR" && "$PYTHON" -m romtools $DAT_CMD ); then
-      ok "DAT descargados en $BASE_DIR/batocera_manager_dats"
+      ok "DATs heruntergeladen nach $BASE_DIR/batocera_manager_dats"
     else
-      warn "No se pudieron descargar todos los DAT"
-      tip "Puedes reintentarlo luego en Herramientas > Renombrado."
+      warn "Nicht alle DATs konnten heruntergeladen werden"
+      tip "Du kannst es später unter Werkzeuge > Umbenennen erneut versuchen."
     fi
     foot "DAT listos"
     ;;
-  *) warn "DAT no descargados (se pueden bajar luego en Herramientas > Renombrado)" ;;
+  *) warn "DATs nicht heruntergeladen (später unter Werkzeuge > Umbenennen möglich)" ;;
 esac
 
 # ── 8 · BIOS (la comprobacion se hace en la web) ────────────────
@@ -871,11 +871,11 @@ esac
 # la haga, avise de lo que falta y baje lo que falte de la fuente.
 BIOS_FIRST="$BASE_DIR/batocera_manager_bios_first.json"
 if rm -f "$BIOS_FIRST" 2>/dev/null; then
-  kv "BIOS" "✔ se comprobarán al abrir el manager"
-  tip "Al entrar en la web se revisa qué BIOS faltan y se bajan de la fuente."
+  kv "BIOS" "✔ werden beim Öffnen des Managers geprüft"
+  tip "Beim Öffnen der Weboberfläche wird geprüft, welche BIOS fehlen, und sie werden aus der Quelle geladen."
 else
-  warn "No se pudo armar la comprobación de BIOS"
-  tip "Se puede lanzar a mano desde la sección ROMs y BIOS."
+  warn "Die BIOS-Prüfung konnte nicht eingerichtet werden"
+  tip "Du kannst sie im Bereich „ROMs und BIOS“ von Hand starten."
 fi
 
 # ── 9 · Utilidades de conversion ──────────────────────────────────
@@ -893,29 +893,29 @@ UTILS_MODE="${BM_UTILS:-auto}"
 case "$UTILS_MODE" in
   auto|all|skip) ;;
   *)
-    warn "BM_UTILS='$UTILS_MODE' no vale (auto, all o skip): sigo con auto"
+    warn "BM_UTILS='$UTILS_MODE' ist ungültig (auto, all oder skip): ich mache mit auto weiter"
     UTILS_MODE=auto
     ;;
 esac
 
 if [ "$UTILS_MODE" = skip ]; then
-  kv "Utilidades" "◌ omitidas (BM_UTILS=skip)"
-  tip "Se pueden instalar luego con: python3 -m romtools utilidades --install"
+  kv "Werkzeuge" "◌ omitidas (BM_UTILS=skip)"
+  tip "Später installierbar mit: python3 -m romtools utilidades --install"
 else
   hdr
-  sub "Instalando las utilidades de conversion"
-  tip "Se descargan de la release oficial de cada proyecto y se comprueba su sha256."
-  tip "No hace falta cerrar esta ventana aunque tarde un rato."
+  sub "Installiere die Konvertierungswerkzeuge"
+  tip "Sie werden aus dem offiziellen Release jedes Projekts geladen und ihre SHA256 wird geprüft."
+  tip "Du musst dieses Fenster nicht schließen, auch wenn es eine Weile dauert."
   UTILS_CMD="utilidades --install --destino $TOOLS_DIR"
   if [ "$UTILS_MODE" = all ]; then
     UTILS_CMD="$UTILS_CMD --forzar"
   fi
   if ( cd "$INSTALL_DIR" && "$PYTHON" -m romtools $UTILS_CMD ); then
-    ok "Utilidades de conversion en $TOOLS_DIR"
+    ok "Konvertierungswerkzeuge in $TOOLS_DIR"
   else
-    warn "No se pudieron instalar todas las utilidades"
-    tip "El manager funciona igual: lo que falte aparece desactivado en Herramientas."
-    tip "Se puede reintentar con: python3 -m romtools utilidades --install"
+    warn "Nicht alle Werkzeuge konnten installiert werden"
+    tip "Der Manager funktioniert trotzdem: Was fehlt, erscheint unter Werkzeuge deaktiviert."
+    tip "Erneut versuchen mit: python3 -m romtools utilidades --install"
   fi
 fi
 
@@ -929,6 +929,6 @@ if [ -f "$SERVICE_SCRIPT" ]; then
   write_tools_block
 fi
 
-foot "Listo. Abre ${CU}http://BATOCERA:$PORT${C0}${CP}"
-tip "Al abrirlo se comprobarán las BIOS y se bajarán las que falten."
+foot "Fertig. Öffne ${CU}http://BATOCERA:$PORT${C0}${CP}"
+tip "Beim Öffnen werden die BIOS geprüft und fehlende heruntergeladen."
 exit 0

@@ -34,7 +34,7 @@ export function RoundedBarChart({ data, height = 180, formatValue, tone }: Round
   if (data.length === 0) {
     return (
       <div className="flex h-full items-center justify-center text-xs text-muted-foreground">
-        Sin datos
+        Keine Daten
       </div>
     )
   }

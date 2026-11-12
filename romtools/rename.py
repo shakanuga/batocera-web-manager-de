@@ -200,7 +200,7 @@ def plan_rename(files: Sequence[str], index: dict | None,
     # es eterno, asi que se lleva un presupuesto de bytes.
     restante = hash_budget
     # El progreso: por ficheros y, dentro de cada uno, por bytes leidos.
-    prog = Progress(len(files), "identificando los ficheros", notificar=progreso)
+    prog = Progress(len(files), "Dateien werden identifiziert", notificar=progreso)
     prog.avisar()
 
     unidades = sorted(files,
@@ -256,34 +256,34 @@ def plan_rename(files: Sequence[str], index: dict | None,
                     if best is not None and best.get("name") != match.entry.get("name"):
                         item.entry = best
                         proposed = naming.rom_target_name(best, current, opts)
-                        item.reason = "de entre varias coincidencias se ha elegido la mejor variante"
+                        item.reason = "aus mehreren Treffern wurde die beste Variante gewählt"
                         item.warnings.append(
                             "candidatas: " + ", ".join(
                                 c["entry"].get("name", "") for c in match.candidates[:4]))
                     else:
                         item.reason = score.reasons[0] if score and score.reasons else match.note
                 else:
-                    item.reason = match.note or "coincidencia por " + match.method
+                    item.reason = match.note or "Übereinstimmung über " + match.method
                 if not hashear and match.method not in ("nombre",):
                     item.warnings.append(
-                        "no se ha verificado por hash: la biblioteca es muy grande")
+                        "nicht per Hash geprüft: Die Bibliothek ist sehr groß")
                 item.proposed = proposed
                 if match.confidence < min_confidence:
                     item.action = "revisar"
-                    item.reason = f"la confianza es baja ({match.confidence:.0%}): revisa el nombre"
+                    item.reason = f"die Zuverlässigkeit ist gering ({match.confidence:.0%}): prüfe den Namen"
                 elif proposed.lower() == current.lower():
                     item.action = "igual"
-                    item.reason = "el nombre ya sigue la convencion"
+                    item.reason = "der Name folgt bereits der Konvention"
                 else:
                     item.action = "renombrar"
             else:
-                item.action = "sin DAT"
-                item.reason = match.note or "no aparece en el DAT"
+                item.action = "kein DAT"
+                item.reason = match.note or "steht nicht im DAT"
                 item.proposed = naming.fallback_name(current, opts)
                 item.confidence = 0.0
         else:
-            item.action = "sin DAT"
-            item.reason = "no hay DAT para este sistema"
+            item.action = "kein DAT"
+            item.reason = "für dieses System gibt es kein DAT"
             item.proposed = naming.fallback_name(current, opts)
 
         if item.action in ("renombrar", "revisar") and not carpeta:
@@ -298,7 +298,7 @@ def plan_rename(files: Sequence[str], index: dict | None,
         "renombrar": sum(1 for i in items if i.action == "renombrar"),
         "revisar": sum(1 for i in items if i.action == "revisar"),
         "igual": sum(1 for i in items if i.action == "igual"),
-        "sin_dat": sum(1 for i in items if i.action == "sin DAT"),
+        "sin_dat": sum(1 for i in items if i.action == "kein DAT"),
     }
     stats["identificados"] = sum(1 for i in items if i.entry)
     return {"items": [i.as_dict() for i in items], "stats": stats}
@@ -389,7 +389,7 @@ def update_gamelist(folder: str, moves: list) -> dict:
         root = ET.fromstring(antes)
     except (OSError, ValueError):
         return {"ok": False, "cambios": [], "media": [], "gamelist": None,
-                "error": "el gamelist.xml no se puede leer"}
+                "error": "die gamelist.xml kann nicht gelesen werden"}
 
     renombres = {}
     for entrada in moves or []:
@@ -499,7 +499,7 @@ def apply_plan(plan: dict, folder: str, root: str = "/userdata/system",
     skipped = []
     errors = []
     # El progreso: renombrar y actualizar la media tambien tardan.
-    prog = Progress(len(plan.get("items") or []), "renombrando los ficheros",
+    prog = Progress(len(plan.get("items") or []), "Dateien werden umbenannt",
                     notificar=progreso)
     prog.avisar()
 
@@ -519,10 +519,10 @@ def apply_plan(plan: dict, folder: str, root: str = "/userdata/system",
             # fichero de dentro se queda con su nombre (el codigo del disco).
             path = os.path.join(folder, carpeta)
             if not os.path.isdir(path):
-                skipped.append({"file": item.get("file"), "reason": "ya no esta en la carpeta"})
+                skipped.append({"file": item.get("file"), "reason": "ist nicht mehr im Ordner"})
                 continue
             if not proposed:
-                skipped.append({"file": item.get("file"), "reason": "no hay nombre destino"})
+                skipped.append({"file": item.get("file"), "reason": "kein Zielname"})
                 continue
             target = os.path.join(folder, naming.unique_path(folder, proposed))
             try:
@@ -535,13 +535,13 @@ def apply_plan(plan: dict, folder: str, root: str = "/userdata/system",
 
         path = os.path.join(folder, item.get("file", ""))
         if not os.path.isfile(path):
-            skipped.append({"file": item.get("file"), "reason": "ya no esta en la carpeta"})
+            skipped.append({"file": item.get("file"), "reason": "ist nicht mehr im Ordner"})
             continue
         if not proposed:
-            skipped.append({"file": item.get("file"), "reason": "no hay nombre destino"})
+            skipped.append({"file": item.get("file"), "reason": "kein Zielname"})
             continue
         if os.path.dirname(os.path.abspath(path)) != folder:
-            errors.append({"file": item.get("file"), "error": "fuera de la carpeta del sistema"})
+            errors.append({"file": item.get("file"), "error": "außerhalb des Systemordners"})
             continue
 
         # El destino va dentro de la carpeta del sistema: si se deja el
@@ -597,7 +597,7 @@ def undo_last(root: str = "/userdata/system") -> dict:
     """Deshace la ultima tanda de renombrados."""
     journal = _read_journal(root)
     if not journal:
-        return {"ok": False, "error": "no hay nada que deshacer"}
+        return {"ok": False, "error": "nichts rückgängig zu machen"}
     batch = journal[-1]
     restored = []
     errors = []

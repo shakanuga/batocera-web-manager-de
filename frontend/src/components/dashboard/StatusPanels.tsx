@@ -30,13 +30,13 @@ export function EsPanel({
   return (
     <PanelCard
       title="EmulationStation"
-      subtitle={running ? 'En ejecución' : 'Detenido'}
+      subtitle={running ? 'Läuft' : 'Gestoppt'}
       icon={<MonitorCog className="size-4" />}
       tone="emerald"
       actions={
         onRestart && (
           <Button size="sm" variant="secondary" onClick={onRestart} disabled={busy}>
-            {pending ? 'Reiniciando…' : 'Reiniciar'}
+            {pending ? 'Neustart läuft…' : 'Neu starten'}
           </Button>
         )
       }
@@ -50,19 +50,19 @@ export function EsPanel({
         />
         <div className="min-w-0">
           <p className="text-sm font-semibold text-foreground">
-            {running ? 'Activo' : 'Apagado'}
+            {running ? 'Aktiv' : 'Aus'}
           </p>
           <p className="truncate text-[11px] text-muted-foreground">
             {running
-              ? `PID ${status?.pid ?? '—'} · puerto ${status?.port ?? '—'}`
-              : 'No se encuentra el proceso'}
+              ? `PID ${status?.pid ?? '—'} · Port ${status?.port ?? '—'}`
+              : 'Prozess nicht gefunden'}
           </p>
         </div>
       </div>
 
       {pending && (
         <p className="mt-3 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] font-medium text-amber-600 dark:text-amber-400">
-          Hay cambios pendientes: reinicia EmulationStation para aplicarlos.
+          Es gibt ausstehende Änderungen: Starte EmulationStation neu, um sie zu übernehmen.
         </p>
       )}
     </PanelCard>
@@ -74,13 +74,13 @@ export function EsPanel({
 export function NetworkPanel({ interfaces }: { interfaces: NetworkIface[] }) {
   return (
     <PanelCard
-      title="Red"
-      subtitle={interfaces.length > 0 ? `${interfaces.length} interfaz(es)` : 'Sin interfaces'}
+      title="Netzwerk"
+      subtitle={interfaces.length > 0 ? `${interfaces.length} Schnittstelle(n)` : 'Keine Schnittstellen'}
       icon={<Network className="size-4" />}
       tone="cyan"
     >
       {interfaces.length === 0 ? (
-        <p className="text-xs text-muted-foreground">No se han detectado interfaces de red.</p>
+        <p className="text-xs text-muted-foreground">Es wurden keine Netzwerkschnittstellen erkannt.</p>
       ) : (
         <div className="divide-y divide-border">
           {interfaces.map((nic) => (
@@ -107,14 +107,14 @@ export function NetworkPanel({ interfaces }: { interfaces: NetworkIface[] }) {
 export function FansPanel({ fans }: { fans: FanEntry[] }) {
   return (
     <PanelCard
-      title="Ventiladores"
-      subtitle={fans.length > 0 ? `${fans.length} sensor(es)` : 'Sin sensores'}
+      title="Lüfter"
+      subtitle={fans.length > 0 ? `${fans.length} Sensor(en)` : 'Keine Sensoren'}
       icon={<Fan className="size-4" />}
       tone="sky"
     >
       {fans.length === 0 ? (
         <p className="text-xs text-muted-foreground">
-          Esta máquina no expone sensores de ventilador por hwmon.
+          Dieses Gerät stellt über hwmon keine Lüftersensoren bereit.
         </p>
       ) : (
         <div className="space-y-2">
@@ -138,7 +138,7 @@ export function FansPanel({ fans }: { fans: FanEntry[] }) {
                   )}
                 />
                 <span className="text-sm font-semibold tabular-nums text-foreground">
-                  {fan.rpm.toLocaleString('es-ES')}
+                  {fan.rpm.toLocaleString('de-DE')}
                   <span className="ml-0.5 text-[10px] font-normal text-muted-foreground">RPM</span>
                 </span>
               </span>
@@ -161,12 +161,12 @@ export function BatteryPanel({ battery }: { battery: BatteryInfo | null }) {
     capacity <= 20 && !battery.charging ? 'text-destructive' : 'text-emerald-500'
 
   return (
-    <PanelCard title="Batería" icon={<Icon className={cn('size-4', tone)} />} tone="emerald">
-      <StatRow label="Capacidad" value={`${Math.round(capacity)}%`} />
-      <StatRow label="Estado" value={battery.status ?? '—'} />
+    <PanelCard title="Akku" icon={<Icon className={cn('size-4', tone)} />} tone="emerald">
+      <StatRow label="Kapazität" value={`${Math.round(capacity)}%`} />
+      <StatRow label="Status" value={battery.status ?? '—'} />
       {battery.minutes != null && (
         <StatRow
-          label="Autonomía"
+          label="Laufzeit"
           value={`${Math.floor(battery.minutes / 60)} h ${battery.minutes % 60} min`}
         />
       )}
@@ -183,9 +183,9 @@ export function GpuPanel({
 }) {
   if (!gpu?.available) {
     return (
-      <PanelCard title="GPU" subtitle="No detectada" icon={<Gauge className="size-4" />} tone="violet">
+      <PanelCard title="GPU" subtitle="Nicht erkannt" icon={<Gauge className="size-4" />} tone="violet">
         <p className="text-xs text-muted-foreground">
-          Esta máquina no expone ninguna GPU por DRM ni por nvidia-smi.
+          Dieses Gerät stellt weder über DRM noch über nvidia-smi eine GPU bereit.
         </p>
       </PanelCard>
     )
@@ -193,9 +193,9 @@ export function GpuPanel({
 
   return (
     <PanelCard title="GPU" subtitle={gpu.name} icon={<Cpu className="size-4" />} tone="violet">
-      <StatRow label="Uso" value={gpu.util != null ? `${gpu.util}%` : '—'} />
-      <StatRow label="Temperatura" value={gpu.temp != null ? `${gpu.temp} °C` : '—'} />
-      {gpu.power && <StatRow label="Consumo" value={gpu.power} />}
+      <StatRow label="Auslastung" value={gpu.util != null ? `${gpu.util}%` : '—'} />
+      <StatRow label="Temperatur" value={gpu.temp != null ? `${gpu.temp} °C` : '—'} />
+      {gpu.power && <StatRow label="Verbrauch" value={gpu.power} />}
     </PanelCard>
   )
 }

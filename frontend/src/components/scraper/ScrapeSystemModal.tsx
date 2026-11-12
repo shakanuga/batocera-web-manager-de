@@ -26,24 +26,24 @@ import type { ScraperConfig, ScraperJob, ScraperSource } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 const IMAGE_TYPES = [
-  { value: 'mixrbv1', label: 'Mix v1 (recomendado)' },
+  { value: 'mixrbv1', label: 'Mix v1 (empfohlen)' },
   { value: 'mixrbv2', label: 'Mix v2' },
-  { value: 'box-2D', label: 'Caja 2D' },
+  { value: 'box-2D', label: '2D-Box' },
   { value: 'ss', label: 'Screenshot' },
-  { value: 'wheel', label: 'Rueda / logo' },
+  { value: 'wheel', label: 'Wheel / Logo' },
   { value: 'fanart', label: 'Fanart' },
-  { value: 'screenshot', label: 'Captura' },
+  { value: 'screenshot', label: 'Screenshot (Ingame)' },
 ]
 
 const REGIONS = [
-  { value: 'wor', label: 'Mundial' },
+  { value: 'wor', label: 'Weltweit' },
   { value: 'eu', label: 'Europa' },
   { value: 'us', label: 'USA' },
-  { value: 'jp', label: 'Japón' },
+  { value: 'jp', label: 'Japan' },
 ]
 
 const LANGS = [
-  { value: 'es', label: 'Español' },
+  { value: 'es', label: 'Spanisch' },
   { value: 'en', label: 'English' },
   { value: 'fr', label: 'Français' },
   { value: 'de', label: 'Deutsch' },
@@ -70,18 +70,18 @@ const CRED_FIELDS: {
   {
     key: 'ss_user',
     conf: 'global.scrapper.user',
-    label: 'Usuario de ScreenScraper',
+    label: 'ScreenScraper-Benutzer',
     type: 'text',
     source: 'screenscraper',
-    hint: 'El mismo usuario que usas en screenscraper.fr',
+    hint: 'Derselbe Benutzer wie auf screenscraper.fr',
   },
   {
     key: 'ss_password',
     conf: 'global.scrapper.password',
-    label: 'Contraseña de ScreenScraper',
+    label: 'ScreenScraper-Passwort',
     type: 'password',
     source: 'screenscraper',
-    hint: 'No se muestra nunca: sólo se guarda en la consola',
+    hint: 'Wird nie angezeigt: nur auf der Konsole gespeichert',
   },
   {
     key: 'ss_devid',
@@ -89,7 +89,7 @@ const CRED_FIELDS: {
     label: 'Developer ID',
     type: 'text',
     source: 'screenscraper',
-    hint: 'Opcional: sólo para desarrolladores de ScreenScraper',
+    hint: 'Optional: nur für ScreenScraper-Entwickler',
   },
   {
     key: 'ss_devpassword',
@@ -97,31 +97,31 @@ const CRED_FIELDS: {
     label: 'Developer password',
     type: 'password',
     source: 'screenscraper',
-    hint: 'Opcional: sólo para desarrolladores de ScreenScraper',
+    hint: 'Optional: nur für ScreenScraper-Entwickler',
   },
   {
     key: 'tgdb_apikey',
     conf: 'global.tgdb.apikey',
-    label: 'API Key de TheGamesDB',
+    label: 'TheGamesDB-API-Key',
     type: 'password',
     source: 'thegamesdb',
-    hint: 'Se obtiene en thegamesdb.net',
+    hint: 'Erhältst du auf thegamesdb.net',
   },
   {
     key: 'igdb_client_id',
     conf: 'global.igdb.clientid',
-    label: 'Client ID de IGDB (Twitch)',
+    label: 'IGDB-Client-ID (Twitch)',
     type: 'text',
     source: 'igdb',
-    hint: 'Credenciales de la aplicación de Twitch',
+    hint: 'Zugangsdaten der Twitch-Anwendung',
   },
   {
     key: 'igdb_client_secret',
     conf: 'global.igdb.clientsecret',
-    label: 'Client Secret de IGDB (Twitch)',
+    label: 'IGDB-Client-Secret (Twitch)',
     type: 'password',
     source: 'igdb',
-    hint: 'Credenciales de la aplicación de Twitch',
+    hint: 'Zugangsdaten der Twitch-Anwendung',
   },
 ]
 
@@ -177,7 +177,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
         setError(null)
         return cfg
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'No se pudo leer la configuración')
+        setError(err instanceof Error ? err.message : 'Konfiguration konnte nicht gelesen werden')
         return null
       } finally {
         if (!silent) setLoadingConfig(false)
@@ -233,22 +233,22 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
     if (job.status === 'failed') {
       showNotify({
         variant: 'error',
-        title: 'El scraping falló',
-        message: job.error || `El trabajo ${job.id} terminó con errores.`,
+        title: 'Scraping fehlgeschlagen',
+        message: job.error || `Der Auftrag ${job.id} wurde mit Fehlern beendet.`,
         detail: errores.length ? errores.join('\n') : (job.error ?? undefined),
       })
     } else if (errores.length) {
       showNotify({
         variant: 'error',
-        title: 'Scraping terminado con errores',
-        message: `${ok} juego(s) guardados y ${fail} con fallos.`,
+        title: 'Scraping mit Fehlern beendet',
+        message: `${ok} Spiel(e) gespeichert und ${fail} mit Fehlern.`,
         detail: errores.join('\n'),
       })
     } else {
       showNotify({
         variant: 'success',
-        title: 'Scraping terminado',
-        message: `${ok} juego(s) scraped y guardado(s) en ${systems.length} sistema(s).`,
+        title: 'Scraping abgeschlossen',
+        message: `${ok} Spiel(e) gescrapt und gespeichert in ${systems.length} System(en).`,
       })
     }
   }, [job, onSaved, showNotify, systems.length])
@@ -280,10 +280,10 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
       if (res.job_id) {
         setJobId(res.job_id)
         setJob(null)
-        showToast(`Scraping de ${systems.length} sistema(s) en marcha`, 'success')
+        showToast(`Scraping von ${systems.length} System(en) läuft`, 'success')
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudo iniciar el scraping')
+      setError(err instanceof Error ? err.message : 'Scraping konnte nicht gestartet werden')
     } finally {
       setStarting(false)
     }
@@ -293,12 +293,12 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
   const handleRefresh = async () => {
     const cfg = await loadConfig(true)
     if (!cfg) {
-      showToast('No se pudo verificar la configuración', 'error')
+      showToast('Konfiguration konnte nicht geprüft werden', 'error')
       return
     }
     const ok = sourceReady(cfg, source)
     showToast(
-      ok ? 'Configuración verificada' : `Faltan credenciales: ${sourceMissing(cfg, source)}`,
+      ok ? 'Konfiguration geprüft' : `Zugangsdaten fehlen: ${sourceMissing(cfg, source)}`,
       ok ? 'success' : 'error',
     )
   }
@@ -306,7 +306,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
   /** Botón «Guardar»: valida, persiste y cierra el modal. */
   const handleSave = async () => {
     if (!ready) {
-      setError(`Faltan credenciales para ${SCRAPER_SOURCES.find((s) => s.id === source)?.label}. Pulsa «Editar» para añadirlas.`)
+      setError(`Zugangsdaten fehlen für ${SCRAPER_SOURCES.find((s) => s.id === source)?.label}. Klicke auf „Bearbeiten“, um sie hinzuzufügen.`)
       return
     }
     setError(null)
@@ -324,11 +324,11 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
     }
     try {
       await api.saveScraperConfig(lines)
-      showToast('Configuración guardada y validada', 'success')
+      showToast('Konfiguration gespeichert und geprüft', 'success')
       onSaved()
       onClose()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'No se pudo guardar la configuración')
+      setError(err instanceof Error ? err.message : 'Konfiguration konnte nicht gespeichert werden')
     }
   }
 
@@ -342,22 +342,22 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
       onClose={onClose}
       title={
         systems.length === 1
-          ? `Escrapear ${systems[0]}`
+          ? `Scrapen ${systems[0]}`
           : systems.length > 1
-            ? `Escrapear ${systems.length} sistemas`
-            : 'Configurar el scraper'
+            ? `Scrapen ${systems.length} Systeme`
+            : 'Scraper konfigurieren'
       }
       description={
         systems.length
-          ? 'Elige la fuente de datos y las opciones. Las credenciales se guardan en la consola y nunca se muestran.'
-          : 'Elige la fuente de datos y guarda tus credenciales. Se guardan en la consola y nunca se muestran.'
+          ? 'Wähle die Datenquelle und die Optionen. Die Zugangsdaten werden auf der Konsole gespeichert und nie angezeigt.'
+          : 'Wähle die Datenquelle und speichere deine Zugangsdaten. Sie werden auf der Konsole gespeichert und nie angezeigt.'
       }
       className="max-w-2xl"
       footer={
         <>
           <Button variant="ghost" size="sm" onClick={handleRefresh} disabled={loadingConfig}>
             <RefreshCw className={cn('size-4', loadingConfig && 'animate-spin')} />
-            Actualizar
+            Aktualisieren
           </Button>
           <Button
             variant="outline"
@@ -368,11 +368,11 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
             }}
           >
             <Pencil className="size-4" />
-            {editing ? 'Terminar edición' : 'Editar'}
+            {editing ? 'Bearbeitung beenden' : 'Bearbeiten'}
           </Button>
           <Button variant="primary" size="sm" onClick={handleSave}>
             <Save className="size-4" />
-            Guardar
+            Speichern
           </Button>
         </>
       }
@@ -388,7 +388,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
         {/* Fuente de datos */}
         <section>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-            Fuente de datos
+            Datenquelle
           </h3>
           <div className="flex flex-wrap gap-2">
             {SCRAPER_SOURCES.map((option, index) => {
@@ -415,11 +415,11 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
                   {configured ? (
                     <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
                       <ShieldCheck className="size-3" />
-                      Listo
+                      Bereit
                     </span>
                   ) : (
                     <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
-                      Sin credenciales
+                      Keine Zugangsdaten
                     </span>
                   )}
                 </button>
@@ -428,18 +428,17 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
           </div>
           {!ready && (
             <p className="mt-2 text-xs font-medium text-destructive">
-              {sourceMissing(config, source)}. Pulsa «Editar» para escribirlas.
+              {sourceMissing(config, source)}. Klicke auf „Bearbeiten“, um sie einzugeben.
             </p>
           )}
           <p className="mt-2 text-[11px] leading-relaxed text-muted-foreground">
-            La fuente elegida es la prioridad. Con el respaldo activado, si no encuentra un juego se
-            prueban las siguientes: {SCRAPER_SOURCES.map((s) => s.label).join(' → ')}.
+            Die gewählte Quelle hat Vorrang. Mit aktivierter Ausweichoption werden, wenn ein Spiel nicht gefunden wird, die folgenden probiert: {SCRAPER_SOURCES.map((s) => s.label).join(' → ')}.
           </p>
         </section>
 
         {/* Opciones */}
         <section className="grid gap-3 sm:grid-cols-3">
-          <Field label="Tipo de imagen" htmlFor="scrape-imgtype">
+          <Field label="Bildtyp" htmlFor="scrape-imgtype">
             <Select id="scrape-imgtype" value={imageType} onChange={(e) => setImageType(e.target.value)}>
               {IMAGE_TYPES.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -448,7 +447,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
               ))}
             </Select>
           </Field>
-          <Field label="Región" htmlFor="scrape-region">
+          <Field label="Region" htmlFor="scrape-region">
             <Select id="scrape-region" value={region} onChange={(e) => setRegion(e.target.value)}>
               {REGIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -457,7 +456,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
               ))}
             </Select>
           </Field>
-          <Field label="Idioma" htmlFor="scrape-lang">
+          <Field label="Sprache" htmlFor="scrape-lang">
             <Select id="scrape-lang" value={lang} onChange={(e) => setLang(e.target.value)}>
               {LANGS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -471,21 +470,21 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
         <Toggle
           checked={onlyMissing}
           onChange={setOnlyMissing}
-          label="Sólo los ROMs que faltan"
-          description="No toca los juegos que ya tienen imagen; es lo habitual para no gastar cuota."
+          label="Nur fehlende ROMs"
+          description="Spiele, die schon ein Bild haben, werden nicht angefasst; üblich, um kein Kontingent zu verbrauchen."
         />
 
         <Toggle
           checked={fallback}
           onChange={setFallback}
-          label="Usar las demás fuentes como respaldo"
-          description="Si la fuente principal no encuentra un juego, se prueban las siguientes por orden."
+          label="Andere Quellen als Ausweichoption nutzen"
+          description="Wenn die Hauptquelle ein Spiel nicht findet, werden die folgenden der Reihe nach probiert."
         />
 
         {/* Credenciales */}
         <section>
           <h3 className="mb-2 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
-            Credenciales de {SCRAPER_SOURCES.find((s) => s.id === source)?.label}
+            Zugangsdaten für {SCRAPER_SOURCES.find((s) => s.id === source)?.label}
           </h3>
           {editing ? (
             <div className="space-y-3">
@@ -495,7 +494,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
                     id={`cred-${field.key}`}
                     type={field.type}
                     autoComplete="off"
-                    placeholder={credStatus.find((c) => c.key === field.key)?.set ? 'Ya configurada (déjalo vacío para no cambiarla)' : ''}
+                    placeholder={credStatus.find((c) => c.key === field.key)?.set ? 'Bereits eingerichtet (leer lassen, um nichts zu ändern)' : ''}
                     value={form[field.key] || ''}
                     onChange={(e) => setForm((prev) => ({ ...prev, [field.key]: e.target.value }))}
                   />
@@ -516,7 +515,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
                     )}
                   >
                     {field.set ? <CircleCheck className="size-3" /> : <X className="size-3" />}
-                    {field.set ? 'Configurada' : 'Sin configurar'}
+                    {field.set ? 'Eingerichtet' : 'Nicht eingerichtet'}
                   </span>
                 </li>
               ))}
@@ -529,7 +528,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
           <section className="rounded-2xl border border-border bg-muted/40 p-3">
             <div className="flex items-center justify-between gap-3">
               <span className="text-xs font-semibold text-foreground">
-                {running ? 'Scraping en curso…' : `Trabajo ${job.status}`}
+                {running ? 'Scraping läuft…' : `Auftrag ${job.status}`}
               </span>
               <span className="text-xs font-semibold tabular-nums text-muted-foreground">{job.progress} %</span>
             </div>
@@ -542,16 +541,16 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
               />
             </div>
             <p className="mt-2 truncate text-[11px] font-medium text-muted-foreground">
-              {job.current_system ? `${job.current_system} → ${job.current_rom || '…'}` : 'Preparando…'}
+              {job.current_system ? `${job.current_system} → ${job.current_rom || '…'}` : 'Wird vorbereitet…'}
             </p>
             <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-medium text-muted-foreground">
               <span className="tabular-nums">
                 {(aggregated?.ok ?? 0) + (partial.ok ?? 0)} OK
               </span>
               <span className="tabular-nums">
-                {(aggregated?.fail ?? 0) + (partial.fail ?? 0)} fallos
+                {(aggregated?.fail ?? 0) + (partial.fail ?? 0)} Fehler
               </span>
-              <span className="tabular-nums">{job.systems_done}/{job.systems.length} sistemas</span>
+              <span className="tabular-nums">{job.systems_done}/{job.systems.length} Systeme</span>
               {job.progress_raw?.[1] ? (
                 <span className="tabular-nums">
                   ROM {job.progress_raw[0]}/{job.progress_raw[1]}
@@ -561,7 +560,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
             {aggregated?.errors?.length ? (
               <details className="mt-2">
                 <summary className="cursor-pointer text-[11px] font-semibold text-destructive">
-                  {aggregated.errors.length} errores
+                  {aggregated.errors.length} Fehler
                 </summary>
                 <ul className="mt-1 max-h-32 space-y-0.5 overflow-y-auto text-[11px] text-muted-foreground">
                   {aggregated.errors.slice(0, 40).map((message, index) => (
@@ -579,7 +578,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
         {systems.length > 0 && (
           <div className="flex items-center justify-between gap-3 border-t border-border pt-3">
             <p className="text-[11px] leading-relaxed text-muted-foreground">
-              El scraping se ejecuta en segundo plano: puedes seguir usando el manager.
+              Das Scraping läuft im Hintergrund: Du kannst den Manager weiter benutzen.
             </p>
             <Button
               variant="secondary"
@@ -588,7 +587,7 @@ export function ScrapeSystemModal({ open, onClose, systems, onSaved }: ScrapeSys
               disabled={starting || !ready || running}
             >
               {starting ? <Loader2 className="size-4 animate-spin" /> : <Download className="size-4" />}
-              {running ? 'Scraping en curso…' : 'Escrapear sistema'}
+              {running ? 'Scraping läuft…' : 'System scrapen'}
             </Button>
           </div>
         )}

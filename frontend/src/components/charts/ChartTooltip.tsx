@@ -36,7 +36,7 @@ export function ChartTooltip({ active, payload, label, formatter }: ChartTooltip
           const display = formatter
             ? formatter(item.value, String(item.name ?? item.dataKey ?? ''))
             : typeof item.value === 'number'
-              ? item.value.toLocaleString('es-ES')
+              ? item.value.toLocaleString('de-DE')
               : item.value
 
           return (
